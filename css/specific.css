@@ -1,0 +1,17 @@
+body[data-URL^="https://polytoria.com/my/friends"] .col-lg-3 {
+    margin-bottom: 20px;
+}
+
+body[data-URL^="https://polytoria.com/create/"] .mt-2.mt-lg-0.col-lg.d-flex.align-content-between.flex-wrap {
+    width: 50%;
+}
+
+body[data-URL^="https://polytoria.com/create/"] .col.d-flex.align-content-between.flex-wrap {
+    width: 50%;
+}
+
+.text-truncate {
+    white-space: nowrap !important; /* Prevents text from wrapping to the next line */
+    overflow: hidden !important; /* Hides the overflowing text */
+    text-overflow: ellipsis !important; /* Adds an ellipsis (...) to indicate truncated text */
+}

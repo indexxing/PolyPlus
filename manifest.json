@@ -1,0 +1,151 @@
+{
+    "manifest_version": 3,
+    "name": "Poly+",
+    "version": "1.0",
+    "version_name": "Beta",
+    "description": "This extension adds quality of life improvements and features to Polytoria's website.",
+    "permissions": ["storage", "contextMenus", "tabs", "scripting", "webNavigation"],
+    "content_scripts": [
+        {
+            "matches": ["https://polytoria.com/*"],
+            "js": ["/js/everywhere.js","/js/membership-themes.js"],
+            "css": ["/css/specific.css"],
+            "run_at": "document_start"
+        },
+
+        {
+            "matches": ["https://polytoria.com/my/settings/*"],
+            "js": ["/js/polyplus-settings.js"],
+            "run_at": "document_start"
+        },
+
+        {
+            "matches": ["https://polytoria.com/", "https://polytoria.com/home"],
+            "js": ["/js/account/home.js"],
+            "run_at": "document_idle"
+        },
+
+        {
+            "matches": ["https://polytoria.com/places/**"],
+            "js": ["/js/places/place-view.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/join-place/**"],
+            "js": ["/js/places/place-join.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/create/place/**"],
+            "js": ["/js/places/place-edit.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/forum/post/**"],
+            "js": ["/js/forum/new-forum-view.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/users/**"],
+            "js": ["/js/profile/profile.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/profile/**"],
+            "js": ["/js/profile/simplified-profile.js"],
+            "run_at": "document_start"
+        },
+
+        {
+            "matches": ["https://polytoria.com/my/friends", "https://polytoria.com/my/friends/"],
+            "js": ["/js/account/friends.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/store", "https://polytoria.com/store/"],
+            "js": ["/js/store/store.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/store/**"],
+            "js": ["/js/store/item-view.js", "/js/store/try-on.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/forum/search","https://polytoria.com/forum/search?*"],
+            "js": ["/js/forum/forum-search.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/trade/sent/*"],
+            "js": ["/js/account/trades-outbound.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/users/*/inventory/*"],
+            "js": ["/js/account/inventory.js"],
+            "run_at": "document_idle"
+        },
+
+        {
+            "matches": ["https://polytoria.com/create/","https://polytoria.com/create/place"],
+            "js": ["/js/account/create.js"],
+            "run_at": "document_idle"
+        },
+
+        {
+            "matches": ["https://polytoria.com/my/settings/privacy"],
+            "js": ["/js/account/settings-privacy.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/my/settings/transactions"],
+            "js": ["/js/account/transactions.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/store/**", "https://polytoria.com/places/**", "https://polytoria.com/guilds/**", "https://polytoria.com/feed/**"],
+            "js": ["/js/op-comments.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/my/avatar?sandbox=true"],
+            "js": ["/js/account/avatar-sandbox2.js"]
+        }
+    ],
+    "background": {
+        "service_worker": "/js/background.js",
+        "type": "module"
+    },
+    "host_permissions": [
+        "https://*.polytoria.com/*"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["js/resources/currencies.json", "settings.html", "settings.js"],
+            "matches": ["https://polytoria.com/*"]
+        },
+
+        {
+            "resources": ["js/account/avatar-sandbox.html"],
+            "matches": ["https://polytoria.com/*"]
+        }
+    ],
+    "short_name": "Poly+",
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Poly+",
+        "default_icon": {
+            "16": "/icon.png",
+            "32": "/icon.png",
+            "48": "/icon.png",
+            "128": "/icon.png"
+        }
+    },
+    "icons": {
+        "16": "/icon.png",
+        "32": "/icon.png",
+        "48": "/icon.png",
+        "128": "/icon.png"
+    }
+}

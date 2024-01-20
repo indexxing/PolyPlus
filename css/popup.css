@@ -1,0 +1,60 @@
+@font-face {
+    font-family: LexendRegular;
+    src: url('Lexend-Regular.ttf');
+}
+
+@font-face {
+    font-family: LexendLight;
+    src: url('Lexend-Light.ttf');
+}
+
+@font-face {
+    font-family: LexendBold;
+    src: url('Lexend-Bold.ttf');
+}
+
+@font-face {
+    font-family: LexendBlack;
+    src: url('Lexend-Black.ttf');
+}
+
+body {
+    margin: 0;
+    padding: 12px;
+    font-family: LexendRegular;
+    background-color: #242424;
+    color: white;
+}
+
+.button {
+    border-radius: 20px;
+    background-color: #fff;
+    color: #424242;
+    width: 95%;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+input {
+    border-radius: 20px;
+    background-color: #fff;
+    color: #007bff;
+    width: 95%;
+    padding: 10px;
+    border: none;
+    font-weight: bold;
+}
+
+h1,.h1 {
+    font-family: LexendBlack;
+}
+
+h2,.h2 {
+    font-family: LexendBold;
+}
+
+hr {
+    border-color: transparent;
+}
