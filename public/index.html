@@ -36,11 +36,21 @@
             }
 
             html, body, main#page {
-                background: var(--background);
+                /*background: var(--background);*/
+
+                background: var(--polytoria-primary);
+                background: linear-gradient(180deg, var(--polytoria-primary) 0%, var(--background) 15%);
             }
 
             .page-title {
                 font-size: 3rem;
+            }
+
+            .title-accent {
+                -webkit-text-stroke: 2px var(--polytoria-primary);
+                color: transparent;
+                font-family: sans-serif;
+                text-shadow: 0 0 16px red;
             }
         </style>
         <main id="page">
@@ -48,11 +58,13 @@
                 <div style="height: 125px;"></div>
 
                 <div style="height: 250px; padding-top: 5rem;">
-                    <h1 class="page-title">Power-up your <span style="-webkit-text-stroke: 1px var(--polytoria-primary); color: transparent; font-family: sans-serif;">Polytoria</span> experience with <span style="text-shadow: 0 3px 0px var(--accent);">Poly+</span></h1>
+                    <h1 class="page-title">Power-up your <span class="title-accent">Polytoria</span> experience with <span style="text-shadow: 0 3px 0px var(--accent);">Poly+</span></h1>
                     <h4 class="fw-light">Poly+ is a quality-of-life extension to improve your experience on Polytoria!</h4>
                     <i class="text-muted">coming soon to <!--available now on--> Chromium-based browsers</i>
                     <br>
+                    <!--
                     <a href="#" class="btn btn-dark btn-lg mt-2">install now</a>
+                    -->
                 </div>
 
                 <div style="height: 125px;"></div>
