@@ -1,9 +1,0 @@
-:root {
-    --background: #151515;
-    --accent: red;
-    --polytoria-primary: #FF4647;
-}
-
-html, body, main#page {
-    background: var(--background);
-}

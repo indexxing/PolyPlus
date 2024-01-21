@@ -14,54 +14,21 @@
         <link href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/halfmoon.min.css" rel="stylesheet" integrity="sha256-SsJizWSIG9JT9Qxbiy8xnYJfjCAkhEQ0hihxRn7jt2M=" crossorigin="anonymous">
     </head>
     <body data-bs-theme="dark">
-        <style>
-            :root {
-                --background: #151515;
-                --accent: red;
-                --polytoria-primary: #FF4647;
-            }
-
-            ::-webkit-scrollbar {
-                width: initial;
-            }
-
-            ::-webkit-scrollbar-track {
-                background-color: black;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background-color: var(--polytoria-primary);
-                border-top-left-radius: 5px;
-                border-bottom-left-radius: 5px;
-            }
-
-            html, body, main#page {
-                background: var(--background);
-            }
-
-            .page-title {
-                font-size: 3rem;
-            }
-        </style>
         <main id="page">
-            <div class="text-center">
-                <div style="height: 125px;"></div>
-
-                <div style="height: 250px; padding-top: 5rem;">
-                    <h1 class="page-title">Power-up your <span style="-webkit-text-stroke: 1px var(--polytoria-primary); color: transparent; font-family: sans-serif;">Polytoria</span> experience with <span style="text-shadow: 0 3px 0px var(--accent);">Poly+</span></h1>
-                    <h4 class="fw-light">Poly+ is a quality-of-life extension to improve your experience on Polytoria!</h4>
-                    <i class="text-muted">coming soon to <!--available now on--> Chromium-based browsers</i>
-                    <br>
-                    <a href="#" class="btn btn-dark btn-lg mt-2">install now</a>
-                </div>
-
-                <div style="height: 125px;"></div>
+            <div class="text-center mb-5" style="background: linear-gradient(to bottom, #2e629a47, var(--background)); height: 300px; padding-top: 5rem;">
+                <h1>Power-up your <span style="color: var(--polytoria-primary);">Polytoria</span> experience with <span style="text-shadow: 0 3px 0px var(--accent);">Poly+</span></h1>
+                <h4 class="fw-light">Poly+ is a quality-of-life extension to improve your experience on Polytoria!</h4>
+                <i class="text-muted">coming soon to <!--available now on--> Chromium-based browsers</i>
+                <br>
+                <!--
+                <a href="#" class="btn btn-primary btn-sm font-monospace mt-2">install now</a>
+                -->
             </div>
 
-            <h1 class="text-center mb-4">Features</h1>
+            <h2 class="text-center">Features</h2>
 
             <!-- PINNED GAMES FEATURE SHOWCASE -->
-            <div class="row w-50 mx-auto">
+            <div class="row w-75 mx-auto">
                 <div class="col-md-4">
                     <img src="pinned-games.png" class="img-fluid" alt="Feature Showcase - Pinned Games">
                 </div>
@@ -71,7 +38,7 @@
                 </div>
             </div>
 
-            <div style="height: 50px;"></div>
+            <div style="height: 75px;"></div>
 
             <!-- MORE FEATURE LIST (NOT ALL FEATURES) -->
             <div class="text-center">
@@ -86,8 +53,6 @@
                     <li>- Store <code>owned</code> Tag</li>
                 </ul>
             </div>
-
-            <div style="height: 125px;"></div>
         </main>
     </body>
 </html>
