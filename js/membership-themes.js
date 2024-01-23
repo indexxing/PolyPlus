@@ -1,7 +1,7 @@
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-    Settings = result.PolyPlus_Settings;
+    Settings = result.PolyPlus_Settings || [];
 
-    if (Settings.ApplyMembershipThemeOn === false) {return}
+    if (Settings.ApplyMembershipThemeOn !== true) {return}
     MembershipTheme = Settings.ApplyMembershipThemeTheme === 0 ? 'plus': 'plusdx'
 
     document.addEventListener('DOMContentLoaded', function(){

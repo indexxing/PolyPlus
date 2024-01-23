@@ -3,8 +3,8 @@
     "name": "Poly+",
     "version": "1.0",
     "version_name": "Beta",
-    "description": "This extension adds quality of life improvements and features to Polytoria's website.",
-    "permissions": ["storage", "contextMenus", "tabs", "scripting", "webNavigation"],
+    "description": "This extension adds quality of life improvements and features to Polytoria's website. Created by Index",
+    "permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
     "content_scripts": [
         {
             "matches": ["https://polytoria.com/*"],
@@ -26,6 +26,11 @@
         },
 
         {
+            "matches": ["https://polytoria.com/my/settings/polyplus-debug/*"],
+            "js": ["/js/debug.js"]
+        },
+
+        {
             "matches": ["https://polytoria.com/places/**"],
             "js": ["/js/places/place-view.js"]
         },
@@ -42,7 +47,7 @@
 
         {
             "matches": ["https://polytoria.com/forum/post/**"],
-            "js": ["/js/forum/new-forum-view.js"]
+            "js": ["/js/forum/forum-view.js"]
         },
 
         {
@@ -88,12 +93,6 @@
         },
 
         {
-            "matches": ["https://polytoria.com/create/","https://polytoria.com/create/place"],
-            "js": ["/js/account/create.js"],
-            "run_at": "document_idle"
-        },
-
-        {
             "matches": ["https://polytoria.com/my/settings/privacy"],
             "js": ["/js/account/settings-privacy.js"]
         },
@@ -111,6 +110,11 @@
         {
             "matches": ["https://polytoria.com/my/avatar?sandbox=true"],
             "js": ["/js/account/avatar-sandbox2.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/inbox/*", "https://polytoria.com/inbox?*"],
+            "js": ["/js/account/inbox.js"]
         }
     ],
     "background": {
@@ -127,13 +131,17 @@
         },
 
         {
+            "resources": ["js/utils.js"],
+            "matches": ["https://polytoria.com/*"]
+        },
+
+        {
             "resources": ["js/account/avatar-sandbox.html"],
             "matches": ["https://polytoria.com/*"]
         }
     ],
     "short_name": "Poly+",
     "action": {
-        "default_popup": "popup.html",
         "default_title": "Poly+",
         "default_icon": {
             "16": "/icon.png",

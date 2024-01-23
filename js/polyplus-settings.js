@@ -1,6 +1,4 @@
 const InExtensionSettings = (window.location.pathname.split('/')[3] === "polyplus")
-console.log(window.location.pathname.split('/')[3], InExtensionSettings)
-
 if (InExtensionSettings === true) {
   window.location.href = chrome.runtime.getURL('settings.html')
 }

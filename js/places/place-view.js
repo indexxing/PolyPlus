@@ -43,26 +43,6 @@ let PinnedGames;
             HandleGameProfiles()
         }
     });
-    
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-        if ('PolyPlus_PinnedGames' in changes) {
-            chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
-                PinnedGames = result.PolyPlus_PinnedGames || [];
-    
-                if (PinnedGames.includes(parseInt(GameID))) {
-                    PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
-                } else {
-                    if (PinnedGames.length !== 5) {
-                        PinBtn.removeAttribute('disabled')
-                        PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
-                    } else {
-                        PinBtn.setAttribute('disabled', true)
-                        PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
-                    }
-                }
-            });
-        }
-    });
 })()
 
 async function HandlePinnedGames() {
@@ -101,6 +81,26 @@ async function HandlePinnedGames() {
         });
 
         document.querySelectorAll('.card-header')[2].appendChild(PinBtn);
+
+        chrome.storage.onChanged.addListener(function(changes, namespace) {
+            if ('PolyPlus_PinnedGames' in changes) {
+                chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
+                    PinnedGames = result.PolyPlus_PinnedGames || [];
+        
+                    if (PinnedGames.includes(parseInt(GameID))) {
+                        PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
+                    } else {
+                        if (PinnedGames.length !== 5) {
+                            PinBtn.removeAttribute('disabled')
+                            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
+                        } else {
+                            PinBtn.setAttribute('disabled', true)
+                            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
+                        }
+                    }
+                });
+            }
+        });
     });
 }
 

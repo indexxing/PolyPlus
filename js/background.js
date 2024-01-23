@@ -1,3 +1,57 @@
+const Manifest = chrome.runtime.getManifest()
+
+// WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
+chrome.action.onClicked.addListener((tab) => {
+    chrome.tabs.create({ active: true, url: chrome.runtime.getURL('settings.html') });
+});
+
+// REGISTER AN ALARM FOR DAILY UPDATE CHECK
+/*
+chrome.alarms.create("PolyPlus-UpdateCheck", {
+    periodInMinutes: 24 * 60,
+    when: Date.now() + (12 - new Date().getHours()) * 60 * 60 * 1000,
+});
+*/
+
+// Create a date object with the current date and the desired time
+/*
+var date = new Date();
+date.setHours(19, 31, 0, 0); // 7:25 PM
+
+// Create an alarm that fires at 7:25 PM and repeats every day
+chrome.alarms.create("PolyPlus-UpdateCheck", {
+    periodInMinutes: 24 * 60,
+    when: date.getTime()
+});
+*/
+
+
+// HANDLE ALARMS FIRING
+chrome.alarms.onAlarm.addListener(function(alarm){
+    if (alarm.name === 'PolyPlus-UpdateCheck') {
+        fetch('https://polyplus.vercel.app/data/version.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network not ok')
+                }
+                return response.json()
+            })
+            .then(data => {
+                if (data.version > Manifest.version) {
+                    console.log('Update available')
+                    chrome.notifications.create({
+                        type: "basic",
+                        iconUrl: chrome.runtime.getURL("icon.png"),
+                        title: "New Update Available",
+                        message: "A new update is available for Poly+!",
+                    })
+                }
+            })
+            .catch(error => {console.log(error)})
+    }
+});
+
+// COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
 chrome.contextMenus.create({
     title: 'Copy Asset ID',
     id: 'PolyPlus-CopyID',
@@ -10,6 +64,7 @@ chrome.contextMenus.create({
     ]
 });
 
+// COPY AVATAR HASH CONTEXT MENU ITEM REGISTRATION
 chrome.contextMenus.create({
     title: 'Copy Avatar Hash',
     id: 'PolyPlus-CopyAvatarHash',
@@ -21,6 +76,7 @@ chrome.contextMenus.create({
     ]
 });
 
+// HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(function (info, tab){
     if (info.menuItemId === 'PolyPlus-CopyID') {
         let ID = parseInt(info.linkUrl.split('/')[4])
@@ -44,21 +100,6 @@ chrome.contextMenus.onClicked.addListener(function (info, tab){
             .then(() => console.log("Copied ID!"));
     }
 });
-
-/*
-chrome.webNavigation.onCompleted.addListener(function (details){
-    console.log('TAB CREATED')
-
-    chrome.scripting
-        .executeScript({
-            target: {tabId: details.tabId},
-            func: HandleJoinPlace,
-            args: [details.url]
-        })
-}, {
-    url: [{ urlMatches: "https://polytoria.com/join-place/*" }]
-});
-*/
 
 function CopyAssetID(id) {
     navigator.clipboard
@@ -102,4 +143,8 @@ function HandleJoinPlace(url) {
             window.location.href = 'polytoria://client/' + data.token
         })
         .catch(error => {console.log(error)})
+}
+
+export default {
+    hi: 1
 }

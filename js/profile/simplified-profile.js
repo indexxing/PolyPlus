@@ -1,20 +1,21 @@
-let Username = window.location.href.split('/')[4]
+const Username = window.location.pathname.split('/')[2]
 
-chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-    Settings = result.PolyPlus_Settings;
+let Reference = new URLSearchParams(new URL(window.location.href).search).get('ref')
+if (Reference === null) {
+    Reference = ""
+}
 
-    if (Settings.SimplifiedProfileURLsOn === true) {
-        fetch("https://api.polytoria.com/v1/users/find?username=" + Username)
-        .then(response => response.json())
-        .then(data => {
-            window.location.href = "https://polytoria.com/users/" + data.id
-        })
-        .catch(error => {
-            console.log("An error occurred:", error);
-        });
-    }
-
-    if (!(parseInt(userID))) {
-        return
-    }
-});
+fetch("https://api.polytoria.com/v1/users/find?username=" + Username)
+    .then(response => {
+        if (!response.ok) {
+            window.location.href = window.location.origin + decodeURIComponent(Reference)
+        } else {
+            return response.json()
+        }
+    })
+    .then(data => {
+        window.location.href = "https://polytoria.com/users/" + data.id
+    })
+    .catch(error => {
+        console.log("An error occurred:", error);
+    });

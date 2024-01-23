@@ -32,8 +32,10 @@
                 })
                 .then(data => {
                     if (data.success !== true) {throw new Error(data.message)}
-                    window.location.href = 'polytoria://client/' + data.token
-                    window.location.href = 'https://polytoria.com/places/' + PlaceID
+                    setTimeout(function(){
+                        window.location.href = 'polytoria://client/' + data.token
+                        window.location.href = 'https://polytoria.com/places/' + PlaceID
+                    }, 5000)
                 })
                 .catch(error => {console.log(error)})
         })

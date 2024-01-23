@@ -11,7 +11,7 @@ body[data-URL^="https://polytoria.com/create/"] .col.d-flex.align-content-betwee
 }
 
 .text-truncate {
-    white-space: nowrap !important; /* Prevents text from wrapping to the next line */
-    overflow: hidden !important; /* Hides the overflowing text */
-    text-overflow: ellipsis !important; /* Adds an ellipsis (...) to indicate truncated text */
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
