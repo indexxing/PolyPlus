@@ -32,7 +32,7 @@
 
         {
             "matches": ["https://polytoria.com/places/**"],
-            "js": ["/js/places/place-view.js"]
+            "js": ["/js/places/place-view2.js"]
         },
 
         {
@@ -126,17 +126,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["js/resources/currencies.json", "settings.html", "settings.js"],
-            "matches": ["https://polytoria.com/*"]
-        },
-
-        {
-            "resources": ["js/utils.js"],
-            "matches": ["https://polytoria.com/*"]
-        },
-
-        {
-            "resources": ["js/account/avatar-sandbox.html"],
+            "resources": ["js/resources/*"],
             "matches": ["https://polytoria.com/*"]
         }
     ],

@@ -1,7 +1,10 @@
-!(() => {
-    const PlaceID = parseInt(window.location.pathname.split('/')[2])
+/*
+    DISABLED FEATURE
+*/
 
-    console.log('PLACE ID: ' + PlaceID)
+!(() => {
+    return
+    const PlaceID = parseInt(window.location.pathname.split('/')[2])
     
     fetch('https://polytoria.com/home')
         .then(response => {

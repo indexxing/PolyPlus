@@ -42,7 +42,7 @@ let ItemCardContents = `
 if (new URLSearchParams(new URL(window.location).search).get('sandbox') === 'true') {
     console.log('Avatar Sandbox!')
 
-    LoadFile(chrome.runtime.getURL('js/account/avatar-sandbox.html'), function(html){
+    LoadFile(chrome.runtime.getURL('js/resources/avatar-sandbox.html'), function(html){
         PageContainer.innerHTML = html
         ItemGrid = document.getElementById('inventory')
         Wearing = document.getElementById('wearing')

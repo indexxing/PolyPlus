@@ -49,13 +49,13 @@ let Spacer = document.createElement('div')
 Spacer.innerHTML = ' '
 Spacer.style.width = '50px'
 Spacer.prepend(BestFriendsContainer)
-FriendContainer.prepend(BestFriendsContainer)
 
+FriendContainer.prepend(BestFriendsContainer)
 UpdateLocalData();
 
 function UpdateLocalData() {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings
+        Settings = result.PolyPlus_Settings || {PinnedGamesOn: false}
     });
 
     chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
@@ -93,7 +93,7 @@ function LoadPinnedGames() {
     }
 
     PinnedGames.forEach(element => {
-        fetch('https://api.polytoria.com/v1/places/:id'.replace(':id', element))
+        fetch('https://api.polytoria.com/v1/places/' + element)
             .then(response => response.json())
             .then(data => {
                 let GameName = data.name;
@@ -101,7 +101,7 @@ function LoadPinnedGames() {
 
                 var NewGameContainer = document.createElement('a');
                 NewGameContainer.innerHTML = GameContainerElement.replace(':GameName',GameName).replace(':Thumbnail',GameThumbnail);
-                NewGameContainer.setAttribute('href', '/places/:id'.replace(':id',element));
+                NewGameContainer.setAttribute('href', '/places/' + element);
 
                 if (new Date().getDate() >= new Date(data.updatedAt).getDate()) {
                     console.log('Game has updated')
@@ -123,9 +123,13 @@ function LoadBestFriends() {
     });
 
     if (BestFriends.length === 0) {
-        BestFriendsContainer.style.display = 'none'
+        BestFriendsContainer.style.visibility = 'hidden'
+        BestFriendsContainer.style.padding = '0px !important'
+        BestFriendsContainer.style.margin = '0px !important'
     } else {
-        BestFriendsContainer.style.display = ''
+        BestFriendsContainer.style.visibility = 'visible'
+        BestFriendsContainer.style.padding = ''
+        BestFriendsContainer.style.margin = ''
     }
 
     BestFriends.forEach(element => {

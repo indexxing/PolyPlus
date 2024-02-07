@@ -2,13 +2,16 @@ const ForumText = document.querySelectorAll('p:not(.text-muted):not(.mb-0)')
 
 var Settings = []
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-    Settings = result.PolyPlus_Settings || []
+    Settings = result.PolyPlus_Settings || {
+        ForumMentsOn: false,
+        ForumUnixStampsOn: false
+    }
 
-    if (Settings.ForumMentsOn === true || 1 === 2) {
+    if (Settings.ForumMentsOn === true) {
         HandleForumMentions()
     }
 
-    if (1 === 1) {
+    if (Settings.ForumUnixStampsOn === true) {
         HandleUnixTimestamps()
     }
 });
@@ -21,27 +24,28 @@ function HandleForumMentions() {
         let match;
         while ((match = Regex.exec(text.innerText)) !== null) {
             const Username = match[0].substring(1)
-            FormattedText = FormattedText.replaceAll(match[0], `<a href="/profile/reufihfuighqre8uogqre?ref=${encodeURIComponent(window.location.pathname)}" class="polyplus-mention">${match[0]}</a>`)
+            FormattedText = FormattedText.replaceAll(match[0], `<a href="/profile/${Username}?ref=${encodeURIComponent(window.location.pathname)}" class="polyplus-mention">${match[0]}</a>`)
         }
         text.innerHTML = FormattedText
     }
 }
 
 function HandleUnixTimestamps() {
-    const Regex = /<t:[A-Za-z0-9]+>/gm
-    //const Regex = /&lt;t:[A-Za-z0-9]+&gt;/i
+    const Regex = /&lt;t:[A-Za-z0-9]+&gt;/i
 
     for (let text of ForumText) {
-        //let FormattedText = text.innerHTML
+        let FormattedText = text.innerHTML
         let match;
-        while ((match = Regex.exec(text.innerText)) !== null) {
-            console.log(match[0])
-            const Timestamp = new Date(parseInt(match[0].substring(3).slice(0, -1))*1000)
+
+        while ((match = Regex.exec(FormattedText)) !== null) {
+            const Timestamp = new Date(match[0].substring(6, match[0].length - 4) * 1000)
             const Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
-            const Result = `${Months[Timestamp.getMonth()]} ${Timestamp.getDate()}, ${Timestamp.getFullYear()}`
-            text.innerHTML = text.innerText.replaceAll(Regex.exec(text.innerText)[0], Result)
+            const Distance = new Intl.RelativeTimeFormat({numeric: 'auto', style: 'short'}).format(Math.floor((Timestamp - new Date()) / (60 * 1000)), 'day')
+            const Result = `<code style="color: orange;">${Months[Timestamp.getMonth()]} ${Timestamp.getDate()}, ${Timestamp.getFullYear()} (${["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][Timestamp.getDay()-1]}) at ${Timestamp.getHours()-12}:${String(Timestamp.getMinutes()).padStart(2, "0")} (${Distance})</code>`
+            FormattedText = FormattedText.replaceAll(match[0], Result)
+            console.log(FormattedText)
         }
-        //text.innerHTML = FormattedText
+        text.innerHTML = FormattedText
     }
 }

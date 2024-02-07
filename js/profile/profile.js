@@ -1,12 +1,18 @@
-setTimeout(function() {}, 100);
-let URLSplit = window.location.pathname.split('/');
-let UserID = URLSplit[2];
+const UserID = window.location.pathname.split('/')[2];
+const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0]
+
 var Settings;
 var BestFriends;
-var FavoriteBtn;
+let FavoriteBtn;
+let CalculateButton;
+
 if (UserID) {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings;
+        Settings = result.PolyPlus_Settings || {
+            IRLPriceWithCurrencyOn: false,
+            BestFriendsOn: false,
+            OutfitCostOn: true
+        }
 
         if (Settings.IRLPriceWithCurrencyOn === true) {
             HandleIRLPrice()
@@ -16,29 +22,43 @@ if (UserID) {
             HandleBestFriends()
         }
 
-        if (1 === 1) {
-            HandleOufitCost()
-        }
-    });
-    
-    // Update the local pinned games whenever the 'PinnedGames' array is updated
-    chrome.storage.onChanged.addListener(function(changes, namespace) {
-        if ('PolyPlus_BestFriends' in changes) {
-            chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
-                BestFriends = result.PolyPlus_BestFriends || [];
-    
-                if (!(BestFriends.length === 7)) {
-                    if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
-                        FavoriteBtn.innerText = 'Remove Best Friend Status'
-                    } else {
-                        FavoriteBtn.innerText = 'Best Friend'
-                    }
-                } else {
-                    FavoriteBtn.innerText = 'Remove Best Friend Status (max 7/7)'
-                }
+        if (Settings.OutfitCostOn === true) {
+            CalculateButton = document.createElement('button')
+            CalculateButton.classList = 'btn btn-warning btn-sm'
+            CalculateButton.innerText = 'Calculate Avatar Cost'
+            AvatarRow.parentElement.parentElement.prepend(CalculateButton)
+            AvatarRow.parentElement.style.marginTop = '10px'
+            
+            CalculateButton.addEventListener('click', function(){
+                HandleOufitCost()
             });
         }
-    });    
+    });
+
+    const AvatarIFrame = document.querySelector('[src^="/ptstatic"]')
+    const DropdownMenu = document.getElementsByClassName('dropdown-menu dropdown-menu-right')[0]
+    const CopyItem = document.createElement('a')
+    CopyItem.classList = 'dropdown-item text-primary'
+    CopyItem.classList.remove('text-danger')
+    CopyItem.classList.add('text-primary')
+    CopyItem.href = '#'
+    CopyItem.innerHTML = `
+    <i class="fa-duotone fa-book"></i>
+    Copy 3D Avatar URL 
+    `
+    DropdownMenu.appendChild(CopyItem)
+    CopyItem.addEventListener('click', function(){
+        navigator.clipboard.writeText(AvatarIFrame.src)
+            .then(() => {
+                alert('Successfully copied 3D avatar URL!')
+            })
+            .catch(() => {
+                alert('Failure to copy 3D avatar URL.')
+            });
+    });
+
+    /*
+    Way overcomplicated code when there is literally an iframe on the page with the exact same result
 
     const UserID = window.location.pathname.split('/')[2]
     const DefaultAvatar = {
@@ -118,6 +138,7 @@ if (UserID) {
     });
 
     Original.parentElement.appendChild(Clone)
+    */
 }
 
 function HandleIRLPrice() {
@@ -162,7 +183,6 @@ function HandleBestFriends() {
     chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result){
         BestFriends = result.PolyPlus_BestFriends || [];
     
-        console.log('Best friends is enabled!')
         FavoriteBtn = document.createElement('button');
         FavoriteBtn.classList = 'btn btn-warning btn-sm ml-2';
         if (!(BestFriends.length === 7)) {
@@ -184,13 +204,13 @@ function HandleBestFriends() {
         document.querySelectorAll('.section-title.px-3.px-lg-0.mt-3')[0].appendChild(FavoriteBtn);
 
         function Fav(UserID, btn) {
-            if (UserID === JSON.parse(window.localStorage.getItem('account_info')).ID) {
-                return
-            }
+            if (UserID === JSON.parse(window.localStorage.getItem('account_info')).ID) { return }
             btn.setAttribute('disabled', 'true')
+
             chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
                 const BestFriends = result.PolyPlus_BestFriends || [];
                 const index = BestFriends.indexOf(parseInt(UserID));
+
                 if (index !== -1) {
                     // Number exists, remove it
                     BestFriends.splice(index, 1);
@@ -211,33 +231,42 @@ function HandleBestFriends() {
                 });
             });
         }
+    });
 
-        function ClearFavs(){
-            chrome.storage.sync.set({ 'PolyPlus': {"PinnedGames": pinnedGames, "BestFriends": []}, arrayOrder: true }, function() {
-                console.log('BestFriends saved successfully!');
-                setTimeout(function() {
-                    btn.removeAttribute('disabled')
-                }, 1500)
-            });
-        }
-
-        function ClearFavsOld(){
-            chrome.storage.sync.set({ 'PolyPlus': {"PinnedGames": pinnedGames, "BestFriends": []}, arrayOrder: true }, function() {
-                console.log('BestFriends saved successfully!');
-                setTimeout(function() {
-                    btn.removeAttribute('disabled')
-                }, 1500)
+    chrome.storage.onChanged.addListener(function(changes, namespace) {
+        if ('PolyPlus_BestFriends' in changes) {
+            chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
+                BestFriends = result.PolyPlus_BestFriends || [];
+    
+                if (!(BestFriends.length === 7)) {
+                    if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
+                        FavoriteBtn.innerText = 'Remove Best Friend Status'
+                    } else {
+                        FavoriteBtn.innerText = 'Best Friend'
+                    }
+                } else {
+                    FavoriteBtn.innerText = 'Remove Best Friend Status (max 7/7)'
+                }
             });
         }
     });
+    
+    function ClearBestFriends(){
+        chrome.storage.sync.set({ 'PolyPlus_BestFriends': {"BestFriends": []}, arrayOrder: true }, function() {
+            console.log('BestFriends saved successfully!');
+            setTimeout(function() {
+                btn.removeAttribute('disabled')
+            }, 1500)
+        });
+    }
 }
 
 async function HandleOufitCost() {
-    const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0]
-
-    let TotalCost = 0
-    let Limiteds = 0
-    let Exclusives = 0
+    const AvatarCost = {
+        Total: 0,
+        Limiteds: 0,
+        Exclusives: 0
+    }
     for (let item of AvatarRow.children) {
         const ItemID = item.getElementsByTagName('a')[0].href.split('/')[4]
         await fetch('https://api.polytoria.com/v1/store/'+ItemID)
@@ -250,14 +279,14 @@ async function HandleOufitCost() {
             .then(data => {
                 let Price = data.price
                 if (data.isLimited === true) {
-                    Limiteds += 1
+                    AvatarCost.Limiteds += 1
                     Price = data.averagePrice
                 } else if (data.sales === 0) {
-                    Exclusives += 1
+                    AvatarCost.Exclusives += 1
                     Price = 0
                 }
 
-                TotalCost += Price
+                AvatarCost.Total += Price
             })
             .catch(error => {console.log(error)});
     }
@@ -265,8 +294,7 @@ async function HandleOufitCost() {
     const TotalCostText = document.createElement('small')
     TotalCostText.classList = 'text-muted'
     TotalCostText.style.padding = '20px'
-    TotalCostText.innerHTML = `${ (Limiteds > 0 || Exclusives > 0) ? '~' : '' }<i class="pi pi-brick me-2"></i> ${TotalCost.toLocaleString()}${ (Limiteds > 0) ? ` (has ${Limiteds} limiteds)` : '' }${ (Exclusives > 0) ? ` (has ${Exclusives} exclusives)` : '' }`
+    TotalCostText.innerHTML = `${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' }<i class="pi pi-brick me-2"></i> ${AvatarCost.Total.toLocaleString()}${ (AvatarCost.Limiteds > 0) ? ` (has ${AvatarCost.Limiteds} limiteds)` : '' }${ (AvatarCost.Exclusives > 0) ? ` (has ${AvatarCost.Exclusives} exclusives)` : '' }`
     AvatarRow.parentElement.parentElement.prepend(TotalCostText)
     AvatarRow.parentElement.style.marginTop = '10px'
-    console.log(TotalCostText)
 }

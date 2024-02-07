@@ -7,7 +7,6 @@ let PinnedGames;
 !(() => {
     if (GameID === undefined) {return}
 
-    /*
     const DataContainer = document.getElementById('likes-data-container')
     const RatingsData = {
         Likes: parseInt(DataContainer.getAttribute('data-like-count')),
@@ -25,7 +24,6 @@ let PinnedGames;
     PercentageLabel.innerText = RatingsData.Percentage + '%'
 
     RatingsContainer.children[0].appendChild(PercentageLabel)
-    */
 
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
         Settings = result.PolyPlus_Settings;
@@ -55,7 +53,12 @@ async function HandlePinnedGames() {
         if (PinnedGames.includes(parseInt(GameID))) {
             PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
         } else {
-            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Pin';
+            if (PinnedGames.length !== 5) {
+                PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
+            } else {
+                PinBtn.setAttribute('disabled', true)
+                PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
+            }
         }
 
         PinBtn.addEventListener('click', function() {

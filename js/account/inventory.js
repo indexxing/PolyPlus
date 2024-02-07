@@ -1,5 +1,5 @@
 if (window.location.pathname.split('/')[3] === "inventory") {
-    let UserID = window.location.pathname.split('/')[2]
+    const UserID = window.location.pathname.split('/')[2]
     if (UserID === JSON.parse(window.localStorage.getItem('account_info')).ID) {
         let Nav = document.getElementsByClassName('nav-pills')[0]
         let WishlistNav = document.createElement('li')
@@ -13,8 +13,8 @@ if (window.location.pathname.split('/')[3] === "inventory") {
         Nav.appendChild(WishlistNav)
 
         if (window.location.pathname.split('/')[4] === "wishlist") {
-            let ItemGrid = document.getElementsByClassName('itemgrid')[0]
-            let ItemCardContents = `
+            const ItemGrid = document.getElementsByClassName('itemgrid')[0]
+            const ItemCardContents = `
             <a href="/store/:ItemID" class="text-reset">
                 <div class="card mb-2">
                     :LimitedTag
@@ -44,7 +44,7 @@ if (window.location.pathname.split('/')[3] === "inventory") {
                 }
             });
             WishlistNav.children[0].classList.add('active')
-            let Search = document.createElement('div')
+            const Search = document.createElement('div')
             Search.classList = 'row'
             Search.innerHTML = `
             <div class="col-auto">
