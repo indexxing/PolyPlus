@@ -1,4 +1,4 @@
-> BETA Testing
+> Public BETA Testing
 # Poly+
 Poly+ is an upcoming quality-of-life browser extension for the Polytoria website! The extension provides tons of improvements to improve your experience on Polytoria!
 

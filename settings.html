@@ -1,6 +1,13 @@
 <html>
   <head>
-    <title>Poly+ Settings</title>
+    <!-- META TAGS -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+    <!-- TITLE -->
+    <title>Poly+ | Settings</title>
+ 
+    <!-- CSS -->
     <link rel="stylesheet" href="https://c0.ptacdn.com/static/app.64aa42f6.css">
   </head>
   <body data-bs-theme="dark">
@@ -328,7 +335,7 @@
       </div>
     </dialog>
     <div id="page">
-      <p id="PinnedGames">
+      <p class="setting-container" id="PinnedGames">
         <span>
           Pinned Games (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="PinnedGamesOn">Toggle</button>
@@ -336,7 +343,7 @@
         <br>
         <span class="desc">Pin your favorite games to the top of the homepage!</span>
       </p>
-      <p id="ForumMentions">
+      <p class="setting-container" id="ForumMentions">
         <span>
           Forum Mentions (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ForumMentsOn">Toggle</button>
@@ -344,7 +351,7 @@
         <br>
         <span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
       </p>
-      <p id="BestFriends">
+      <p class="setting-container" id="BestFriends">
         <span>
           Best Friends (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="BestFriendsOn">Toggle</button>
@@ -352,7 +359,7 @@
         <br>
         <span class="desc">Prioritize the bestest of friends on applicable friend lists!</span>
       </p>
-      <p id="ImprovedFriendLists">
+      <p class="setting-container" id="ImprovedFriendLists">
         <span>
           Improved Friend Lists (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ImprovedFrListsOn">Toggle</button>
@@ -364,7 +371,7 @@
           <span style="font-size: 0.8rem; color: orange;">* You can only remove up to 25 friends at once.</span>
         </span>
       </p>
-      <p id="IRLPriceWithCurrency">
+      <p class="setting-container" id="IRLPriceWithCurrency">
         <span>
           Show IRL price with Brick Count (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="IRLPriceWithCurrencyOn">Toggle</button>
@@ -396,7 +403,7 @@
           <option value="5">$99.99 USD</option>
         </select>
       </p>
-      <p id="HideNotifBadges">
+      <p class="setting-container" id="HideNotifBadges">
         <span>
           Hide Notification Badges (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="HideNotifBadgesOn">Toggle</button>
@@ -404,7 +411,10 @@
         <br>
         <span class="desc">Hide the annoying red circles on the sidebar!</span>
       </p>
-      <p id="SimplifiedProfileURLs">
+      <!--
+      No longer a setting
+
+      <p class="setting-container" id="SimplifiedProfileURLs">
         <span>
           Simplified Profile URLs (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="SimplifiedProfileURLsOn">Toggle</button>
@@ -412,7 +422,8 @@
         <br>
         <span class="desc">Makes all profile URLs simpler by allowing for you to go to "https://polytoria.com/profile/UsernameGoesHere" to redirect to the real profile URL!</span>
       </p>
-      <p id="StoreOwnTag">
+      -->
+      <p class="setting-container" id="StoreOwnTag">
         <span>
           Show "OWNED" Tag on Store Main Page (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="StoreOwnTagOn">Toggle</button>
@@ -420,7 +431,7 @@
         <br>
         <span class="desc">Quickly see if you own the item at a glance with a little tag in the top left corner of item cards on the main store page!</span>
       </p>
-      <p id="ThemeCreator">
+      <p class="setting-container" id="ThemeCreator">
         <span>
           Theme Creator (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ThemeCreatorOn">Toggle</button>
@@ -429,7 +440,7 @@
         <br>
         <span class="desc">Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</span>
       </p>
-      <p id="MoreSearchFilters">
+      <p class="setting-container" id="MoreSearchFilters">
         <span>
           More Search Filters (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="MoreSearchFiltersOn">Toggle</button>
@@ -437,7 +448,7 @@
         <br>
         <span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
       </p>
-      <p id="ApplyMembershipTheme">
+      <p class="setting-container" id="ApplyMembershipTheme">
         <span>
           Apply Membership Theme for <b>Free</b> (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ApplyMembershipThemeOn">Toggle</button>
@@ -449,7 +460,10 @@
           <option value="PlusDX">Plus Deluxe</option>
         </select>
       </p>
-      <p id="ForumMarkdown" style="display: none;">
+      <!--
+      Forum markdown has been added officially
+
+      <p class="setting-container" id="ForumMarkdown">
         <span>
           Forum Markdown (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ForumMarkOn">Toggle</button>
@@ -459,7 +473,8 @@
           Format forum posts to make them look epic!
         </span>
       </p>
-      <p id="MultiCancelOutTrades">
+      -->
+      <p class="setting-container" id="MultiCancelOutTrades">
         <span>
           Multi-Cancel Outbound Trades (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="MultiCancelOutTradesOns">Toggle</button>
@@ -471,7 +486,7 @@
           <span style="font-size: 0.8rem; color: orange;">* You can only cancel up to 10 trades at once.</span>
         </span>
       </p>
-      <p id="ModifyNav">
+      <p class="setting-container" id="ModifyNav">
         <span>
           Modify Navbar (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ModifyNavOn">Toggle</button>
@@ -482,7 +497,7 @@
           Customize the navbar to your liking!
         </span>
       </p>
-      <p id="ItemWishlist">
+      <p class="setting-container" id="ItemWishlist">
         <span>
           Item Wishlist (<span class="status">enabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="ItemWishlistOn">Toggle</button>
@@ -492,7 +507,7 @@
           Wishlist that item that you REALLY want!
         </span>
       </p>
-      <p id="HideUpgradeBtn">
+      <p class="setting-container" id="HideUpgradeBtn">
         <span>
           Hide Upgrade Button (<span class="status">disabled</span>)
           <button class="btn btn-warning btn-sm" data-setting="HideUpgradeBtnOn">Toggle</button>

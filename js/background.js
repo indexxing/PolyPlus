@@ -6,25 +6,10 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 // REGISTER AN ALARM FOR DAILY UPDATE CHECK
-/*
 chrome.alarms.create("PolyPlus-UpdateCheck", {
     periodInMinutes: 24 * 60,
     when: Date.now() + (12 - new Date().getHours()) * 60 * 60 * 1000,
 });
-*/
-
-// Create a date object with the current date and the desired time
-/*
-var date = new Date();
-date.setHours(19, 31, 0, 0); // 7:25 PM
-
-// Create an alarm that fires at 7:25 PM and repeats every day
-chrome.alarms.create("PolyPlus-UpdateCheck", {
-    periodInMinutes: 24 * 60,
-    when: date.getTime()
-});
-*/
-
 
 // HANDLE ALARMS FIRING
 chrome.alarms.onAlarm.addListener(function(alarm){
@@ -78,6 +63,15 @@ chrome.contextMenus.create({
 
 // HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(function (info, tab){
+    chrome.notifications.create({
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("icon.png"),
+        title: "New Update Available",
+        message: "A new update is available for Poly+!",
+    }, function(id) {
+        console.log(id)
+    })
+
     if (info.menuItemId === 'PolyPlus-CopyID') {
         let ID = parseInt(info.linkUrl.split('/')[4])
         chrome.scripting
@@ -121,30 +115,4 @@ function CopyAvatarHash(hash) {
         .catch(() => {
             alert('Failure to copy avatar hash.')
         });
-}
-
-function HandleJoinPlace(url) {
-    console.log('HANDLING JOINING PLACE')
-    const PlaceID = new URL(url).pathname.split('/')[2]
-    fetch('https://polytoria.com/api/places/join',{
-        method: 'POST',
-        body: {
-            placeID:PlaceID
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network not ok')
-            }
-            return response.json()
-        })
-        .then(data => {
-            if (data.success !== true) {throw new Error(data.message)}
-            window.location.href = 'polytoria://client/' + data.token
-        })
-        .catch(error => {console.log(error)})
-}
-
-export default {
-    hi: 1
 }

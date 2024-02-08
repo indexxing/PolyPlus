@@ -5,21 +5,23 @@ var PurchaseBtn;
 var WishlistBtn;
 
 setTimeout(function () {
-    if (!(window.location.href.split('/')[4])) {return}
-    chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-      var Settings = result.PolyPlus_Settings || {
-        IRLPriceWithCurrencyOn: false,
-        IRLPriceWithCurrencyCurrency: 0,
-        ItemWishlistOn: true
-      }
-      PurchaseBtn = document.getElementsByClassName('btn btn-outline-success')[0]
+  if (!(window.location.href.split('/')[4])) {return}
+  chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
+    var Settings = result.PolyPlus_Settings || {
+      IRLPriceWithCurrencyOn: false,
+      IRLPriceWithCurrencyCurrency: 0,
+      ItemWishlistOn: true
+    }
+    PurchaseBtn = document.getElementsByClassName('btn btn-outline-success')[0]
+    console.log(PurchaseBtn)
 
-      if (Settings.IRLPriceWithCurrencyOn === true){ IRLPrice() }
+    if (Settings.IRLPriceWithCurrencyOn === true){ IRLPrice() }
 
-      if (Settings.ItemWishlistOn === true && !(PurchaseBtn.getAttribute('disabled'))) {
-        HandleItemWishlist()
-      }
-    })
+    if (Settings.ItemWishlistOn === true && !(PurchaseBtn.getAttribute('disabled'))) {
+      console.log('AAAA')
+      HandleItemWishlist()
+    }
+  })
 }, 100)
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
@@ -96,7 +98,7 @@ function IRLPrice() {
 }
 
 function HandleItemWishlist() {
-  const DescriptionText = document.getElementsByClassName('card-text')[0]
+  const DescriptionText = document.querySelector('.mcard .card-body:has(p)')
   WishlistBtn = document.createElement('button')
   chrome.storage.sync.get(['PolyPlus_ItemWishlist'], function(result){
     ItemWishlist = result.PolyPlus_ItemWishlist || [];

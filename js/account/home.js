@@ -55,7 +55,7 @@ UpdateLocalData();
 
 function UpdateLocalData() {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings || {PinnedGamesOn: false}
+        Settings = result.PolyPlus_Settings || {PinnedGamesOn: true, BestFriendsOn: false}
     });
 
     chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {

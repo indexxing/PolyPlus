@@ -1,22 +1,7 @@
+const SaveBtn = document.getElementById('Save')
+const Elements = Array.from(document.getElementsByClassName('setting-container'))
+
 var Settings;
-var SaveBtn = document.getElementById('Save')
-var Elements = [
-  document.getElementById("PinnedGames"),
-  document.getElementById("ForumMentions"),
-  document.getElementById("BestFriends"),
-  document.getElementById("ImprovedFriendLists"),
-  document.getElementById("IRLPriceWithCurrency"),
-  document.getElementById("HideNotifBadges"),
-  document.getElementById("SimplifiedProfileURLs"),
-  document.getElementById("StoreOwnTag"),
-  document.getElementById("ThemeCreator"),
-  document.getElementById("MoreSearchFilters"),
-  document.getElementById("ApplyMembershipTheme"),
-  document.getElementById("MultiCancelOutTrades"),
-  document.getElementById("ModifyNav"),
-  document.getElementById("ItemWishlist"),
-  document.getElementById("HideUpgradeBtn")
-];
 var ExpectedSettings = {
   PinnedGamesOn: true,
   ForumMentsOn: false,
@@ -26,7 +11,6 @@ var ExpectedSettings = {
   IRLPriceWithCurrencyCurrency: 0,
   IRLPriceWithCurrencyPackage: 0,
   HideNotifBadgesOn: false,
-  SimplifiedProfileURLsOn: true,
   StoreOwnTagOn: true,
   ThemeCreatorOn: false,
   ThemeCreator: {
@@ -41,7 +25,7 @@ var ExpectedSettings = {
   ModifyNavOn: false,
   ModifyNav: [
     {
-      Label: "Play",
+      Label: "Places",
       Link: "https://polytoria.com/places"
     },
     {
@@ -69,7 +53,7 @@ var ExpectedSettings = {
   HideUpgradeBtnOn: false
 }
 
-var ResetDefaultsModal = document.getElementById('ResetDefaults-Modal')
+const ResetDefaultsModal = document.getElementById('ResetDefaults-Modal')
 var ThemeCreatorModal = {
   Modal: document.getElementById('ThemeCreator-Modal'),
   Save: document.getElementById('ThemeCreator-Modal-Save'),
@@ -105,7 +89,6 @@ Elements.forEach(element => {
 
   if (Button) {
     Button.addEventListener('click', function() {
-      console.log('button clicked!!!!')
       ToggleSetting(Button.getAttribute('data-setting'), element)
     });
   }
@@ -173,14 +156,18 @@ Elements.forEach(element => {
       Array.from(ModalInputs).forEach(input => {
         if (!(input.getAttribute('data-ignore') === 'true')) {
           if (!(input.getAttribute('data-parent'))) {
-            if (Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] !== "undefined") {
+            if (Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] !== "undefined" && Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] !== undefined) {
               input.value = Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')]
+            } else {
+              input.value = ''
             }
           } else {
             let Parent = input.getAttribute('data-parent')
-            if (Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] !== "undefined") {
+            if (Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] !== "undefined" && Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] !== undefined) {
               if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
               input.value = Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')]
+            } else {
+              input.value = ''
             }
           }
         }

@@ -8,7 +8,6 @@ const ExpectedSettings = {
   IRLPriceWithCurrencyCurrency: 0,
   IRLPriceWithCurrencyPackage: 0,
   HideNotifBadgesOn: true,
-  SimplifiedProfileURLsOn: true,
   StoreOwnTagOn: true,
   ThemeCreatorOn: false,
   ThemeCreator: {

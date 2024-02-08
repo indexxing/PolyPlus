@@ -73,7 +73,7 @@
 
         {
             "matches": ["https://polytoria.com/store/**"],
-            "js": ["/js/store/item-view.js", "/js/store/try-on.js"]
+            "js": ["/js/store/item-view.js"]
         },
 
         {
