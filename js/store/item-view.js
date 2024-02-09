@@ -121,7 +121,6 @@ function HandleItemWishlist() {
         ItemWishlist = result.PolyPlus_ItemWishlist || [];
 
         let i = ItemWishlist.indexOf(parseInt(ItemID))
-        console.log(i)
         if (i !== -1) {
           ItemWishlist.splice(i, 1)
           WishlistBtn.classList = 'btn btn-primary btn-sm'
