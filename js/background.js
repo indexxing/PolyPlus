@@ -5,11 +5,28 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.create({ active: true, url: chrome.runtime.getURL('settings.html') });
 });
 
-// REGISTER AN ALARM FOR DAILY UPDATE CHECK
+// REGISTER AN ALARM FOR DAILY UPDATE CHECK (chatgpt cause I'm lazy and have to release Poly+ on February 8th aka today at the time of writing this)
+// Calculate the milliseconds until the next 12 PM
+/*
+const now = new Date();
+const msUntilNext12PM = new Date(
+  now.getFullYear(),
+  now.getMonth(),
+  now.getDate(),
+  12, // 12 PM hour
+  0,  // 0 minutes
+  0   // 0 seconds
+) - now;
+
+// Convert milliseconds to minutes
+const minutesUntilNext12PM = msUntilNext12PM / (1000 * 60);
+
+// Create the alarm
 chrome.alarms.create("PolyPlus-UpdateCheck", {
-    periodInMinutes: 24 * 60,
-    when: Date.now() + (12 - new Date().getHours()) * 60 * 60 * 1000,
+  periodInMinutes: 24 * 60, // 24 hours
+  delayInMinutes: minutesUntilNext12PM, // Time until next 12 PM
 });
+*/
 
 // HANDLE ALARMS FIRING
 chrome.alarms.onAlarm.addListener(function(alarm){
@@ -24,11 +41,18 @@ chrome.alarms.onAlarm.addListener(function(alarm){
             .then(data => {
                 if (data.version > Manifest.version) {
                     console.log('Update available')
-                    chrome.notifications.create({
+                    chrome.notifications.create("", {
                         type: "basic",
                         iconUrl: chrome.runtime.getURL("icon.png"),
                         title: "New Update Available",
                         message: "A new update is available for Poly+!",
+                    }, function(notificationID) {
+                        chrome.notifications.onClicked.addListener(function (id) {
+                            if (id === notificationID) {
+                                chrome.tabs.create({url: 'https://github.com/IndexingGitHub/PolyPlus', active: true})
+                                chrome.notifications.clear(notificationID)
+                            }
+                        })
                     })
                 }
             })
@@ -63,15 +87,6 @@ chrome.contextMenus.create({
 
 // HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(function (info, tab){
-    chrome.notifications.create({
-        type: "basic",
-        iconUrl: chrome.runtime.getURL("icon.png"),
-        title: "New Update Available",
-        message: "A new update is available for Poly+!",
-    }, function(id) {
-        console.log(id)
-    })
-
     if (info.menuItemId === 'PolyPlus-CopyID') {
         let ID = parseInt(info.linkUrl.split('/')[4])
         chrome.scripting

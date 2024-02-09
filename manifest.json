@@ -2,8 +2,8 @@
     "manifest_version": 3,
     "name": "Poly+",
     "version": "1.0",
-    "version_name": "Beta",
-    "description": "This extension adds quality of life improvements and features to Polytoria's website. Created by Index",
+    "version_name": "Public Beta",
+    "description": "Power-up your Polytoria experience with Poly+! Created by Index.",
     "permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
     "content_scripts": [
         {
