@@ -2,6 +2,7 @@ const SaveBtn = document.getElementById('Save')
 const Elements = Array.from(document.getElementsByClassName('setting-container'))
 
 var Settings;
+/*
 var ExpectedSettings = {
   PinnedGamesOn: true,
   ForumMentsOn: false,
@@ -52,6 +53,15 @@ var ExpectedSettings = {
   ItemWishlistOn: true,
   HideUpgradeBtnOn: false
 }
+*/
+var ExpectedSettings;
+var Utilities;
+(async () => {
+  Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  Utilities = Utilities.default
+
+  ExpectedSettings = Utilities.DefaultSettings
+})();
 
 const ResetDefaultsModal = document.getElementById('ResetDefaults-Modal')
 var ThemeCreatorModal = {
@@ -280,6 +290,12 @@ document.getElementById('ThemeCreator').getElementsByTagName('button')[1].addEve
 CopyThemeJSONBtn.addEventListener('click', function(){
   if (SaveThemeToJSONInput.value.length > 0) {
     navigator.clipboard.writeText(SaveThemeToJSONInput.value)
+      .then(() => {
+        alert('Successfully copied theme data to clipboard!')
+      })
+      .catch(() => {
+        alert('Failure to copy theme data to clipboard.')
+      });
   }
 });
 
@@ -291,12 +307,19 @@ LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
 })
 
 function LoadThemeJSON(string) {
+  alert('This feature has been disabled for now.')
+  return
   try {
     let JSONTable = JSON.parse(string)
     if (JSONTable.length === ExpectedSettings.ThemeCreator.length) {
       if (confirm('Are you sure you\'d like to replace this theme with the theme specified in the JSON?') === true) {
         LoadThemeFromJSONBtn.previousElementSibling.value = ''
         document.getElementById('ThemeCreator-Modal').close()
+        /*
+        for (let i = 0; i < JSONTable.length; i++) {
+          JSONTable[i] = new Sanitzer(JSONTable[i])
+        }
+        */
         Settings.ThemeCreator = MergeObjects(JSONTable, ExpectedSettings.ThemeCreator)
         Save();
         console.log(JSONTable.length, JSONTable, 'applied')

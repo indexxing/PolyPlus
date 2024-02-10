@@ -1,11 +1,19 @@
 setTimeout(function () {}, 100)
 
+/*
 let Currencies;
 
 LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
     Currencies = JSON.parse(text)
     console.log(new Date(Currencies.Date).toLocaleDateString("en-US", {day:"numeric",month:"long",year:"numeric"}), Currencies)
 })
+*/
+
+let Utilities;
+(async () => {
+    Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+    Utilities = Utilities.default
+})();
 
 let Nav = document.querySelector('.nav-pills')
 let DIV = document.createElement('div')
@@ -21,6 +29,7 @@ DIV.innerHTML = `
     <option value="AUD">Australian Dollar (AUD)</option>
     <option value="TRY">Turkish Lira (TRY)</option>
 </select>
+<!--
 <select id="polyplus-brickconverter-package" class="form-select bg-dark">
     <option value="0" selected>$0.99 USD</option>
     <option value="1">$4.99 USD</option>
@@ -29,6 +38,7 @@ DIV.innerHTML = `
     <option value="4">c</option>
     <option value="5">d</option>
 </select>
+-->
 `
 Nav.appendChild(document.createElement('hr'))
 Nav.appendChild(DIV)
@@ -39,9 +49,9 @@ let Type = document.getElementById('polyplus-brickconverter-type')
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
     Type.selectedIndex = result.PolyPlus_Settings.IRLPriceWithCurrencyCurrency || 0
 });
-let Package = document.getElementById('polyplus-brickconverter-package')
+//let Package = document.getElementById('polyplus-brickconverter-package')
 
-Input.addEventListener('change', function(){
+Input.addEventListener('input', function(){
     Update()
 });
 
@@ -49,48 +59,18 @@ Type.addEventListener('change', function(){
     Update()
 });
 
+/*
 Package.addEventListener('change', function(){
     Update()
 });
+*/
 
-function Update(){
-    let DISPLAY = Type.options[Type.selectedIndex].value
-    let IRL = (parseInt(Input.value.replace(/,/g, '')) * Currencies.Data[Package.selectedIndex][DISPLAY]).toFixed(2)
-    /*
-    var IRL;
-    var DISPLAY;
-    switch (Type.selectedIndex) {
-        case 0:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.0099).toFixed(2)
-            DISPLAY = 'USD'
-            break
-        case 1:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.009).toFixed(2)
-            DISPLAY = 'EUR'
-            break
-        case 2:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.0131).toFixed(2)
-            DISPLAY = 'CAD'
-            break
-        case 3:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.0077).toFixed(2)
-            DISPLAY = 'GBP'
-            break
-        case 4:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.1691).toFixed(2)
-            DISPLAY = 'MXN'
-            break
-        case 5:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) * 0.0144).toFixed(2)
-            DISPLAY = 'AUD'
-            break
-        case 6:
-            IRL = (parseInt(Input.value.replace(/,/g, '')) *  0.2338).toFixed(2)
-            DISPLAY = 'TRY'
-            break
-    }
-    */
-    Output.value = "$" + IRL  + " " + DISPLAY
+async function Update(){
+    //let DISPLAY = Type.options[Type.selectedIndex].value
+    //let IRL = (parseInt(Input.value.replace(/,/g, '')) * Currencies.Data[Package.selectedIndex][DISPLAY]).toFixed(2)
+    const Result = await Utilities.CalculateIRL(Input.value, Type.selectedIndex)
+    console.log(Input.value, Type.options[Type.selectedIndex].value, Result)
+    Output.value = "$" + Result.bricks  + " " + Result.display
 }
 
 function LoadFile(path, callback) {

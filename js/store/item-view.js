@@ -1,28 +1,30 @@
 const ItemID = window.location.pathname.split('/')[2]
 
+var Utilities;
+
+var Settings;
 var ItemWishlist;
 var PurchaseBtn;
 var WishlistBtn;
 
-setTimeout(function () {
+(async () => {
+  if (!(window.location.href.split('/')[4])) {return}
+
+  Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  Utilities = Utilities.default
+
   if (!(window.location.href.split('/')[4])) {return}
   chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-    var Settings = result.PolyPlus_Settings || {
-      IRLPriceWithCurrencyOn: false,
-      IRLPriceWithCurrencyCurrency: 0,
-      ItemWishlistOn: true
-    }
+    Settings = result.PolyPlus_Settings || {}
     PurchaseBtn = document.getElementsByClassName('btn btn-outline-success')[0]
-    console.log(PurchaseBtn)
 
     if (Settings.IRLPriceWithCurrencyOn === true){ IRLPrice() }
 
     if (Settings.ItemWishlistOn === true && !(PurchaseBtn.getAttribute('disabled'))) {
-      console.log('AAAA')
       HandleItemWishlist()
     }
   })
-}, 100)
+})();
 
 chrome.storage.onChanged.addListener(function(changes, namespace) {
   if ('PolyPlus_ItemWishlist' in changes) {
@@ -53,46 +55,15 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
   }
 });
 
-function IRLPrice() {
+async function IRLPrice() {
   if (!(PurchaseBtn.getAttribute('disabled'))) {
-    let Price = PurchaseBtn.getAttribute('data-price').replace(/,/g, '')
-    let Span = document.createElement('span')
+    const Price = PurchaseBtn.getAttribute('data-price')
+    const Span = document.createElement('span')
     Span.classList = 'text-muted polyplus-own-tag'
     Span.style.fontSize = '0.7rem'
     Span.style.fontWeight = 'normal'
-    let IRL;
-    let DISPLAY;
-    switch (Settings.IRLPriceWithCurrencyCurrency) {
-      case 0:
-        IRL = (Price * 0.0099).toFixed(2)
-        DISPLAY = 'USD'
-        break
-      case 1:
-        IRL = (Price * 0.009).toFixed(2)
-        DISPLAY = 'EUR'
-        break
-      case 2:
-        IRL = (Price * 0.0131).toFixed(2)
-        DISPLAY = 'CAD'
-        break
-      case 3:
-        IRL = (Price * 0.0077).toFixed(2)
-        DISPLAY = 'GBP'
-        break
-      case 4:
-        IRL = (Price * 0.1691).toFixed(2)
-        DISPLAY = 'MXN'
-        break
-      case 5:
-        IRL = (Price * 0.0144).toFixed(2)
-        DISPLAY = 'AUD'
-        break
-      case 6:
-        IRL = (Price *  0.2338).toFixed(2)
-        DISPLAY = 'TRY'
-        break
-    }
-    Span.innerText = "($" + IRL + " " + DISPLAY + ")"
+    const Result = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
+    Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
     PurchaseBtn.appendChild(Span)
   }
 }

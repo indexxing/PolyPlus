@@ -1,13 +1,25 @@
-setTimeout(function () {}, 100)
-var Settings = {IRLPriceWithCurrencyOn: true, IRLPriceWithCurrencyCurrency: 0, StoreOwnTagOn: true};
-var UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
-var ItemGrid = document.getElementById('assets')
+const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+
+var Settings;
+
+var Utilities;
+(async () => {
+    Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+    Utilities = Utilities.default
+
+    Update()
+})();
+
+const ItemGrid = document.getElementById('assets')
 var Inventory = [];
+
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-    Settings = result.PolyPlus_Settings;
+    Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
+    console.log(Settings)
 });
 
 function Update() {
+    console.log('update')
     if (Settings.IRLPriceWithCurrencyOn === true) {
         Array.from(ItemGrid.children).forEach(element => {LoadIRLPrices(element)});
     }
@@ -15,9 +27,7 @@ function Update() {
 
 const observer = new MutationObserver(async function (list){
     for (const record of list) {
-        console.log('record')
         for (const element of record.addedNodes) {
-            console.log('element', element.tagName, element.classList)
             if (element.tagName === "DIV" && element.classList.value === 'mb-3 itemCardCont') {
                 if (Settings.IRLPriceWithCurrencyOn === true) {LoadIRLPrices(element)}
                 if (Settings.StoreOwnTagOn === true) {
@@ -49,56 +59,23 @@ const observer = new MutationObserver(async function (list){
 
 observer.observe(ItemGrid, {attributes: false,childList: true,subtree: false});
 
-function LoadIRLPrices(element) {
+async function LoadIRLPrices(element) {
+    console.log('LOAD IRL PRICES!!!')
     if (element.tagName != "DIV") {return}
     if (element.querySelector('small.text-primary')) {return}
-    let Parent = element.getElementsByTagName('small')[1]
-    if (Parent.innerText === "") {
-        return
-    }
+    const Parent = element.getElementsByTagName('small')[1]
+    if (Parent.innerText === "") { return }
     let Span = document.createElement('span')
     Span.classList = 'text-muted polyplus-price-tag'
     Span.style.fontSize = '0.7rem'
-    let Price = parseInt(Parent.innerText.replace(/,/g, ''))
-    var IRL;
-    var DISPLAY;
-    switch (Settings.IRLPriceWithCurrencyCurrency) {
-        case 0:
-          IRL = (Price * 0.0099).toFixed(2)
-          DISPLAY = 'USD'
-          break
-        case 1:
-          IRL = (Price * 0.009).toFixed(2)
-          DISPLAY = 'EUR'
-          break
-        case 2:
-          IRL = (Price * 0.0131).toFixed(2)
-          DISPLAY = 'CAD'
-          break
-        case 3:
-          IRL = (Price * 0.0077).toFixed(2)
-          DISPLAY = 'GBP'
-          break
-        case 4:
-          IRL = (Price * 0.1691).toFixed(2)
-          DISPLAY = 'MXN'
-          break
-        case 5:
-          IRL = (Price * 0.0144).toFixed(2)
-          DISPLAY = 'AUD'
-          break
-        case 6:
-          IRL = (Price *  0.2338).toFixed(2)
-          DISPLAY = 'TRY'
-          break
-    }
-    Span.innerText = "($" + IRL + " " + DISPLAY + ")"
+    const Price = Parent.innerText
+    const Result = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
+    Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
     Parent.appendChild(Span)
 }
 
 function LoadOwnedTags(element) {
     let Item = CheckInventory(parseInt(element.querySelector('[href^="/store/"]').getAttribute('href').split('/')[2]))
-    console.log(Item, Item.id)
     if (Item.id) {
         var Tag = document.createElement('span')
         Tag.classList = 'badge bg-primary polyplus-own-tag'
@@ -108,7 +85,7 @@ function LoadOwnedTags(element) {
         } else {
             Tag.innerHTML = 'owned<br><span class="text-muted" style="font-size: 0.65rem;">#' + Item.serial
         }
-        element.querySelector('img').parentElement.appendChild(Tag)
+        element.getElementsByTagName('img')[0].parentElement.appendChild(Tag)
     }
 }
 
