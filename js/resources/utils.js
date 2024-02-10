@@ -99,6 +99,10 @@ export default {
         IRL = (bricks.replace(/,/g, '') *  0.2338).toFixed(2)
         DISPLAY = 'TRY'
         break
+      case 7:
+        IRL = (bricks.replace(/,/g, '') * 4.90).toFixed(2)
+        DISPLAY = 'BRL'
+        break
     }
     return {bricks: IRL, display: DISPLAY}
   }
