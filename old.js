@@ -5,7 +5,8 @@ let CurrencyNames = [
     "GBP",
     "MXN",
     "AUD",
-    "TRY"
+    "TRY",
+    "BRL"
 ]
 
 let Divides = [
@@ -26,6 +27,7 @@ let Currencies = [
         19.28, // MXN
         1.42, // AUD
         15.83, // TRY
+        4.90 // BRL
     ],
 
     [
@@ -36,6 +38,7 @@ let Currencies = [
         96.44, // MXN
         7.38, // AUD
         80.39, // TRY
+        24.71 // BRL
     ],
 
     [
@@ -46,6 +49,7 @@ let Currencies = [
         192.80, // MXN
         14.76, // AUD
         158.33, // TRY
+        49.48 // BRL
     ],
 
     [
@@ -56,6 +60,7 @@ let Currencies = [
         475.60, // MXN
         34.92, // AUD
         396.66, // TRY
+        123.76 // BRL 
     ],
 
     [
@@ -66,6 +71,7 @@ let Currencies = [
         951.20, // MXN
         73.84, // AUD
         793.32, // TRY
+        247.58 // BRL
     ],
 
     [
@@ -76,6 +82,7 @@ let Currencies = [
         1902.40, // MXN
         147.68, // AUD
         1586.64, // TRY
+        495.20 // BRL
     ]
 ]
 
