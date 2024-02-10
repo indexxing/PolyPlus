@@ -1,4 +1,4 @@
-// DEBUG MENU FOR CLEARING PINNED GAMES AND BEST FRIENDS
+// DEBUG MENU FOR CLEARING PINNED GAMES AND BEST FRIENDS DATA
 document.querySelector('#main-content .container').innerHTML = `
 <button class="btn btn-warning" id="clear-pins">Clear Pinned Games</button>
 
