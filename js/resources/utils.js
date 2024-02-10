@@ -100,7 +100,7 @@ export default {
         DISPLAY = 'TRY'
         break
       case 7:
-        IRL = (bricks.replace(/,/g, '') * 4.90).toFixed(2)
+        IRL = (bricks.replace(/,/g, '') * 0.49).toFixed(2)
         DISPLAY = 'BRL'
         break
     }
