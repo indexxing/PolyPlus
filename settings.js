@@ -61,6 +61,8 @@ var Utilities;
   Utilities = Utilities.default
 
   ExpectedSettings = Utilities.DefaultSettings
+
+  LoadCurrent()
 })();
 
 const ResetDefaultsModal = document.getElementById('ResetDefaults-Modal')
@@ -144,12 +146,6 @@ Elements.forEach(element => {
               }, 400)
             } else if (Setting === '[cancel]') {
               Modal.close();
-            } else if (Setting === '[callback]') {
-              let Function = btn.getAttribute('data-onclick')
-              if (window[Function] && typeof(window[Function]) === 'function') {
-                console.log('is')
-                window[Function]()
-              }
             } else {
               if (!(btn.getAttribute('data-parent'))) {
                 ToggleSetting(Modal.getAttribute('data-setting')[btn.getAttribute('data-setting')], null)
@@ -243,7 +239,6 @@ function LoadCurrent() {
     });
   });
 }
-LoadCurrent();
 
 function ToggleSetting(Name, Element) {
   if (Settings[Name] === true) {
