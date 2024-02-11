@@ -16,5 +16,7 @@ As of right now, Poly+ only works on chromium-based browsers and Firefox (howeve
 4. Fourth go to Polytoria and you should see some changes!
 
 ## How to Download Pre-Release?
-> Pre-Release builds may have work in progress features or bugs - use at your own risk
+
+> Pre-Release builds may have work in progress features or bugs!
+
 To download the stable build, simply follow the instructions above. However, to access the pre-release build, download the source code of the GitHub itself and follow the same steps as outlined in the stable build download instructions.
