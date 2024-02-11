@@ -132,18 +132,6 @@
       </div>
       <div class="modal-body">
         <p>Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</p>
-        <!--
-        <div class="mx-auto" style="width: 450px; height: 350px; border: 2.5px solid #fff;">
-          <div class="row h-100">
-            <div class="col-md-1 h-100" style="padding: 25px; border-right: 2.5px solid #fff; padding-left: 0px !important;"></div>
-            <div class="col h-100" style="padding-left: 0px !important;">
-              <div style="padding: 10px; width: 100%; border-bottom: 2.5px solid #fff; margin-bottom: 3.5px"></div>
-              <h2 class="mb-1">Heading</h2>
-              <p>This is a preview!</p>
-            </div>
-          </div>
-        </div>
-        -->
         <hr class="mt-2 mb-3">
   
         <label>Save Theme to JSON</label>
@@ -384,25 +372,26 @@
           <br>
           <span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
         </span>
-        <select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyCurrency">
-          <option value="USD" selected>United States Dollar (USD)</option>
-          <option value="EUR">Euro (EUR)</option>
-          <option value="CAD">Canadian Dollar (CAD)</option>
-          <option value="GBP">Great British Pound (GBP)</option>
-          <option value="MXN">Mexican Peso (MXN)</option>
-          <option value="AUD">Australian Dollar (AUD)</option>
-          <option value="TRY">Turkish Lira (TRY)</option>
-          <option value="BRL">Brazilian Real (BRL)</option>
-        </select>
-  
-        <select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyPackage">
-          <option value="0" selected>$0.99 USD</option>
-          <option value="1">$4.99 USD</option>
-          <option value="2">$9.99 USD</option>
-          <option value="3">$24.99 USD</option>
-          <option value="4">$49.99 USD</option>
-          <option value="5">$99.99 USD</option>
-        </select>
+        <div role="group" class="input-group">
+          <select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyCurrency">
+            <option value="USD" selected>United States Dollar (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="CAD">Canadian Dollar (CAD)</option>
+            <option value="GBP">Great British Pound (GBP)</option>
+            <option value="MXN">Mexican Peso (MXN)</option>
+            <option value="AUD">Australian Dollar (AUD)</option>
+            <option value="TRY">Turkish Lira (TRY)</option>
+            <option value="BRL">Brazilian Real (BRL)</option>
+          </select>
+          <select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyPackage">
+            <option value="0" selected>$0.99 Brick Package</option>
+            <option value="1">$4.99 Brick Package</option>
+            <option value="2">$9.99 Brick Package</option>
+            <option value="3">$24.99 Brick Package</option>
+            <option value="4">$49.99 Brick Package</option>
+            <option value="5">$99.99 Brick Package</option>
+          </select>
+        </div>
       </p>
       <p class="setting-container" id="HideNotifBadges">
         <span>
@@ -412,18 +401,6 @@
         <br>
         <span class="desc">Hide the annoying red circles on the sidebar!</span>
       </p>
-      <!--
-      No longer a setting
-
-      <p class="setting-container" id="SimplifiedProfileURLs">
-        <span>
-          Simplified Profile URLs (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="SimplifiedProfileURLsOn">Toggle</button>
-        </span>
-        <br>
-        <span class="desc">Makes all profile URLs simpler by allowing for you to go to "https://polytoria.com/profile/UsernameGoesHere" to redirect to the real profile URL!</span>
-      </p>
-      -->
       <p class="setting-container" id="StoreOwnTag">
         <span>
           Show "OWNED" Tag on Store Main Page (<span class="status">enabled</span>)
@@ -461,20 +438,6 @@
           <option value="PlusDX">Plus Deluxe</option>
         </select>
       </p>
-      <!--
-      Forum markdown has been added officially
-
-      <p class="setting-container" id="ForumMarkdown">
-        <span>
-          Forum Markdown (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ForumMarkOn">Toggle</button>
-        </span>
-        <br>
-        <span class="desc">
-          Format forum posts to make them look epic!
-        </span>
-      </p>
-      -->
       <p class="setting-container" id="MultiCancelOutTrades">
         <span>
           Multi-Cancel Outbound Trades (<span class="status">enabled</span>)
@@ -516,6 +479,55 @@
         <br>
         <span class="desc">Hide the ugly blue "Upgrade" button on the sidebar!</span>
       </p>
+      <p class="setting-container" id="OutfitCost">
+        <span>
+          Show Outfit Cost on Profiles (<span class="status">enabled</span>)
+          <button class="btn btn-warning btn-sm" data-setting="OutfitCostOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly see how many bricks a user spent on their avatar!</span>
+      </p>
+      <div class="card">
+        <div class="card-body">
+          <h3>EXPERIMENTAL SETTINGS</h3>
+          <p>These features are a work in progress.</p>
+          <hr>
+          <p class="setting-container" id="GameProfiles">
+            <span>
+              Game Profiles (<span class="status">disabled</span>)
+              <button class="btn btn-warning btn-sm" data-setting="GameProfilesOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">Traverse a place view page that matches a place's color palette!</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* Place creators must request a game profile for one to be made.</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature will be expanded upon in the future.</span>
+          </p>
+          <p class="setting-container" id="InlineEditing">
+            <span>
+              Inline Editing (<span class="status">disabled</span>)
+              <button class="btn btn-warning btn-sm" data-setting="InlineEditingOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature currently only supports places.</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature is not finished or polished.</span>
+          </p>
+          <p class="setting-container" id="ForumUnixStamps">
+            <span>
+              Forum Unix Timestamps (<span class="status">disabled</span>)
+              <button class="btn btn-warning btn-sm" data-setting="ForumUnixStampsOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* The styling for this feature is not yet done.</span>
+          </p>
+        </div>
+      </div>
       <hr>
       <button id="Save" class="btn btn-primary" disabled="true">Save</button>
       <button id="ResetDefaults" class="btn btn-warning">Reset to Default Settings</button>

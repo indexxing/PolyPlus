@@ -6,6 +6,7 @@ var Settings;
 var ItemWishlist;
 var PurchaseBtn;
 var WishlistBtn;
+var ItemOwned;
 
 (async () => {
   if (!(window.location.href.split('/')[4])) {return}
@@ -13,14 +14,14 @@ var WishlistBtn;
   Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
   Utilities = Utilities.default
 
-  if (!(window.location.href.split('/')[4])) {return}
   chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
     Settings = result.PolyPlus_Settings || {}
-    PurchaseBtn = document.getElementsByClassName('btn btn-outline-success')[0]
+    PurchaseBtn = document.querySelector('.btn#purchase-button')
+    ItemOwned = (PurchaseBtn.innerText === ' Item owned' || document.querySelector('.btn[onclick="sellItem()"]') !== null)
 
     if (Settings.IRLPriceWithCurrencyOn === true){ IRLPrice() }
 
-    if (Settings.ItemWishlistOn === true && !(PurchaseBtn.getAttribute('disabled'))) {
+    if (Settings.ItemWishlistOn === true) {
       HandleItemWishlist()
     }
   })
@@ -74,7 +75,21 @@ function HandleItemWishlist() {
   chrome.storage.sync.get(['PolyPlus_ItemWishlist'], function(result){
     ItemWishlist = result.PolyPlus_ItemWishlist || [];
 
-    if (Array.isArray(ItemWishlist) && ItemWishlist.includes(parseInt(ItemID))) {
+    if (ItemOwned === true) {
+      if (ItemWishlist.includes(parseInt(ItemID))) {
+        ItemWishlist.splice(ItemWishlist.indexOf(parseInt(ItemID)), 1)
+        chrome.storage.sync.set({'PolyPlus_ItemWishlist': ItemWishlist, arrayOrder: true});
+      }
+      return
+    }
+    if (ItemOwned === true) {
+      return
+    } else if (ItemOwned === true && ItemWishlist.includes(parseInt(ItemID))) {
+      ItemWishlist.splice(ItemWishlist.indexOf(parseInt(ItemID)), 1)
+      return
+    }
+
+    if (ItemWishlist.includes(parseInt(ItemID))) {
       WishlistBtn.classList = 'btn btn-danger btn-sm'
       WishlistBtn.innerHTML = `
       <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Un-Wishlist Item

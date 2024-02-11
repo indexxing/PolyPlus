@@ -1,6 +1,6 @@
-HandleExpandMessages()
+ExpandMessages()
 
-function HandleExpandMessages() {
+function ExpandMessages() {
     const Messages = document.getElementById('messages')
 
     for (let message of Messages.children) {

@@ -29,21 +29,20 @@ let PinnedGames;
         Settings = result.PolyPlus_Settings;
     
         if (Settings.PinnedGamesOn === true) {
-            HandlePinnedGames()
+            PinnedGames()
         }
 
-        // Disabled settings
-        if (Settings.InlineEditingOn === true || 1 === 2) {
-            HandleInlineEditing()
+        if (Settings.InlineEditingOn === true) {
+            InlineEditing()
         }
 
-        if (Settings.GameProfilesOn === true && 1 === 2) {
-            HandleGameProfiles()
+        if (Settings.GameProfilesOn === true) {
+            GameProfiles()
         }
     });
 })()
 
-async function HandlePinnedGames() {
+async function PinnedGames() {
     chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result){
         PinnedGames = result.PolyPlus_PinnedGames || [];
         const PinBtn = document.createElement('button');
@@ -107,7 +106,7 @@ async function HandlePinnedGames() {
     });
 }
 
-async function HandleInlineEditing() {
+async function InlineEditing() {
     // Fix description editing
     // Make it possible to edit description even if the game doesn't initially have a description
     // Add the ability to edit the game's genre
@@ -202,7 +201,7 @@ async function HandleInlineEditing() {
 
 const Data = JSON.parse('{"gameTitle": "Hyper[Fart]","bg": "#000","accent": "#007bff","secondary": "#","cardBg": "#313131","font": "","text": "#fff"}')
 
-async function HandleGameProfiles(Data) {
+async function GameProfiles(Data) {
     document.querySelector('h1.my-0')
         .setAttribute('game-key', 'true');
     document.querySelector('div[style="min-height: 60vh;"]')

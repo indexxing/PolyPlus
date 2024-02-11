@@ -8,15 +8,15 @@ chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
     }
 
     if (Settings.ForumMentsOn === true) {
-        HandleForumMentions()
+        ForumMentions()
     }
 
     if (Settings.ForumUnixStampsOn === true) {
-        HandleUnixTimestamps()
+        ForumUnixTimestamps()
     }
 });
 
-function HandleForumMentions() {
+function ForumMentions() {
     const Regex = /@([\w.]+)/g
 
     for (let text of ForumText) {
@@ -30,7 +30,7 @@ function HandleForumMentions() {
     }
 }
 
-function HandleUnixTimestamps() {
+function ForumUnixTimestamps() {
     const Regex = /&lt;t:[A-Za-z0-9]+&gt;/i
 
     for (let text of ForumText) {

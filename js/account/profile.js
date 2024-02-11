@@ -15,11 +15,11 @@ if (UserID && !isNaN(UserID)) {
         }
 
         if (Settings.IRLPriceWithCurrencyOn === true) {
-            HandleIRLPrice()
+            IRLPrice()
         }
     
         if (Settings.BestFriendsOn === true) {
-            HandleBestFriends()
+            BestFriends()
         }
 
         if (Settings.OutfitCostOn === true) {
@@ -30,23 +30,23 @@ if (UserID && !isNaN(UserID)) {
             AvatarRow.parentElement.style.marginTop = '10px'
             
             CalculateButton.addEventListener('click', function(){
-                HandleOufitCost()
+                OutfitCost()
             });
         }
     });
 
     const AvatarIFrame = document.querySelector('[src^="/ptstatic"]')
     const DropdownMenu = document.getElementsByClassName('dropdown-menu dropdown-menu-right')[0]
+
     const CopyItem = document.createElement('a')
     CopyItem.classList = 'dropdown-item text-primary'
-    CopyItem.classList.remove('text-danger')
-    CopyItem.classList.add('text-primary')
     CopyItem.href = '#'
     CopyItem.innerHTML = `
     <i class="fa-duotone fa-book"></i>
     Copy 3D Avatar URL 
     `
     DropdownMenu.appendChild(CopyItem)
+
     CopyItem.addEventListener('click', function(){
         navigator.clipboard.writeText(AvatarIFrame.src)
             .then(() => {
@@ -54,6 +54,25 @@ if (UserID && !isNaN(UserID)) {
             })
             .catch(() => {
                 alert('Failure to copy 3D avatar URL.')
+            });
+    });
+
+    const ShareItem = document.createElement('a')
+    ShareItem.classList = 'dropdown-item text-warning'
+    ShareItem.href = '#'
+    ShareItem.innerHTML = `
+    <i class="fa-duotone fa-book"></i>
+    Share your 3D Avatar URL!
+    `
+    DropdownMenu.appendChild(ShareItem)
+
+    ShareItem.addEventListener('click', function(){
+        navigator.clipboard.writeText("Hey! Look at my Polytoria avatar in 3D [here](" + AvatarIFrame.src + ")!")
+            .then(() => {
+                alert('Successfully copied sharable 3D avatar URL!')
+            })
+            .catch(() => {
+                alert('Failure to copy sharable 3D avatar URL.')
             });
     });
 } else if (UserID && UserID[0] === "@") {
@@ -80,7 +99,7 @@ if (UserID && !isNaN(UserID)) {
         });
 }
 
-function HandleIRLPrice() {
+function IRLPrice() {
     const NetWorthElement = document.getElementsByClassName('float-end text-success')[0];
     const NetWorth = parseInt(NetWorthElement.innerText.replace(/,/g, ''));
     let IRL;
@@ -118,7 +137,7 @@ function HandleIRLPrice() {
     NetWorthElement.innerText = NetWorthElement.innerText + " ($" + IRL + " " + DISPLAY + ")"
 }
 
-function HandleBestFriends() {
+function BestFriends() {
     chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result){
         BestFriends = result.PolyPlus_BestFriends || [];
     
@@ -200,7 +219,7 @@ function HandleBestFriends() {
     }
 }
 
-async function HandleOufitCost() {
+async function OutfitCost() {
     const AvatarCost = {
         Total: 0,
         Limiteds: 0,

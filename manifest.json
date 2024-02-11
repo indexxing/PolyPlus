@@ -51,13 +51,7 @@
 
         {
             "matches": ["https://polytoria.com/users/**"],
-            "js": ["/js/profile/profile.js"]
-        },
-
-        {
-            "matches": ["https://polytoria.com/profile/**"],
-            "js": ["/js/profile/simplified-profile.js"],
-            "run_at": "document_start"
+            "js": ["/js/account/profile.js"]
         },
 
         {
