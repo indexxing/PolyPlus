@@ -5,28 +5,20 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.create({ active: true, url: chrome.runtime.getURL('settings.html') });
 });
 
-// REGISTER AN ALARM FOR DAILY UPDATE CHECK (chatgpt cause I'm lazy and have to release Poly+ on February 8th aka today at the time of writing this)
-// Calculate the milliseconds until the next 12 PM
-/*
-const now = new Date();
-const msUntilNext12PM = new Date(
-  now.getFullYear(),
-  now.getMonth(),
-  now.getDate(),
-  12, // 12 PM hour
-  0,  // 0 minutes
-  0   // 0 seconds
-) - now;
-
-// Convert milliseconds to minutes
-const minutesUntilNext12PM = msUntilNext12PM / (1000 * 60);
-
-// Create the alarm
-chrome.alarms.create("PolyPlus-UpdateCheck", {
-  periodInMinutes: 24 * 60, // 24 hours
-  delayInMinutes: minutesUntilNext12PM, // Time until next 12 PM
+// REGISTER AN ALARM FOR DAILY UPDATE CHECK
+chrome.alarms.create('PolyPlus-UpdateCheck', {
+    when: Date.now() + (GetNext12PM())
 });
-*/
+
+function GetNext12PM() {
+    const Now = new Date();
+    const Next = new Date();
+    Next.setHours(12, 0, 0, 0);
+    if (Now.getHours() >= 12) {
+      Next.setDate(Next.getDate() + 1);
+    }
+    return Next - Now;
+}
 
 // HANDLE ALARMS FIRING
 chrome.alarms.onAlarm.addListener(function(alarm){
@@ -40,16 +32,16 @@ chrome.alarms.onAlarm.addListener(function(alarm){
             })
             .then(data => {
                 if (data.version > Manifest.version) {
-                    console.log('Update available')
                     chrome.notifications.create("", {
                         type: "basic",
                         iconUrl: chrome.runtime.getURL("icon.png"),
                         title: "New Update Available",
-                        message: "A new update is available for Poly+!",
+                        message: "A new update is available for Poly+! (v" + data.version + ")",
+                        requiresInteraction: true
                     }, function(notificationID) {
                         chrome.notifications.onClicked.addListener(function (id) {
                             if (id === notificationID) {
-                                chrome.tabs.create({url: 'https://github.com/IndexingGitHub/PolyPlus', active: true})
+                                chrome.tabs.create({url: 'https://github.com/IndexingGitHub/PolyPlus/releases', active: true})
                                 chrome.notifications.clear(notificationID)
                             }
                         })

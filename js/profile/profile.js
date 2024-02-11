@@ -6,7 +6,7 @@ var BestFriends;
 let FavoriteBtn;
 let CalculateButton;
 
-if (UserID) {
+if (UserID && !isNaN(UserID)) {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
         Settings = result.PolyPlus_Settings || {
             IRLPriceWithCurrencyOn: false,
@@ -56,89 +56,28 @@ if (UserID) {
                 alert('Failure to copy 3D avatar URL.')
             });
     });
+} else if (UserID && UserID[0] === "@") {
+    const Username = window.location.pathname.split('/')[2].substring(1)
 
-    /*
-    Way overcomplicated code when there is literally an iframe on the page with the exact same result
-
-    const UserID = window.location.pathname.split('/')[2]
-    const DefaultAvatar = {
-        "useCharacter": true,
-        "items": [],
-        "shirt": null,
-        "pants": null,
-        "tool": null,
-        "headColor": "#111111",
-        "torsoColor": "#111111",
-        "leftArmColor": "#111111",
-        "rightArmColor": "#111111",
-        "leftLegColor": "#111111",
-        "rightLegColor": "#111111",
-        "face": "https://c0.ptacdn.com/static/3dview/DefaultFace.png"
+    let Reference = new URLSearchParams(new URL(window.location.href).search).get('ref')
+    if (Reference === null) {
+        Reference = ""
     }
-    const Avatar = structuredClone(DefaultAvatar)
 
-    const Original = document.querySelector('.container .dropdown-item:nth-child(2)')
-    const Clone = Original.cloneNode(true)
-    Clone.classList.remove('text-danger')
-    Clone.classList.add('text-primary')
-    Clone.href = '#'
-    Clone.innerHTML = `
-    <i class="fa-duotone fa-book"></i>
-    Copy 3D Avatar URL 
-    `
-    Clone.addEventListener('click', function(){
-        fetch('https://api.polytoria.com/v1/users/:id/avatar'.replace(':id', UserID))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network not ok')
-                }
+    fetch("https://api.polytoria.com/v1/users/find?username=" + Username)
+        .then(response => {
+            if (!response.ok) {
+                window.location.href = window.location.origin + decodeURIComponent(Reference)
+            } else {
                 return response.json()
-            })
-            .then(data => {
-                data.assets.forEach(item => {
-                    switch(item.type) {
-                        case 'hat':
-                            Avatar.items.push(item.path)
-                            break
-                        case 'tool':
-                            Avatar.tool = item.path
-                            break
-                        case 'face':
-                            Avatar.face = item.path
-                            break
-                        case 'shirt':
-                            Avatar.shirt = item.path
-                            break
-                        case 'pants':
-                            Avatar.pants = item.path
-                            break
-                    }
-                });
-
-                Avatar.headColor = '#' + data.colors.head || '#cdcdcd'
-                Avatar.torsoColor = '#' + data.colors.torso || '#cdcdcd'
-                Avatar.leftArmColor = '#' + data.colors.leftArm || '#cdcdcd'
-                Avatar.rightArmColor = '#' + data.colors.rightArm || '#cdcdcd'
-                Avatar.leftLegColor = '#' + data.colors.leftLeg || '#cdcdcd'
-                Avatar.rightLegColor = '#' + data.colors.rightLeg || '#cdcdcd'
-                
-                const URL = 'https://polytoria.com/ptstatic/itemview/#' + btoa(encodeURIComponent(JSON.stringify(Avatar)))
-                console.log('URL: ', URL)
-                navigator.clipboard.writeText(URL)
-                const SwalCopied = document.createElement('script')
-                SwalCopied.innerHTML = `
-                window.Swal.fire({title: "Copied", icon: "success", html: "The 3D avatar URL has been copied to clipboard!<br><a href='${URL}' target='_blank'>Preview it here!</a>"})
-                `
-                document.body.prepend(SwalCopied)
-                SwalCopied.remove()
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    });
-
-    Original.parentElement.appendChild(Clone)
-    */
+            }
+        })
+        .then(data => {
+            window.location.href = "https://polytoria.com/users/" + data.id
+        })
+        .catch(error => {
+            console.log("An error occurred:", error);
+        });
 }
 
 function HandleIRLPrice() {
