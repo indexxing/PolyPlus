@@ -1,5 +1,6 @@
 > [!CAUTION]
 > We're not related in any way to the official POLYTORIA team. This project is made by the community.
+
 > [!IMPORTANT]
 > This extension is in BETA, some features may be missing, and bugs found. If you found any bugs please report [Here](https://github.com/IndexingGitHub/PolyPlus/issues)
 
