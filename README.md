@@ -1,59 +1,74 @@
 > [!CAUTION]
-> We're not related in any way to the official POLYTORIA team. This project is made by the community.
+> Poly+ is in no way affiliated with the Polytoria team. This is a project I started for the community - and I hope some community members are willing to help with development so the extension is better for everyone ❤️.
 
 > [!IMPORTANT]
-> This extension is in BETA, some features may be missing, and bugs found. If you found any bugs please report [Here](https://github.com/IndexingGitHub/PolyPlus/issues)
+> This extension is currently in BETA. If you find any bugs, please report them in this repository's issues section as it'd be a great help towards development of the extension.
 
 # Poly+
-Poly+ is an upcoming quality-of-life browser extension for the Polytoria website! The extension provides tons of improvements to improve your experience on Polytoria!
----
+
+Poly+ is an upcoming quality-of-life browser extension for the Polytoria website! The extension provides tons of improvements to improve your experience on Polytoria! Visit the website [here](https://polyplus.vercel.app/)!
 
 ![image](https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white)
-![image](https://img.shields.io/badge/Opera-FF1B2D?style=for-the-badge&logo=Opera&logoColor=white)
 ![image](https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white)
-![image](https://img.shields.io/badge/Vivaldi-EF3939?style=for-the-badge&logo=Vivaldi&logoColor=white)
+![image](https://img.shields.io/badge/Opera-FF1B2D?style=for-the-badge&logo=Opera&logoColor=white)
 ![image](https://img.shields.io/badge/Brave-FF1B2D?style=for-the-badge&logo=Brave&logoColor=white)
----
+![image](https://img.shields.io/badge/Vivaldi-EF3939?style=for-the-badge&logo=Vivaldi&logoColor=white)
+
+^ shields.io for the badges ❤️
+
 # Features
 
 - Pinned Games
 - Forum Mentions
+- Best Friends
+- Improved Friend Lists
+- IRL Price with Brick Count
+- Hide Sidebar Notification Badges
 - Theme Creator
-- Store owned Tags
+- Store `owned` Tags
+- More Search Filters
+- Modify Navbar
+- Free Membership Themes
+- Multi-Cancel Outbound Trades
 - Item Wishlist
-  And more to come!
+- Outfit Cost
+And there is more to come!
 
 # Supported Browsers
-As of right now, Poly+ only works on chromium-based browsers and Firefox (however it has not been tested and is not going to be as maintained). Currently, there are no plans to bring it to other browsers in the future.
+
+As of right now, Poly+ only works on Chromium-based browsers. Currently, there are no plans to bring it to other browsers in the future.
 > TL;DR Chromium-based browsers
-### Examples
-- Opera(GX, One and Normal)
+
+## Examples of Browsers that are Chromium-based
 - Google Chrome
-- Arc
 - Chromium
-- Brave
 - Edge
+- Opera (& it's variations)
+- Brave
+- Arc
 
-# How to Download?
-1. First enable developer mode on your browser (developer mode allows you to load unpacked extensions)
-2. Second click the "Load Unpacked" button
-3. Third when the file selector comes up pick the unzipped folder from this GitHub repository
-4. Fourth go to Polytoria and you should see the extension's button on the sidebar
+# Downloading
 
-# <span style="color:red">CAUTION!</span> Hmm, i am feeling adventurous!
-## Here's how to install the Unstable Version
-1. Go to the top of the page
+## How to Download - Stable Build?
+
+1. Go to the releases section of this GitHub repository
+3. Go to the latest release and download the .ZIP file for that release
+4. Extract the .ZIP
+5. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
+6. Click the "Load Unpacked" button
+7. When the file selector comes up, open the unzipped folder from this GitHub repository
+8. Go to Polytoria and you should see some changes!
+
+## How to Download - Pre-Release Build?
+
+> Pre-Release builds may have work in progress features or bugs!
+
+1. Go to the top of this GitHub repository
 2. Click on the "Code" button
-3. Click in Download Zip
-4. Extract the zip
-5. Click on extensions -> Manage Extensions
-6. Click on Developer Mode
-7. Load without compressing
-8. Find the folder you extracted
-9. And now you have it!
-
-# How to update it?
-1. Uninstall the extension
-2. Delete the old folder and .zip file
-3. Download the new version
-4. Follow the step 3 and 4 from How to Download's tab.
+3. Click on the "Download ZIP" button in the dropdown menu
+4. Extract the .ZIP
+5. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
+6. Go to your browsers extensions page (usually `browserName://extensions`)
+8. Click the "Load Unpacked" button
+9. When the file selector comes up, open the unzipped folder of this repository's source code
+10. Go to Polytoria and you should see some changes!
