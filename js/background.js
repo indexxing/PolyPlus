@@ -102,6 +102,39 @@ chrome.contextMenus.onClicked.addListener(function (info, tab){
     }
 });
 
+/*
+GREEN LOGO WHEN EXTENSION APPLIES TO CURRENT TAB PAGE, RED WHEN IT DOESN'T
+COMING SOON
+
+chrome.tabs.onActivated.addListener(function (info){
+    chrome.tabs.get(info.tabId, function(tab){
+        const Any = CheckIfScriptApplies(tab.url)
+        console.log(Any)
+    });
+});
+
+function CheckIfScriptApplies(url) {
+    return Manifest.content_scripts.forEach(script => {
+        COMMENT
+        if (matchesUrl(script.matches, url)) {
+            return true
+        }
+
+        script.matches.forEach(match => {
+            if (url.startsWith(match.replaceAll('*', ''))) {
+                return true
+            }
+        })
+    })
+}
+
+function matchesUrl(patterns, url) {
+    return patterns.some(pattern => {
+        return new RegExp(pattern).test(url);
+    });
+}
+*/
+
 function CopyAssetID(id) {
     navigator.clipboard
         .writeText(id)
