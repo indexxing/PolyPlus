@@ -5,7 +5,7 @@ var PinnedGames;
 let GamePinned;
 
 !(() => {
-    if (GameID === undefined) {return}
+    if (GameID === undefined) { return }
 
     const DataContainer = document.getElementById('likes-data-container')
     const RatingsData = {
@@ -21,7 +21,12 @@ let GamePinned;
     PercentageLabel.style.fontSize = '0.8rem'
     PercentageLabel.style.marginLeft = '10px'
     PercentageLabel.style.marginRight = '10px'
-    PercentageLabel.innerText = RatingsData.Percentage + '%'
+    
+    if (!isNaN(RatingsData.Percentage)) {
+        PercentageLabel.innerText = RatingsData.Percentage + '%'
+    } else {
+        PercentageLabel.innerText = 'N/A'
+    }
 
     RatingsContainer.children[0].appendChild(PercentageLabel)
 
