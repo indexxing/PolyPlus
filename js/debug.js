@@ -21,10 +21,6 @@ document.querySelector('#main-content .container').innerHTML = `
                 <p class="text-muted mb-1">Data Size: <span id="data-size">Loading</span> byte(s)</p>
                 <button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
                 <a href="https://github.com/IndexingGitHub/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
-                <!--
-                <a href="https://github.com/IndexingGitHub/PolyPlus/issues" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub Issues</a>
-                <a href="https://github.com/IndexingGitHub/PolyPlus/pulls" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub PRs</a>
-                -->
             </div>
         </div>
         <hr>
@@ -45,6 +41,14 @@ document.querySelector('#main-content .container').innerHTML = `
             <input type="text" name="settingName" id="edit-setting-name" class="form-control" placeholder="Setting Name..">
             <input type="text" id="edit-setting-value" class="form-control" placeholder="New Value..">
             <button class="btn btn-success" id="edit-setting">Submit</button>
+        </div>
+
+        <label>Load Example Data</label>
+        <p>Quickly clear specific parts of the extension's local data</p>
+        <div role="group" class="btn-group w-100 mb-3">
+            <button class="btn btn-secondary" id="example-pinnedgames">Load Example Pinned Games</button>
+            <button class="btn btn-secondary" id="example-bestfriends">Load Example Best Friends</button>
+            <button class="btn btn-secondary" id="example-itemwishlist">Load Example Item Wishlist</button>
         </div>
 
         <label>Clear Specific Local Data</label>
@@ -133,6 +137,24 @@ document.getElementById('reset-settings').addEventListener('click', async functi
     Utilities = Utilities.default
     chrome.storage.sync.set({ 'PolyPlus_Settings': Utilities.DefaultSettings }, function() {
         alert('Successfully reset settings to their defaults!')
+    });
+});
+
+document.getElementById('example-pinnedgames').addEventListener('click', function(){
+    chrome.storage.sync.set({ 'PolyPlus_PinnedGames': [6012, 3857, 2537] }, function() {
+        alert('Successfully loaded example for Pinned Games!')
+    });
+});
+
+document.getElementById('example-bestfriends').addEventListener('click', function(){
+    chrome.storage.sync.set({ 'PolyPlus_BestFriends': [1, 2, 3] }, function() {
+        alert('Successfully loaded example for Best Friends!')
+    });
+});
+
+document.getElementById('example-itemwishlist').addEventListener('click', function(){
+    chrome.storage.sync.set({ 'PolyPlus_ItemWishlist': [31495, 31493, 31492] }, function() {
+        alert('Successfully loaded example for Item Wishlist!')
     });
 });
 

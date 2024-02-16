@@ -74,7 +74,7 @@ async function LoadIRLPrices(element) {
     const Span = document.createElement('span')
     Span.classList = 'text-muted polyplus-price-tag'
     Span.style.fontSize = '0.7rem'
-    const Price = Parent.innerText
+    const Price = Parent.innerText.split(' ')[1]
     const Result = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
     Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
     Parent.appendChild(Span)

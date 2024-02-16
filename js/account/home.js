@@ -25,7 +25,7 @@ let GameContainerElement = `
     <div class="card-body">
         <div class="ratings-header">
             <img src=":Thumbnail" class="place-card-image" style="position: relative;">
-            <div style="position: absolute;background: linear-gradient(to bottom, black, transparent, transparent, transparent);width: 100%;height: 100%;top: 0;left: 0;border-radius: 10px;padding-top: 5px;">
+            <div style="position: absolute;background: linear-gradient(to bottom, black, transparent, transparent, transparent);width: 100%;height: 100%;top: 0;left: 0;border-radius: 10px;padding-top: 5px;color: gray;font-size: 0.8rem;">
                 <span>
                     <i id="thumbup-icn" class="thumb-icon far fa-thumbs-up"></i>
                     :Likes
