@@ -5,7 +5,7 @@ if (window.location.pathname.split('/')[3] === "inventory") {
         let WishlistNav = document.createElement('li')
         WishlistNav.classList.add('nav-item')
         WishlistNav.innerHTML = `
-        <a href="wishlist/" class="nav-link">
+        <a href="/users/${UserID}/inventory/wishlist/" class="nav-link">
             <i class="fa-regular fa-sparkles me-1"></i>
             <span class="pilltitle">Item Wishlist</span>
         </a>

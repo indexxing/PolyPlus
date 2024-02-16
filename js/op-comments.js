@@ -11,9 +11,11 @@ switch (Type) {
     case 'places':
         CreatorID = document.querySelector('.mcard .col .text-muted [href^="/users/"]').getAttribute('href').split('/')[2]
         break
+    /*
     case 'feed':
         CreatorID = document.querySelector('p a[href^="/users/"].text-reset').getAttribute('href').split('/')[2]
         break
+    */
     case 'guilds':
         CreatorID = document.querySelector('[class^="userlink-"][href^="/users/"]').getAttribute('href').split('/')[2]
         Comments = document.getElementById('wall-posts')

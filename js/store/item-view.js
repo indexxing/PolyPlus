@@ -1,4 +1,5 @@
 const ItemID = window.location.pathname.split('/')[2]
+const ItemType = document.querySelector('.col-12 .badge').innerHTML
 
 var Utilities;
 
@@ -9,7 +10,7 @@ var WishlistBtn;
 var ItemOwned;
 
 (async () => {
-  if (!(window.location.href.split('/')[4])) {return}
+  if (!(window.location.href.split('/')[4]) || ItemType === "achievement") {return}
 
   Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
   Utilities = Utilities.default
@@ -17,9 +18,12 @@ var ItemOwned;
   chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
     Settings = result.PolyPlus_Settings || {}
     PurchaseBtn = document.querySelector('.btn#purchase-button')
+    if (ItemType === "gamePass") {
+      PurchaseBtn = document.querySelector('.btn.btn-outline-success[onclick^="buyAsset"]')
+    }
     ItemOwned = (PurchaseBtn.innerText === ' Item owned' || document.querySelector('.btn[onclick="sellItem()"]') !== null)
 
-    if (Settings.IRLPriceWithCurrencyOn === true){ IRLPrice() }
+    if (Settings.IRLPriceWithCurrencyOn === true) { IRLPrice() }
 
     if (Settings.ItemWishlistOn === true) {
       HandleItemWishlist()

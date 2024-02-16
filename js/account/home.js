@@ -1,13 +1,42 @@
+/*
+this file needs a rewrite by me lol
+*/
+
 var Settings;
-var PinnedGames;
-var BestFriends;
+var PinnedGamesData
+var BestFriendsData
+
+chrome.storage.sync.get(['PolyPlus_Settings'], async function(result) {
+    Settings = result.PolyPlus_Settings || {}
+
+    if (Settings.IRLPriceWithCurrencyOn === true) {
+        IRLPrice()
+    }
+
+    if (Settings.PinnedGamesOn === true || Settings.BestFriendsOn === true) {
+        Update()
+    }
+});
 
 let ContainerElement = `
 <div class="card-body p-0 m-1 scrollFadeContainer d-flex"></div>`;
 let GameContainerElement = `
 <div class="scrollFade card me-2 place-card force-desktop text-center mb-2" style="opacity: 1;">
     <div class="card-body">
-        <img src=":Thumbnail" class="place-card-image">
+        <div class="ratings-header">
+            <img src=":Thumbnail" class="place-card-image" style="position: relative;">
+            <div style="position: absolute;background: linear-gradient(to bottom, black, transparent, transparent, transparent);width: 100%;height: 100%;top: 0;left: 0;border-radius: 10px;padding-top: 5px;">
+                <span>
+                    <i id="thumbup-icn" class="thumb-icon far fa-thumbs-up"></i>
+                    :Likes
+                </span>
+                |
+                <span>
+                    <i id="thumbdown-icn" class="thumb-icon far fa-thumbs-down"></i>
+                    :Dislikes
+                </span>
+            </div>
+        </div>
         <div>
             <div class="mt-2 mb-1 place-card-title">
                 :GameName
@@ -37,13 +66,6 @@ NewTitle.innerHTML = TitleElement;
 let BestFriendsContainer = document.createElement('div')
 BestFriendsContainer.classList = 'd-flex'
 BestFriendsContainer.style = 'display: none; border-bottom: 1px solid #000; padding-bottom: 10px; margin-bottom: 10px; width: 100%;'
-/*
-BestFriendsContainer.style.display = 'none'
-BestFriendsContainer.style.borderBottom = '1px solid #000'
-BestFriendsContainer.style.paddingBottom = '10px'
-BestFriendsContainer.style.marginBottom = '10px'
-BestFriendsContainer.style.width = '100%'
-*/
 
 let Spacer = document.createElement('div')
 Spacer.innerHTML = ' '
@@ -51,40 +73,38 @@ Spacer.style.width = '50px'
 Spacer.prepend(BestFriendsContainer)
 
 FriendContainer.prepend(BestFriendsContainer)
-UpdateLocalData();
 
-function UpdateLocalData() {
-    chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings || {PinnedGamesOn: true, BestFriendsOn: false}
+async function Update() {
+    chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
+        PinnedGamesData = result.PolyPlus_PinnedGames || [];
+
+        if (Settings.PinnedGamesOn === true) {
+            PinnedGames()
+        } else {
+            NewContainer.style.display = 'none'
+            NewTitle.style.display = 'none'
+        }
     });
 
-    chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
-        PinnedGames = result.PolyPlus_PinnedGames || [];
-        chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
-            BestFriends = result.PolyPlus_BestFriends || [];
-            if (Settings.PinnedGamesOn === true) {
-                LoadPinnedGames();
-            } else {
-                NewContainer.style.display = 'none'
-                NewTitle.style.display = 'none'
-            }
-            if (Settings.BestFriendsOn === true) {
-                LoadBestFriends();
-            } else {
-                BestFriendsContainer.style.display = 'none'
-                Spacer.style.display = 'none'
-            }
-        });
+    chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
+        BestFriendsData = result.PolyPlus_BestFriends || [];
+
+        if (Settings.BestFriendsOn === true) {
+            BestFriends();
+        } else {
+            BestFriendsContainer.style.display = 'none'
+            Spacer.style.display = 'none'
+        }
     });
 }
 
-function LoadPinnedGames() {
+function PinnedGames() {
     var Existing = NewContainer.children[0].children
     Array.from(Existing).forEach(element => {
         element.remove();
     });
 
-    if (PinnedGames.length === 0) {
+    if (PinnedGamesData.length === 0) {
         NewContainer.style.display = 'none'
         NewTitle.style.display = 'none'
     } else {
@@ -92,7 +112,7 @@ function LoadPinnedGames() {
         NewTitle.style.display = ''
     }
 
-    PinnedGames.forEach(element => {
+    PinnedGamesData.forEach(element => {
         fetch('https://api.polytoria.com/v1/places/' + element)
             .then(response => response.json())
             .then(data => {
@@ -100,12 +120,14 @@ function LoadPinnedGames() {
                 let GameThumbnail = data.thumbnail;
 
                 var NewGameContainer = document.createElement('a');
-                NewGameContainer.innerHTML = GameContainerElement.replace(':GameName',GameName).replace(':Thumbnail',GameThumbnail);
-                NewGameContainer.setAttribute('href', '/places/' + element);
+                NewGameContainer.innerHTML = GameContainerElement.replace(':GameName',GameName).replace(':Thumbnail',GameThumbnail).replace(':Likes', data.rating.likes).replace(':Dislikes', data.rating.dislikes);
+                NewGameContainer.href = '/places/' + element
 
+                /*
                 if (new Date().getDate() >= new Date(data.updatedAt).getDate()) {
                     console.log('Game has updated')
                 }
+                */
 
                 NewContainer.children[0].appendChild(NewGameContainer);
             })
@@ -115,14 +137,14 @@ function LoadPinnedGames() {
     });
 }
 
-function LoadBestFriends() {
+function BestFriends() {
     Array.from(document.querySelectorAll('[bestFriend]')).forEach(element => {
         element.removeAttribute('bestFriend')
         element.getElementsByClassName('friend-name')[0].style.color = 'initial';
         FriendContainer.appendChild(element)
     });
 
-    if (BestFriends.length === 0) {
+    if (BestFriendsData.length === 0) {
         BestFriendsContainer.style.visibility = 'hidden'
         BestFriendsContainer.style.padding = '0px !important'
         BestFriendsContainer.style.margin = '0px !important'
@@ -132,7 +154,7 @@ function LoadBestFriends() {
         BestFriendsContainer.style.margin = ''
     }
 
-    BestFriends.forEach(element => {
+    BestFriendsData.forEach(element => {
         let ExistingFriend = document.getElementById('friend-' + element)
         if (ExistingFriend) {
             ExistingFriend.setAttribute('bestFriend', 'true')
@@ -145,3 +167,24 @@ function LoadBestFriends() {
 var SecondaryColumn = document.getElementsByClassName('col-lg-8')[0]
 SecondaryColumn.insertBefore(NewContainer, SecondaryColumn.children[0]);
 SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[0]);
+
+async function IRLPrice() {
+    (async () => {
+        let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+        Utilities = Utilities.default
+
+        const TrendingItems = document.getElementById('home-trendingItems')
+        console.log(TrendingItems.children[1].getElementsByClassName('d-flex')[0].children)
+        for (let item of TrendingItems.children[1].getElementsByClassName('d-flex')[0].children) {
+            const Price = item.getElementsByClassName('text-success')[0]
+            console.log(item, Price)
+            const Result = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+            
+            let Span = document.createElement('span')
+            Span.classList = 'text-muted polyplus-price-tag'
+            Span.style.fontSize = '0.7rem'
+            Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
+            Price.appendChild(Span)
+        }
+    })();
+}

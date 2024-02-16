@@ -19,9 +19,16 @@ chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
 });
 
 function Update() {
-    console.log('update')
     if (Settings.IRLPriceWithCurrencyOn === true) {
-        Array.from(ItemGrid.children).forEach(element => {LoadIRLPrices(element)});
+        Array.from(ItemGrid.children).forEach(element => {
+            LoadIRLPrices(element)
+        });
+    }
+
+    if (Settings.StoreOwnTagOn === true) {
+        Array.from(ItemGrid.children).forEach(element => {
+            LoadOwnedTags(element)
+        });
     }
 }
 
@@ -60,12 +67,11 @@ const observer = new MutationObserver(async function (list){
 observer.observe(ItemGrid, {attributes: false,childList: true,subtree: false});
 
 async function LoadIRLPrices(element) {
-    console.log('LOAD IRL PRICES!!!')
     if (element.tagName != "DIV") {return}
     if (element.querySelector('small.text-primary')) {return}
     const Parent = element.getElementsByTagName('small')[1]
     if (Parent.innerText === "") { return }
-    let Span = document.createElement('span')
+    const Span = document.createElement('span')
     Span.classList = 'text-muted polyplus-price-tag'
     Span.style.fontSize = '0.7rem'
     const Price = Parent.innerText

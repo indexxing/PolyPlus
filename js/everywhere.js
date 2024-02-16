@@ -149,7 +149,7 @@ let Theme = null;
   
     if (Settings.ModifyNavOn && Settings.ModifyNavOn === true) {
       let NavbarItems = document.querySelectorAll('.navbar-nav.me-auto a.nav-link[href]')
-      let Needed = [NavbarItems[10],NavbarItems[11],NavbarItems[12],NavbarItems[13],NavbarItems[14]]
+      let Needed = [NavbarItems[11],NavbarItems[12],NavbarItems[13],NavbarItems[14],NavbarItems[15]]
       for (let i = 0; i < Settings.ModifyNav.length; i++) {
         if (Settings.ModifyNav[i].Label != null) {
           console.log(Needed[i], Needed[i].children[1])
