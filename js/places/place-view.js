@@ -1,4 +1,5 @@
 const GameID = window.location.pathname.split('/')[2]
+const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
 
 let Utilities;
 
@@ -177,7 +178,7 @@ async function InlineEditing() {
     // Improve editing visuals overall
 
     const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2]
-    if (GameCreator !== JSON.parse(window.localStorage.getItem('account_info')).ID) {
+    if (GameCreator !== UserID) {
         return
     }
 
@@ -389,8 +390,19 @@ async function IRLPrice() {
 }
 
 async function OwnedTags() {
+    /*
+    This feature is disabled due to the the public API for user inventories is broken when specifying an asset type
+    */
+    return
+    const Response = await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory/')
     const Gamepasses = document.querySelector('#gamepasses-tabpane .row.flex-row').children
     for (let gamepass of Gamepasses) {
+        const GamePassID = gamepass.getElementsByTagName('a')[0].getAttribute('href').split('/')
+        console.log(GamePassID)
+    }
+
+    const Achievements = document.querySelector('#achievements-tabpane .row.flex-row').children
+    for (let gamepass of Achievements) {
         const GamePassID = gamepass.getElementsByTagName('a')[0].getAttribute('href').split('/')
         console.log(GamePassID)
     }
