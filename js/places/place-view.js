@@ -46,9 +46,11 @@ let GamePinned;
         }
 
         // Work in Progress
+        /*
         if (Settings.GameProfilesOn === true) {
             GameProfiles()
         }
+        */
 
         if (Settings.IRLPriceWithCurrencyOn === true) {
             (async () => {
@@ -336,6 +338,7 @@ async function InlineEditing() {
 //const Data = JSON.parse('{"gameTitle": "Hyper[Fart]","bg": "#000","accent": "#007bff","secondary": "#","cardBg": "#313131","font": "","text": "#fff"}')
 const Data = JSON.parse('{"gameTitle":"Isolation: Brix High School","bg":"#0148af","accent":"#986c6a","secondary":"#b7d3f2","cardBg":"#313131","text":"#fff"}')
 async function GameProfiles(data) {
+    return
     data = Data
     document.querySelector('h1.my-0')
         .setAttribute('game-key', 'true');
