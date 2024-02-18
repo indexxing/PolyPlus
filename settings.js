@@ -97,7 +97,8 @@ SaveBtn.addEventListener("click", function() {
 Elements.forEach(element => {
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
-  let Select = element.getElementsByTagName('select') || []
+  let Select = element.getElementsByTagName('select')
+  console.log(element, Select)
 
   if (Button) {
     Button.addEventListener('click', function() {
@@ -202,6 +203,7 @@ Elements.forEach(element => {
   if (Select.length > 0) {
     Array.from(Select).forEach(element => {
       element.addEventListener('change', function() {
+        console.log('aaa')
         SetSetting(element.getAttribute('data-setting'), element, element.selectedIndex)
       });
     });
@@ -230,8 +232,9 @@ function LoadCurrent() {
 
     Elements.forEach(element => {
       let Status = element.getElementsByClassName('status')[0]
-      console.log(element, FormatBool(Settings[element.getElementsByTagName('button')[0].getAttribute('data-setting')]))
-      Status.innerText = FormatBool(Settings[element.getElementsByTagName('button')[0].getAttribute('data-setting')])
+      if (Status !== undefined) {
+        Status.innerText = FormatBool(Settings[element.getElementsByTagName('button')[0].getAttribute('data-setting')])
+      }
       let SelectInput = element.getElementsByTagName('select')[0]
       if (SelectInput) {
         SelectInput.selectedIndex = Settings[SelectInput.getAttribute('data-setting')]
