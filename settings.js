@@ -97,7 +97,7 @@ SaveBtn.addEventListener("click", function() {
 Elements.forEach(element => {
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
-  let Select = element.getElementsByTagName('select')
+  let Select = element.getElementsByTagName('select') || []
   console.log(element, Select)
 
   if (Button) {
@@ -203,7 +203,6 @@ Elements.forEach(element => {
   if (Select.length > 0) {
     Array.from(Select).forEach(element => {
       element.addEventListener('change', function() {
-        console.log('aaa')
         SetSetting(element.getAttribute('data-setting'), element, element.selectedIndex)
       });
     });
@@ -254,6 +253,7 @@ function ToggleSetting(Name, Element) {
     Element.getElementsByClassName('status')[0].innerText = FormatBool(Settings[Name])
   }
   if (SaveBtn.getAttribute('disabled')) {
+    console.log('is disabled button - toggle')
     SaveBtn.removeAttribute('disabled')
   }
 }
@@ -263,6 +263,7 @@ function SetSetting(Name, Element, Value) {
   Settings[Name] = Value
 
   if (SaveBtn.getAttribute('disabled')) {
+    console.log('is disabled button')
     SaveBtn.removeAttribute('disabled')
   }
 }
