@@ -32,6 +32,7 @@ Poly+ is an upcoming quality-of-life browser extension for the Polytoria website
 - Multi-Cancel Outbound Trades
 - Item Wishlist
 - Outfit Cost
+  
 And there is more to come!
 
 # Supported Browsers
