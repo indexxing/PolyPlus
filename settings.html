@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
  
-    <!-- TITLE -->
-    <title>Poly+ | Settings</title>
+    <!-- PUBLIC -->
+    <title>Poly+ Settings</title>
  
-    <!-- CSS -->
+    <!-- RESOURCES -->
     <link rel="stylesheet" href="https://c0.ptacdn.com/static/app.64aa42f6.css">
   </head>
   <body data-bs-theme="dark">
@@ -48,7 +48,7 @@
         margin-right: 15px;
       }
   
-      p span:first-child {
+      p span.title {
         font-size: 1.4rem;
       }
   
@@ -91,37 +91,32 @@
       dialog .modal-body p:first-child {
         font-size: 0.9rem;
       }
+
+      .setting-container .indicator {
+        border-radius: 5rem;
+        display: inline-block;
+        cursor: default;
+      }
   
-      /*
-      p span span.status {
-        font-size: 0.16rem !important;
-        color: #cee;
-      }
-      */
-
-      /*
-      button {
-        border: none;
-        padding: 5px;
-        color: #fff;
-        border-radius: 5px;
+      .setting-container.enabled .indicator {
+        background-color: #007bff;
       }
 
-      button.btn-primary {
-        background: #007bff;
+      .setting-container.disabled .indicator {
+        background-color: orangered;
       }
 
-      button.btn-warning {
-        background: orange;
+      .toggle-btn {
+        float: right;
+        width: 100px;
       }
-      */
     </style>
     <dialog class="w-50" id="ResetDefaults-Modal">
       <div class="modal-header">
-        <p>Are you Sure?</p>
+        <p>Are you sure?</p>
       </div>
       <div class="modal-body">
-        <p>Are you sure you'd like to reset all settings to their respective defaults? (this action is irreversible)</p>
+        <p>Are you sure you'd like to reset all settings to their defaults? (this action is irreversible)</p>
         <button id="ResetDefaults-Modal-Yes" class="btn btn-danger">Yes</button>
         <button id="ResetDefaults-Modal-No" class="btn btn-primary">No</button>
       </div>
@@ -131,22 +126,20 @@
         <p>Theme Creator</p>
       </div>
       <div class="modal-body">
-        <p>Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</p>
-        <hr class="mt-2 mb-3">
+        <p>Let out your creativity and turn it into a reality on Polytoria's website!</p>
+        <hr class="mt-3 mb-3">
   
         <label>Save Theme to JSON</label>
-        <div class="row">
-          <div class="col">
-            <input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark mb-2" placeholder="JSON..." data-ignore="true" disabled>
-          </div>
-          <div class="col-auto">
-            <button id="CopyThemeJSONBtn" class="btn btn-warning"><!--<i class="fa-duotone fa-clipboard"></i>--> Copy</button>
-          </div>
+        <div class="input-group mb-3">
+          <input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark" placeholder="JSON String..." data-ignore="true" disabled>
+          <button id="CopyThemeJSONBtn" class="btn btn-warning">Copy</button>
         </div>
-  
+
         <label>Load Theme from JSON</label>
-        <input type="text" class="form-control bg-dark mb-2" placeholder="JSON..." data-ignore="true">
-        <button id="LoadThemeFromJSONBtn" class="btn btn-primary mb-2" data-ignore="true" data-onclick="LoadThemeJSON(this.previousElementSibling.value)">Load</button>
+        <div class="input-group">
+          <input type="text" class="form-control bg-dark" placeholder="JSON..." data-ignore="true">
+          <button id="LoadThemeFromJSONBtn" class="btn btn-success" data-ignore="true" data-onclick="LoadThemeJSON(this.previousElementSibling.value)">Load</button>
+        </div>
   
         <hr class="mt-2 mb-3">
   
@@ -214,22 +207,19 @@
             <div class="row">
               <div class="col">
                 <label>Link (state: default) Text Color</label>
-                <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkTextColor">
               </div>
               <div class="col">
                 <label>Link (state: hovered) Text Color</label>
-                <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkHoveredTextColor">
               </div>
               <div class="col">
                 <label>Link (state: focused) Text Color</label>
-                <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkFocusedTextColor">
               </div>
-              <!--
-              <div class="col">
-                <label>Link (state: visited) Text Color</label>
-                <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkVisitedTextColor">
-              </div>
-              -->
+            </div>
+
+            <div class="input-group">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkTextColor">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkHoveredTextColor">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkFocusedTextColor">
             </div>
           </div>
         </div>
@@ -323,18 +313,21 @@
       </div>
     </dialog>
     <div id="page">
-      <p class="setting-container" id="PinnedGames">
-        <span>
-          Pinned Games (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="PinnedGamesOn">Toggle</button>
+      <h2>Poly+ Settings</h2>
+      <p class="setting-container">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Pinned Games
+          <button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Pin your favorite places to the top of the homepage! (limit: 5 places)</span>
       </p>
       <p class="setting-container" id="ForumMentions">
-        <span>
-          Forum Mentions (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ForumMentsOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Forum Mentions
+          <button class="btn btn-sm toggle-btn" data-setting="ForumMentsOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
@@ -342,17 +335,19 @@
         <span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user.</span>
       </p>
       <p class="setting-container" id="BestFriends">
-        <span>
-          Best Friends (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="BestFriendsOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Best Friends
+          <button class="btn btn-sm toggle-btn" data-setting="BestFriendsOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: 7 best friends)</span>
       </p>
       <p class="setting-container" id="ImprovedFriendLists">
-        <span>
-          Improved Friend Lists (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ImprovedFrListsOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Improved Friend Lists
+          <button class="btn btn-sm toggle-btn" data-setting="ImprovedFrListsOn">Toggle</button>
         </span>
         <br>
         <span class="desc">
@@ -362,9 +357,10 @@
         </span>
       </p>
       <p class="setting-container" id="IRLPriceWithCurrency">
-        <span>
-          Show IRL price with Brick Count (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="IRLPriceWithCurrencyOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show IRL price with Brick Count
+          <button class="btn btn-sm toggle-btn" data-setting="IRLPriceWithCurrencyOn">Toggle</button>
         </span>
         <br>
         <span class="desc mb-4">
@@ -396,42 +392,47 @@
         -->
       </p>
       <p class="setting-container" id="HideNotifBadges">
-        <span>
-          Hide Notification Badges (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="HideNotifBadgesOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Hide Notification Badges
+          <button class="btn btn-sm toggle-btn" data-setting="HideNotifBadgesOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Hide the annoying red circles on the sidebar!</span>
       </p>
       <p class="setting-container" id="StoreOwnTag">
-        <span>
-          Show "OWNED" Tag on Store Main Page (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="StoreOwnTagOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show "OWNED" Tag on Store Main Page
+          <button class="btn btn-sm toggle-btn" data-setting="StoreOwnTagOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Quickly see if you own the item at a glance with a little tag in the top left corner of item cards on the main store page!</span>
       </p>
       <p class="setting-container" id="ThemeCreator">
-        <span>
-          Theme Creator (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ThemeCreatorOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Theme Creator
+          <button class="btn btn-sm toggle-btn" data-setting="ThemeCreatorOn">Toggle</button>
           <button id="ThemeCreator-Options" class="btn btn-primary btn-sm" data-modal="ThemeCreator">Options</button>
         </span>
         <br>
         <span class="desc">Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</span>
       </p>
       <p class="setting-container" id="MoreSearchFilters">
-        <span>
-          More Search Filters (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="MoreSearchFiltersOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          More Search Filters
+          <button class="btn btn-sm toggle-btn" data-setting="MoreSearchFiltersOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
       </p>
       <p class="setting-container" id="ApplyMembershipTheme">
-        <span>
-          Apply Membership Theme for <b>Free</b> (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ApplyMembershipThemeOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Apply Membership Theme for <b>Free</b>
+          <button class="btn btn-sm toggle-btn" data-setting="ApplyMembershipThemeOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Ever want the fancy membership themes for completely <b>free</b>? Well now you can get apply them site-wide!</span>
@@ -441,9 +442,10 @@
         </select>
       </p>
       <p class="setting-container" id="MultiCancelOutTrades">
-        <span>
-          Multi-Cancel Outbound Trades (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="MultiCancelOutTradesOns">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Multi-Cancel Outbound Trades
+          <button class="btn btn-sm toggle-btn" data-setting="MultiCancelOutTradesOns">Toggle</button>
         </span>
         <br>
         <span class="desc">
@@ -453,9 +455,10 @@
         </span>
       </p>
       <p class="setting-container" id="ModifyNav">
-        <span>
-          Modify Navbar (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ModifyNavOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Modify Navbar
+          <button class="btn btn-sm toggle-btn" data-setting="ModifyNavOn">Toggle</button>
           <button id="ModifyNav-Options" class="btn btn-primary btn-sm" data-modal="ModifyNav">Options</button>
         </span>
         <br>
@@ -464,9 +467,10 @@
         </span>
       </p>
       <p class="setting-container" id="ItemWishlist">
-        <span>
-          Item Wishlist (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="ItemWishlistOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Item Wishlist
+          <button class="btn btn-sm toggle-btn" data-setting="ItemWishlistOn">Toggle</button>
         </span>
         <br>
         <span class="desc">
@@ -474,17 +478,19 @@
         </span>
       </p>
       <p class="setting-container" id="HideUpgradeBtn">
-        <span>
-          Hide Upgrade Button (<span class="status">disabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="HideUpgradeBtnOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Hide Upgrade Button
+          <button class="btn btn-sm toggle-btn" data-setting="HideUpgradeBtnOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Hide the ugly blue "Upgrade" button on the sidebar!</span>
       </p>
       <p class="setting-container" id="OutfitCost">
-        <span>
-          Show Outfit Cost on Profiles (<span class="status">enabled</span>)
-          <button class="btn btn-warning btn-sm" data-setting="OutfitCostOn">Toggle</button>
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show Outfit Cost on Profiles
+          <button class="btn btn-sm toggle-btn" data-setting="OutfitCostOn">Toggle</button>
         </span>
         <br>
         <span class="desc">Quickly see how many bricks a user spent on their avatar!</span>
@@ -496,9 +502,10 @@
           <hr>
           <!--
           <p class="setting-container" id="GameProfiles">
-            <span>
-              Game Profiles (<span class="status">disabled</span>)
-              <button class="btn btn-warning btn-sm" data-setting="GameProfilesOn">Toggle</button>
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Game Profiles
+              <button class="btn btn-sm toggle-btn" data-setting="GameProfilesOn">Toggle</button>
             </span>
             <br>
             <span class="desc">Traverse a place view page that matches a place's color palette!</span>
@@ -509,9 +516,10 @@
           </p>
           -->
           <p class="setting-container" id="InlineEditing">
-            <span>
-              Inline Editing (<span class="status">disabled</span>)
-              <button class="btn btn-warning btn-sm" data-setting="InlineEditingOn">Toggle</button>
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Inline Editing
+              <button class="btn btn-sm toggle-btn" data-setting="InlineEditingOn">Toggle</button>
             </span>
             <br>
             <span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
@@ -521,9 +529,10 @@
             <span style="font-size: 0.8rem; color: orange;">* This feature is not finished or polished.</span>
           </p>
           <p class="setting-container" id="ForumUnixStamps">
-            <span>
-              Forum Unix Timestamps (<span class="status">disabled</span>)
-              <button class="btn btn-warning btn-sm" data-setting="ForumUnixStampsOn">Toggle</button>
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Forum Unix Timestamps
+              <button class="btn btn-sm toggle-btn" data-setting="ForumUnixStampsOn">Toggle</button>
             </span>
             <br>
             <span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
@@ -533,9 +542,11 @@
         </div>
       </div>
       <hr>
-      <button id="Save" class="btn btn-primary" disabled="true">Save</button>
-      <button id="ResetDefaults" class="btn btn-warning">Reset to Default Settings</button>
-      <p class="text-muted mt-2" style="font-size: 0.8rem;">made by Index</p>
+      <div class="btn-group w-100">
+        <button id="Save" class="btn btn-primary w-50" disabled="true">Save</button>
+        <button id="ResetDefaults" class="btn btn-warning w-50">Reset to Default Settings</button>
+      </div>
+      <p class="text-center text-muted mt-2" style="font-size: 0.8rem;">made by Index</p>
     </div>
     <script src="settings.js"></script>
   </body>

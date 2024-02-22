@@ -2,6 +2,7 @@
     "manifest_version": 3,
     "name": "Poly+",
     "version": "1.11",
+    "version_name": "Pre-Release Build (stable: v1.1.1)",
     "description": "Power-up your Polytoria experience with Poly+! Created by Index.",
     "permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
     "content_scripts": [

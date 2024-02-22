@@ -2,59 +2,8 @@ const SaveBtn = document.getElementById('Save')
 const Elements = Array.from(document.getElementsByClassName('setting-container'))
 
 var Settings;
-/*
-var ExpectedSettings = {
-  PinnedGamesOn: true,
-  ForumMentsOn: false,
-  BestFriendsOn: true,
-  ImprovedFrListsOn: true,
-  IRLPriceWithCurrencyOn: true,
-  IRLPriceWithCurrencyCurrency: 0,
-  IRLPriceWithCurrencyPackage: 0,
-  HideNotifBadgesOn: false,
-  StoreOwnTagOn: true,
-  ThemeCreatorOn: false,
-  ThemeCreator: {
-    BGColor: null,
-    BGImage: null,
-    BGImageSize: 'fit',
-    PrimaryTextColor: null,
-    SecondaryTextColor: null,
-    LinkTextColor: null,
-    WebsiteLogo: null
-  },
-  ModifyNavOn: false,
-  ModifyNav: [
-    {
-      Label: "Places",
-      Link: "https://polytoria.com/places"
-    },
-    {
-      Label: "Store",
-      Link: "https://polytoria.com/store"
-    },
-    {
-      Label: "Guilds",
-      Link: "https://polytoria.com/guilds"
-    },
-    {
-      Label: "People",
-      Link: "https://polytoria.com/users"
-    },
-    {
-      Label: "Forum",
-      Link: "https://polytoria.com/forum"
-    }
-  ],
-  MoreSearchFiltersOn: true,
-  ApplyMembershipThemeOn: false,
-  ApplyMembershipThemeTheme: 0,
-  MultiCancelOutTradesOn: true,
-  ItemWishlistOn: true,
-  HideUpgradeBtnOn: false
-}
-*/
 var ExpectedSettings;
+
 var Utilities;
 (async () => {
   Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
@@ -65,40 +14,42 @@ var Utilities;
   LoadCurrent()
 })();
 
-const ResetDefaultsModal = document.getElementById('ResetDefaults-Modal')
-var ThemeCreatorModal = {
-  Modal: document.getElementById('ThemeCreator-Modal'),
-  Save: document.getElementById('ThemeCreator-Modal-Save'),
-  BGColor: document.getElementById('ThemeCreator-Modal-BGColor'),
-  BGImage: document.getElementById('ThemeCreator-Modal-BGImage'),
-  BGImageSize: document.getElementById('ThemeCreator-Modal-BGImageSize'),
-  PrimaryTextColor: document.getElementById('ThemeCreator-Modal-PrimaryTextColor'),
-  SecondaryTextColor: document.getElementById('ThemeCreator-Modal-SecondaryTextColor'),
-  LinkTextColor: document.getElementById('ThemeCreator-Modal-LinkTextColor'),
-  WebsiteLogo: document.getElementById('ThemeCreator-Modal-WebsiteLogo')
-}
-var ModifyNavModal = {
-  Modal: document.getElementById('ModifyNav-Modal'),
-  Save: document.getElementById('ModifyNav-Modal-Save'),
-  "1Label": document.getElementById('ModifyNav-Modal-1Label'),
-  "1Link": document.getElementById('ModifyNav-Modal-1Link'),
-  "2Label": document.getElementById('ModifyNav-Modal-2Label'),
-  "2Link": document.getElementById('ModifyNav-Modal-2Link'),
-  "3Label": document.getElementById('ModifyNav-Modal-3Label'),
-  "3Link": document.getElementById('ModifyNav-Modal-3Link'),
-  "4Label": document.getElementById('ModifyNav-Modal-4Label'),
-  "4Link": document.getElementById('ModifyNav-Modal-4Link'),
-  "5Label": document.getElementById('ModifyNav-Modal-5Label'),
-  "5Link": document.getElementById('ModifyNav-Modal-5Link'),
-}
+// Handle buttons at the bottom of the page
+document.getElementById('ResetDefaults').addEventListener('click', function() {
+  document.getElementById('ResetDefaults-Modal').showModal();
+});
 SaveBtn.addEventListener("click", function() {
   Save();
 });
+
+// Handle modal buttons for Reset Defaults modal
+document.getElementById('ResetDefaults-Modal-Yes').addEventListener('click', function() {
+  Settings = ExpectedSettings
+  Save()
+  setTimeout(function () {
+    LoadCurrent();
+    document.getElementById('ResetDefaults-Modal').close();
+  }, 400)
+});
+document.getElementById('ResetDefaults-Modal-No').addEventListener('click', function() {
+  document.getElementById('ResetDefaults-Modal').close();
+});
+
+// Handle leaving the settings page before saving
+/*
+window.onbeforeunload = function() {
+  if (SaveBtn.getAttribute('disabled') !== null) {
+    return "Are you sure you'd like to leave? Your Poly+ settings haven't been saved."
+  }
+  return "aaa"
+}
+*/
+
+// Loop thru each setting container and handle toggling, selecting, opening modal, etc
 Elements.forEach(element => {
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
   let Select = element.getElementsByTagName('select') || []
-  console.log(element, Select)
 
   if (Button) {
     Button.addEventListener('click', function() {
@@ -208,31 +159,32 @@ Elements.forEach(element => {
     });
   }
 });
-document.getElementById('ResetDefaults').addEventListener('click', function() {
-  ResetDefaultsModal.showModal();
-});
-document.getElementById('ResetDefaults-Modal-Yes').addEventListener('click', function() {
-  Settings = ExpectedSettings
-  Save()
-  setTimeout(function () {
-    LoadCurrent();
-    ResetDefaultsModal.close();
-  }, 400)
-});
-document.getElementById('ResetDefaults-Modal-No').addEventListener('click', function() {
-  ResetDefaultsModal.close();
-});
 
 function LoadCurrent() {
   chrome.storage.sync.get(["PolyPlus_Settings"], function(result) {
     Settings = MergeObjects(result.PolyPlus_Settings || ExpectedSettings, ExpectedSettings)
 
-    console.log(Settings)
+    console.log("Current:", Settings)
 
     Elements.forEach(element => {
+      /*
       let Status = element.getElementsByClassName('status')[0]
       if (Status !== undefined) {
         Status.innerText = FormatBool(Settings[element.getElementsByTagName('button')[0].getAttribute('data-setting')])
+      }
+      */
+      console.log(Settings)
+      const ToggleBtn = element.getElementsByClassName('toggle-btn')[0]
+      if (Settings[ToggleBtn.getAttribute('data-setting')] === true) {
+        console.log(ToggleBtn.parentElement, 'enabled', Settings[ToggleBtn.getAttribute('data-setting')])
+        element.classList.add('enabled')
+        ToggleBtn.innerText = 'Disable'
+        ToggleBtn.classList.add('btn-danger')
+      } else {
+        console.log(ToggleBtn.parentElement, 'disabled', Settings[ToggleBtn.getAttribute('data-setting')])
+        element.classList.add('disabled')
+        ToggleBtn.innerText = 'Enable'
+        ToggleBtn.classList.add('btn-success')
       }
       let SelectInput = element.getElementsByTagName('select')[0]
       if (SelectInput) {
@@ -243,17 +195,21 @@ function LoadCurrent() {
 }
 
 function ToggleSetting(Name, Element) {
+  const ToggleBtn = Element.getElementsByClassName('toggle-btn')[0]
+  document.title = "*unsaved | Poly+ Settings"
   if (Settings[Name] === true) {
     Settings[Name] = false;
+    ToggleBtn.innerText = 'Enable'
   } else {
     Settings[Name] = true;
+    ToggleBtn.innerText = 'Disable'
   }
+  Element.classList.toggle('enabled')
+  Element.classList.toggle('disabled')
+  ToggleBtn.classList.toggle('btn-success')
+  ToggleBtn.classList.toggle('btn-danger')
 
-  if (Element != null) {
-    Element.getElementsByClassName('status')[0].innerText = FormatBool(Settings[Name])
-  }
   if (SaveBtn.getAttribute('disabled')) {
-    console.log('is disabled button - toggle')
     SaveBtn.removeAttribute('disabled')
   }
 }
@@ -263,18 +219,18 @@ function SetSetting(Name, Element, Value) {
   Settings[Name] = Value
 
   if (SaveBtn.getAttribute('disabled')) {
-    console.log('is disabled button')
     SaveBtn.removeAttribute('disabled')
   }
 }
 
 function Save() {
+  document.title = 'Poly+ Settings'
   SaveBtn.setAttribute('disabled', 'true')
   chrome.storage.sync.set({ 'PolyPlus_Settings': Settings, arrayOrder: true }, function() {
     console.log('Saved successfully!');
   });
 
-  console.log(Settings);
+  console.log("Save:", Settings);
 }
 
 let LoadThemeFromJSONBtn = document.getElementById('LoadThemeFromJSONBtn')
@@ -306,19 +262,17 @@ LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
 })
 
 function LoadThemeJSON(string) {
-  alert('This feature has been disabled for now.')
-  return
   try {
     let JSONTable = JSON.parse(string)
     if (JSONTable.length === ExpectedSettings.ThemeCreator.length) {
       if (confirm('Are you sure you\'d like to replace this theme with the theme specified in the JSON?') === true) {
         LoadThemeFromJSONBtn.previousElementSibling.value = ''
         document.getElementById('ThemeCreator-Modal').close()
-        /*
         for (let i = 0; i < JSONTable.length; i++) {
-          JSONTable[i] = new Sanitzer(JSONTable[i])
+          if (JSONTable[i][0] !== "#") {
+            JSONTable[i] = ""
+          }
         }
-        */
         Settings.ThemeCreator = MergeObjects(JSONTable, ExpectedSettings.ThemeCreator)
         Save();
         console.log(JSONTable.length, JSONTable, 'applied')
@@ -326,45 +280,13 @@ function LoadThemeJSON(string) {
       }
     } else {
       alert('JSON is not a theme!')
-      //LoadThemeFromJSONBtn.innerText = 'JSON is too short or too long!'
-      //setTimeout(function () {LoadThemeFromJSONBtn.innerText = 'Load'}, 1250)
     }
   } catch (error) {
     alert('JSON is invalid!')
-    //LoadThemeFromJSONBtn.innerText = 'JSON is invalid!'
-    //setTimeout(function () {LoadThemeFromJSONBtn.innerText = 'Load'}, 1250)
   }
 }
 
-/*
-function MergeObjects(obj1, obj2) {
-  var mergedObj = {};
-
-  // Copy the values from obj1 to the mergedObj
-  for (var key in obj1) {
-    mergedObj[key] = obj1[key];
-  }
-
-  // Merge the values from obj2 into the mergedObj, favoring obj2 for non-existing keys in obj1
-  for (var key in obj2) {
-    if (!obj1.hasOwnProperty(key)) {
-      mergedObj[key] = obj2[key];
-    } else if (obj1[key] !== obj2[key]) {
-      mergedObj[key] = obj2[key];
-    }
-  }
-
-  // Remove keys from mergedObj if they are not present in obj2
-  for (var key in mergedObj) {
-    if (!obj2.hasOwnProperty(key)) {
-      delete mergedObj[key];
-    }
-  }
-
-  return mergedObj;
-}
-*/
-
+// MergeObjects function was written by ChatGPT cause I was lazy and it was awhile ago
 function MergeObjects(obj1, obj2) {
   var mergedObj = {};
 
@@ -384,11 +306,8 @@ function MergeObjects(obj1, obj2) {
 }
 
 function FormatBool(bool){
-  if (bool === true) {
-    return 'enabled'
-  } else {
-    return 'disabled'
-  }
+  if (bool === true) { return 'enabled' }
+  else { return 'disabled' }
 }
 
 function LoadFile(path, callback) {

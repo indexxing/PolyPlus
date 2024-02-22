@@ -137,7 +137,7 @@ let Theme = null;
     }
   
     window.localStorage.setItem('account_info', JSON.stringify(UserData))
-    document.body.setAttribute('data-URL', window.location.href)
+    document.body.setAttribute('data-URL', window.location.pathname)
   
     // Add PolyPlus Settings link to Sidebar
     const Parent = document.querySelector('ul.nav.nav-flush')

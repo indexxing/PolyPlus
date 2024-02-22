@@ -1,12 +1,12 @@
-body[data-URL^="https://polytoria.com/my/friends"] .col-lg-3 {
+body[data-URL^="/my/friends"] .col-lg-3 {
     margin-bottom: 20px;
 }
 
-body[data-URL^="https://polytoria.com/create/"] .mt-2.mt-lg-0.col-lg.d-flex.align-content-between.flex-wrap {
+body[data-URL^="/create/"] .mt-2.mt-lg-0.col-lg.d-flex.align-content-between.flex-wrap {
     width: 50%;
 }
 
-body[data-URL^="https://polytoria.com/create/"] .col.d-flex.align-content-between.flex-wrap {
+body[data-URL^="/create/"] .col.d-flex.align-content-between.flex-wrap {
     width: 50%;
 }
 
