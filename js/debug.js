@@ -79,16 +79,6 @@ function CheckForUpdates() {
             return response.json()
         })
         .then(data => {
-            /*
-            const Result = document.createElement('span')
-            if (data.version === Version || Math.floor((data.version - Version) * 10) === 0) {
-                Result.innerText = 'No updates available'
-            } else {
-                Result.innerText = Math.floor((data.version - Version) * 10) + ' updates available'
-            }
-            CheckForUpdatesButton.parentElement.insertBefore(Result, CheckForUpdatesButton)
-            CheckForUpdatesButton.remove()
-            */
             if (data.version === Version || Math.floor((data.version - Version) * 10) === 0) {
                 CheckForUpdatesButton.innerText = 'No updates available'
             } else {

@@ -316,3 +316,35 @@ function LoadFile(path, callback) {
   xhr.open("GET", path, true);
   xhr.send();
 }
+
+const Manifest = chrome.runtime.getManifest()
+let BuildType = "Stable"
+if (Manifest.version_name !== undefined) {BuildType = "Pre-Release"}
+
+const FooterText = document.getElementById('footer-text')
+FooterText.children[0].innerHTML = `Version: v${Manifest.version} | Build Type: ${BuildType}`
+
+const CheckForUpdatesButton = document.getElementById('check-for-updates')
+function CheckForUpdates() {
+  CheckForUpdatesButton.removeEventListener('click', CheckForUpdates)
+  CheckForUpdatesButton.disabled = true
+  fetch('https://polyplus.vercel.app/data/version.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network not ok')
+      }
+      return response.json()
+    })
+    .then(data => {
+      if (data.version === Manifest.version || Math.floor((data.version - Manifest.version) * 10) === 0) {
+        CheckForUpdatesButton.innerHTML = '<b>No updates available</b>'
+        alert('No updates available')
+      } else {
+        const NumberOfUpdatesAvailable = Math.floor((data.version - Version) * 10)
+        CheckForUpdatesButton.innerHTML = '<b>'+NumberOfUpdatesAvailable+' update(s) available</b>'
+        alert(NumberOfUpdatesAvailable + ' updates available')
+      }
+    })
+    .catch(error => {console.log(error)});
+}
+CheckForUpdatesButton.addEventListener('click', CheckForUpdates)
