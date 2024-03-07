@@ -161,6 +161,7 @@ Elements.forEach(element => {
     Array.from(Select).forEach(element => {
       element.addEventListener('change', function() {
         SetSetting(element.getAttribute('data-setting'), element, element.selectedIndex)
+        Save()
       });
     });
   }

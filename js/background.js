@@ -76,8 +76,7 @@ chrome.contextMenus.create({
     id: 'PolyPlus-RunUpdateNotifier',
     contexts: ['all'],
     documentUrlPatterns: [
-        "https://polytoria.com/*",
-        SettingsURL
+        "https://polytoria.com/my/settings/polyplus-debug",
     ]
 });
 

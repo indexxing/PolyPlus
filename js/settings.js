@@ -1,5 +1,7 @@
 const InExtensionSettings = (window.location.pathname.split('/')[3] === "polyplus")
-if (InExtensionSettings === true) { window.location.href = chrome.runtime.getURL('settings.html') }
+if (InExtensionSettings === true) {
+  window.location.href = chrome.runtime.getURL('settings.html') + window.location.hash
+}
 
 document.addEventListener('DOMContentLoaded', function(){
   const Nav = document.getElementsByClassName('nav nav-pills')[0]
