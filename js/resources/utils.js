@@ -7,6 +7,13 @@ HOW TO USE IN CONTENT SCRIPTS:
 })();
 */
 
+function ParseFullNumber(ab) {
+  if (typeof(ab) === "number") { return ab }
+  const Suffixes = {"k": 1000, "m": 1000000, "b": 1000000000}
+  const Suffix = ab.slice(-1).toLowerCase();
+  if (Suffixes[Suffix]) {return parseFloat(ab)*Suffixes[Suffix]} else {return parseFloat(ab)}
+}
+
 export default {
   DefaultSettings: {
     PinnedGamesOn: true,
@@ -60,50 +67,76 @@ export default {
   },
   CalculateIRL: async function(bricks, to, brickPackage) {
     /*
+    Disabled for now: currency retrieval from currencies.json
+
     const response = await fetch(chrome.runtime.getURL('/js/resources/currencies.json'))
     if (!response.ok) {
       throw new Error('Getting currency data failure')
     }
     const data = await response.json()
+    const UnitPrice = data.Data[brickPackage][to]
     */
 
-    let IRL;
-    let DISPLAY;
-    //const UnitPrice = data.Data[brickPackage][to]
+    let Result = "N/A";
+    let Display = "Currency Not Found";
+
+    bricks = ParseFullNumber(bricks.replace(/,/g, ''))
+    console.log(bricks)
     switch (to) {
+      // U.S. Dollar
       case 0:
-        IRL = (bricks.replace(/,/g, '') * 0.0099).toFixed(2)
-        DISPLAY = 'USD'
+        Result = (bricks * 0.0099).toFixed(2)
+        Display = "USD"
         break
+
+      // Euro
       case 1:
-        IRL = (bricks.replace(/,/g, '') * 0.009).toFixed(2)
-        DISPLAY = 'EUR'
+        Result = (bricks.replace(/,/g, '') * 0.009).toFixed(2)
+        Display = "EUR"
         break
+
+      // Canadian Dollar
       case 2:
-        IRL = (bricks.replace(/,/g, '') * 0.0131).toFixed(2)
-        DISPLAY = 'CAD'
+        Result = (bricks.replace(/,/g, '') * 0.0131).toFixed(2)
+        Display = "CAD"
         break
+
+      // Great British Pound
       case 3:
-        IRL = (bricks.replace(/,/g, '') * 0.0077).toFixed(2)
-        DISPLAY = 'GBP'
+        Result = (bricks.replace(/,/g, '') * 0.0077).toFixed(2)
+        Display = "GBP"
         break
+
+      // Mexican Peso
       case 4:
-        IRL = (bricks.replace(/,/g, '') * 0.1691).toFixed(2)
-        DISPLAY = 'MXN'
+        Result = (bricks.replace(/,/g, '') * 0.1691).toFixed(2)
+        Display = "MXN"
         break
+
+      // Australia Dollar
       case 5:
-        IRL = (bricks.replace(/,/g, '') * 0.0144).toFixed(2)
-        DISPLAY = 'AUD'
+        Result = (bricks.replace(/,/g, '') * 0.0144).toFixed(2)
+        Display = "AUD"
         break
+
+      // Turkish Lira
       case 6:
-        IRL = (bricks.replace(/,/g, '') *  0.2338).toFixed(2)
-        DISPLAY = 'TRY'
+        Result = (bricks.replace(/,/g, '') *  0.2338).toFixed(2)
+        Display = "TRY"
         break
+
+      // Brazillian Real
       case 7:
-        IRL = (bricks.replace(/,/g, '') * 0.49).toFixed(2)
-        DISPLAY = 'BRL'
+        Result = (bricks.replace(/,/g, '') * 0.49).toFixed(2)
+        Display = "BRL"
         break
     }
-    return {bricks: IRL, display: DISPLAY}
+
+    if (typeof(Result) === "number") { Result = Result.toFixed(2) }
+
+    return {
+      result: Result,
+      display: Display
+    }
   }
 }

@@ -96,6 +96,12 @@ Elements.forEach(element => {
                 LoadCurrent();
                 Modal.close();
               }, 400)
+            } else if (Setting === '[reset-default]') {
+              if (confirm("Are you sure you'd like to reset these options to their defaults?") === true) {
+                Settings[Modal.getAttribute('data-setting')] = ExpectedSettings[Modal.getAttribute('data-setting')]
+                Save()
+                Modal.close();
+              }
             } else if (Setting === '[cancel]') {
               Modal.close();
             } else {
@@ -164,24 +170,15 @@ function LoadCurrent() {
   chrome.storage.sync.get(["PolyPlus_Settings"], function(result) {
     Settings = MergeObjects(result.PolyPlus_Settings || ExpectedSettings, ExpectedSettings)
 
-    console.log("Current:", Settings)
+    console.log("Current: ", Settings)
 
     Elements.forEach(element => {
-      /*
-      let Status = element.getElementsByClassName('status')[0]
-      if (Status !== undefined) {
-        Status.innerText = FormatBool(Settings[element.getElementsByTagName('button')[0].getAttribute('data-setting')])
-      }
-      */
-      console.log(Settings)
       const ToggleBtn = element.getElementsByClassName('toggle-btn')[0]
       if (Settings[ToggleBtn.getAttribute('data-setting')] === true) {
-        console.log(ToggleBtn.parentElement, 'enabled', Settings[ToggleBtn.getAttribute('data-setting')])
         element.classList.add('enabled')
         ToggleBtn.innerText = 'Disable'
         ToggleBtn.classList.add('btn-danger')
       } else {
-        console.log(ToggleBtn.parentElement, 'disabled', Settings[ToggleBtn.getAttribute('data-setting')])
         element.classList.add('disabled')
         ToggleBtn.innerText = 'Enable'
         ToggleBtn.classList.add('btn-success')
@@ -254,13 +251,6 @@ CopyThemeJSONBtn.addEventListener('click', function(){
   }
 });
 
-let CurrencyDate = 
-LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
-  CurrencyDate = new Date(JSON.parse(text).Date).toLocaleDateString("en-US", {day:"numeric",month:"long",year:"numeric"})
-
-  document.getElementById('IRLPriceWithCurrencyCurrency').previousElementSibling.children[1].innerText = document.getElementById('IRLPriceWithCurrencyCurrency').previousElementSibling.children[1].innerText.replace('[DATE]', CurrencyDate)
-})
-
 function LoadThemeJSON(string) {
   try {
     let JSONTable = JSON.parse(string)
@@ -310,13 +300,6 @@ function FormatBool(bool){
   else { return 'disabled' }
 }
 
-function LoadFile(path, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () { return callback(this.responseText); }
-  xhr.open("GET", path, true);
-  xhr.send();
-}
-
 const Manifest = chrome.runtime.getManifest()
 let BuildType = "Stable"
 if (Manifest.version_name !== undefined) {BuildType = "Pre-Release"}
@@ -348,3 +331,46 @@ function CheckForUpdates() {
     .catch(error => {console.log(error)});
 }
 CheckForUpdatesButton.addEventListener('click', CheckForUpdates)
+
+fetch(chrome.runtime.getURL('/js/resources/currencies.json'))
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network not ok')
+    }
+    return response.json()
+  })
+  .then(data => {
+    const DateText = new Date(data.Date).toLocaleDateString("en-US", {day:"numeric",month:"long",year:"numeric"})
+    document.getElementById('IRLPriceWithCurrency-Date').innerText = DateText
+  })
+  .catch(error => {console.log(error)})
+
+chrome.storage.local.get(['PolyPlus_OutOfDate', 'PolyPlus_LiveVersion', 'PolyPlus_ReleaseNotes', 'PolyPlus_SkipUpdate'], function(result) {
+  const OutOfDate = result.PolyPlus_OutOfDate || false
+  const SkipUpdate = result.PolyPlus_SkipUpdate || null
+  const LiveVersion = result.PolyPlus_LiveVersion || Manifest.version
+  if (OutOfDate === true && SkipUpdate !== LiveVersion) {
+    const Banner = document.createElement('div')
+    Banner.classList = 'alert position-sticky p-3'
+    Banner.style = 'top: 30px; box-shadow: 0 0 20px 2px #000; z-index: 2000; background: rgb(163 39 39);'
+    Banner.innerHTML = `
+    <b>New Update Available!</b>
+    <br>
+    Your Poly+ installation is out of date! If you would like to get the latest and greatest features, improvements, and bug fixes click on one of the links below to dismiss this banner!
+    <br>
+    <div role="group" class="btn-group w-100 mt-2">
+      <a href="${result.PolyPlus_ReleaseNotes}" class="btn btn-primary btn-sm w-25" target="_blank">Go to Release Notes</a>
+      <button id="skip-this-update" class="btn btn-warning btn-sm w-25">(Not Recommended) Skip this Update</button>
+    </div>
+    `
+    document.getElementById('page').insertBefore(Banner, document.getElementById('page').children[1])
+
+    const SkipButton = document.getElementById('skip-this-update')
+    SkipButton.addEventListener('click', function(){
+      Banner.remove()
+      chrome.storage.local.set({'PolyPlus_SkipUpdate': result.PolyPlus_LiveVersion}, function(){
+        console.log('set skip update to live version: ', result.PolyPlus_LiveVersion)
+      })
+    });
+  }
+})

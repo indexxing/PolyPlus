@@ -6,16 +6,19 @@ var BestFriends;
 let FavoriteBtn;
 let CalculateButton;
 
+let Utilities;
+
 if (UserID && !isNaN(UserID)) {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings || {
-            IRLPriceWithCurrencyOn: false,
-            BestFriendsOn: false,
-            OutfitCostOn: true
-        }
+        Settings = result.PolyPlus_Settings || {}
 
         if (Settings.IRLPriceWithCurrencyOn === true) {
-            IRLPrice()
+            (async () => {
+                Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+                Utilities = Utilities.default
+
+                IRLPrice()
+            })();
         }
     
         if (Settings.BestFriendsOn === true) {
@@ -99,42 +102,11 @@ if (UserID && !isNaN(UserID)) {
         });
 }
 
-function IRLPrice() {
+async function IRLPrice() {
     const NetWorthElement = document.getElementsByClassName('float-end text-success')[0];
-    const NetWorth = parseInt(NetWorthElement.innerText.replace(/,/g, ''));
-    let IRL;
-    let DISPLAY;
-    switch (Settings.IRLPriceWithCurrencyCurrency) {
-        case 0:
-            IRL = (NetWorth * 0.0099).toFixed(2)
-            DISPLAY = 'USD'
-            break
-        case 1:
-            IRL = (NetWorth * 0.009).toFixed(2)
-            DISPLAY = 'EUR'
-            break
-        case 2:
-            IRL = (NetWorth * 0.0131).toFixed(2)
-            DISPLAY = 'CAD'
-            break
-        case 3:
-            IRL = (NetWorth * 0.0077).toFixed(2)
-            DISPLAY = 'GBP'
-            break
-        case 4:
-            IRL = (NetWorth * 0.1691).toFixed(2)
-            DISPLAY = 'MXN'
-            break
-        case 5:
-            IRL = (NetWorth * 0.0144).toFixed(2)
-            DISPLAY = 'AUD'
-            break
-        case 6:
-            IRL = (NetWorth *  0.2338).toFixed(2)
-            DISPLAY = 'TRY'
-            break
-    }
-    NetWorthElement.innerText = NetWorthElement.innerText + " ($" + IRL + " " + DISPLAY + ")"
+    //const NetWorth = parseInt(NetWorthElement.innerText.replace(/,/g, ''));
+    const IRLResult = await Utilities.CalculateIRL(NetWorthElement.innerText, Settings.IRLPriceWithCurrencyCurrency)
+    NetWorthElement.innerText = NetWorthElement.innerText + " ($" + IRLResult.result + " " + IRLResult.display + ")"
 }
 
 function BestFriends() {
@@ -255,4 +227,5 @@ async function OutfitCost() {
     TotalCostText.innerHTML = `${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' }<i class="pi pi-brick me-2"></i> ${AvatarCost.Total.toLocaleString()}${ (AvatarCost.Limiteds > 0) ? ` (has ${AvatarCost.Limiteds} limiteds)` : '' }${ (AvatarCost.Exclusives > 0) ? ` (has ${AvatarCost.Exclusives} exclusives)` : '' }`
     AvatarRow.parentElement.parentElement.prepend(TotalCostText)
     AvatarRow.parentElement.style.marginTop = '10px'
+    CalculateButton.remove();
 }

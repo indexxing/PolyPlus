@@ -1,8 +1,9 @@
 const Manifest = chrome.runtime.getManifest()
+const SettingsURL = chrome.runtime.getURL('settings.html')
 
 // WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
 chrome.action.onClicked.addListener((tab) => {
-    chrome.tabs.create({ active: true, url: chrome.runtime.getURL('settings.html') });
+    chrome.tabs.create({ active: true, url: SettingsURL });
 });
 
 // REGISTER AN ALARM FOR DAILY UPDATE CHECK
@@ -23,33 +24,61 @@ function GetNext12PM() {
 // HANDLE ALARMS FIRING
 chrome.alarms.onAlarm.addListener(function(alarm){
     if (alarm.name === 'PolyPlus-UpdateCheck') {
-        fetch('https://polyplus.vercel.app/data/version.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network not ok')
-                }
-                return response.json()
-            })
-            .then(data => {
-                if (data.version > Manifest.version) {
-                    chrome.notifications.create("", {
-                        type: "basic",
-                        iconUrl: chrome.runtime.getURL("icon.png"),
-                        title: "New Update Available",
-                        message: "A new update is available for Poly+! (v" + data.version + ")",
-                        requiresInteraction: true
-                    }, function(notificationID) {
-                        chrome.notifications.onClicked.addListener(function (id) {
-                            if (id === notificationID) {
-                                chrome.tabs.create({url: 'https://github.com/IndexingGitHub/PolyPlus/releases', active: true})
-                                chrome.notifications.clear(notificationID)
-                            }
-                        })
-                    })
-                }
-            })
-            .catch(error => {console.log(error)})
+        RunUpdateNotifier()
     }
+});
+function RunUpdateNotifier() {
+    chrome.storage.local.get(["PolyPlus_LiveVersion", "PolyPlus_OutOfDate", "PolyPlus_SkipUpdate"], function(result){
+        const OutOfDate = result.PolyPlus_OutOfDate || false
+        const SkipUpdate = result.PolyPlus_SkipUpdate || null
+        const LiveVersion = result.PolyPlus_LiveVersion || Manifest.version
+        if (OutOfDate !== true && SkipUpdate !== LiveVersion) {
+            fetch('https://polyplus.vercel.app/data/version.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network not ok')
+                    }
+                    return response.json()
+                })
+                .then(data => {
+                    chrome.storage.local.set({'PolyPlus_LiveVersion': data.version}, function(){
+                        console.log('Cached live version')
+                    })
+                    if (data.version > Manifest.version) {
+                        chrome.storage.local.set({'PolyPlus_OutOfDate': true, 'PolyPlus_ReleaseNotes': data.releaseNotes}, function(){
+                            console.log('Cached update notifier result')
+                        });
+                        chrome.notifications.create("", {
+                            type: "basic",
+                            iconUrl: chrome.runtime.getURL("icon.png"),
+                            title: "New Update Available",
+                            message: "A new update is available for Poly+! (v" + data.version + ")"
+                        }, function(notificationID) {
+                            chrome.notifications.onClicked.addListener(function (id) {
+                                if (id === notificationID) {
+                                    chrome.tabs.create({url: 'https://github.com/IndexingGitHub/PolyPlus/releases', active: true})
+                                    chrome.notifications.clear(notificationID)
+                                }
+                            })
+                        })
+                        chrome.action.setBadgeBackgroundColor(
+                            {color: 'red'},
+                            () => { /* ... */ },
+                        );
+                    }
+                })
+                .catch(error => {console.log(error)})
+        }
+    });
+}
+chrome.contextMenus.create({
+    title: 'Run Update Notifier',
+    id: 'PolyPlus-RunUpdateNotifier',
+    contexts: ['all'],
+    documentUrlPatterns: [
+        "https://polytoria.com/*",
+        SettingsURL
+    ]
 });
 
 // COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
@@ -57,7 +86,10 @@ chrome.contextMenus.create({
     title: 'Copy Asset ID',
     id: 'PolyPlus-CopyID',
     contexts: ['link'],
-    documentUrlPatterns: ['https://polytoria.com/*'],
+    documentUrlPatterns: [
+        "https://polytoria.com/*",
+        SettingsURL
+    ],
     targetUrlPatterns: [
         "https://polytoria.com/places/**",
         "https://polytoria.com/users/**",
@@ -70,7 +102,10 @@ chrome.contextMenus.create({
     title: 'Copy Avatar Hash',
     id: 'PolyPlus-CopyAvatarHash',
     contexts: ['image'],
-    documentUrlPatterns: ['https://polytoria.com/*'],
+    documentUrlPatterns: [
+        "https://polytoria.com/*",
+        SettingsURL
+    ],
     targetUrlPatterns: [
         "https://c0.ptacdn.com/thumbnails/avatars/**",
         "https://c0.ptacdn.com/thumbnails/avatars/**"
@@ -99,6 +134,10 @@ chrome.contextMenus.onClicked.addListener(function (info, tab){
                 args: [Hash]
             })
             .then(() => console.log("Copied ID!"));
+    }
+
+    if (info.menuItemId === 'PolyPlus-RunUpdateNotifier') {
+        RunUpdateNotifier()
     }
 });
 

@@ -8,7 +8,7 @@
     <title>Poly+ Settings</title>
  
     <!-- RESOURCES -->
-    <link rel="stylesheet" href="https://c0.ptacdn.com/static/app.64aa42f6.css">
+    <link rel="stylesheet" href="css/polytoria.css">
   </head>
   <body data-bs-theme="dark">
     <style>
@@ -246,8 +246,11 @@
           </div>
         </div>
   
-        <button class="btn btn-success" data-setting="[save]">Save</button>
-        <button class="btn btn-secondary" data-setting="[cancel]">Cancel</button>
+        <div role="group" class="btn-group w-100">
+          <button class="btn btn-success w-25" data-setting="[save]">Save</button>
+          <button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
+          <button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
+        </div>
       </div>
     </dialog>
     <dialog class="w-50" id="ModifyNav-Modal" data-setting="ModifyNav">
@@ -261,55 +264,58 @@
           <div class="card-header">#1 Navbar Item</div>
           <div class="card-body">
             <label>Label</label>
-            <input id="ModifyNav-Modal-1Label" class="form-control bg-dark mb-2" placeholder="Play" data-parent="0" data-setting="Label">
+            <input class="form-control bg-dark mb-2" placeholder="Play" data-parent="0" data-setting="Label">
   
             <label>Link</label>
-            <input id="ModifyNav-Modal-1Link" class="form-control bg-dark mb-2" placeholder="https://polytoria.com/places/" data-parent="0" data-setting="Link">
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/places/" data-parent="0" data-setting="Link">
           </div>
         </div>
         <div class="card mb-2">
           <div class="card-header">#2 Navbar Item</div>
           <div class="card-body">
             <label>Label</label>
-            <input id="ModifyNav-Modal-2Label" class="form-control bg-dark mb-2" placeholder="Store" data-parent="1" data-setting="Label">
+            <input class="form-control bg-dark mb-2" placeholder="Store" data-parent="1" data-setting="Label">
   
             <label>Link</label>
-            <input id="ModifyNav-Modal-2Link" class="form-control bg-dark mb-2" placeholder="https://polytoria.com/store/" data-parent="1" data-setting="Link">
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/store/" data-parent="1" data-setting="Link">
           </div>
         </div>
         <div class="card mb-2">
           <div class="card-header">#3 Navbar Item</div>
           <div class="card-body">
             <label>Label</label>
-            <input id="ModifyNav-Modal-3Label" class="form-control bg-dark mb-2" placeholder="Guilds" data-parent="2" data-setting="Label">
+            <input class="form-control bg-dark mb-2" placeholder="Guilds" data-parent="2" data-setting="Label">
   
             <label>Link</label>
-            <input id="ModifyNav-Modal-3Link" class="form-control bg-dark mb-2" placeholder="https://polytoria.com/guilds/" data-parent="2" data-setting="Link">
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/guilds/" data-parent="2" data-setting="Link">
           </div>
         </div>
         <div class="card mb-2">
           <div class="card-header">#4 Navbar Item</div>
           <div class="card-body">
             <label>Label</label>
-            <input id="ModifyNav-Modal-4Label" class="form-control bg-dark mb-2" placeholder="People" data-parent="3" data-setting="Label">
+            <input class="form-control bg-dark mb-2" placeholder="People" data-parent="3" data-setting="Label">
   
             <label>Link</label>
-            <input id="ModifyNav-Modal-4Link" class="form-control bg-dark mb-2" placeholder="https://polytoria.com/users/" data-parent="3" data-setting="Link">
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/users/" data-parent="3" data-setting="Link">
           </div>
         </div>
         <div class="card mb-2">
           <div class="card-header">#5 Navbar Item</div>
           <div class="card-body">
             <label>Label</label>
-            <input id="ModifyNav-Modal-5Label" class="form-control bg-dark mb-2" placeholder="Forum" data-parent="4" data-setting="Label">
+            <input class="form-control bg-dark mb-2" placeholder="Forum" data-parent="4" data-setting="Label">
   
             <label>Link</label>
-            <input id="ModifyNav-Modal-5Link" class="form-control bg-dark mb-2" placeholder="https://polytoria.com/forum" data-parent="4" data-setting="Link">
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/forum" data-parent="4" data-setting="Link">
           </div>
         </div>
-  
-        <button id="ModifyNav-Modal-Save" class="btn btn-success" data-setting="[save]">Save</button>
-        <button id="ModifyNav-Modal-Save" class="btn btn-secondary" data-setting="[cancel]">Cancel</button>
+
+        <div role="group" class="btn-group w-100">
+          <button class="btn btn-success w-25" data-setting="[save]">Save</button>
+          <button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
+          <button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
+        </div>
       </div>
     </dialog>
     <div id="page">
@@ -366,7 +372,7 @@
         <span class="desc mb-4">
           See the real life currency value along with Bricks across the site!
           <br>
-          <span style="font-size: 0.8rem; color: orange;">* Currencies were calculated on [DATE].</span>
+          <span style="font-size: 0.8rem; color: orange;">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
           <br>
           <span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
         </span>

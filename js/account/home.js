@@ -174,16 +174,14 @@ async function IRLPrice() {
         Utilities = Utilities.default
 
         const TrendingItems = document.getElementById('home-trendingItems')
-        console.log(TrendingItems.children[1].getElementsByClassName('d-flex')[0].children)
         for (let item of TrendingItems.children[1].getElementsByClassName('d-flex')[0].children) {
             const Price = item.getElementsByClassName('text-success')[0]
-            console.log(item, Price)
-            const Result = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+            const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
             
             let Span = document.createElement('span')
             Span.classList = 'text-muted polyplus-price-tag'
             Span.style.fontSize = '0.7rem'
-            Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
+            Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
             Price.appendChild(Span)
         }
     })();

@@ -15,7 +15,7 @@
 
         {
             "matches": ["https://polytoria.com/my/settings/*"],
-            "js": ["/js/polyplus-settings.js"],
+            "js": ["/js/settings.js"],
             "run_at": "document_start"
         },
 

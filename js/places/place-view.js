@@ -382,12 +382,12 @@ async function IRLPrice() {
     const Gamepasses = document.querySelector('#gamepasses-tabpane .row.flex-row').children
     for (let gamepass of Gamepasses) {
         const Price = gamepass.getElementsByClassName('text-success')[0]
-        const Result = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+        const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
 
         let Span = document.createElement('span')
         Span.classList = 'text-muted polyplus-price-tag'
         Span.style.fontSize = '0.7rem'
-        Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
+        Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
         Price.appendChild(Span)
     }
 }

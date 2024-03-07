@@ -67,8 +67,8 @@ async function IRLPrice() {
     Span.classList = 'text-muted polyplus-own-tag'
     Span.style.fontSize = '0.7rem'
     Span.style.fontWeight = 'normal'
-    const Result = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
-    Span.innerText = "($" + Result.bricks + " " + Result.display + ")"
+    const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
+    Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
     PurchaseBtn.appendChild(Span)
   }
 }

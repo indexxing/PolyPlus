@@ -164,9 +164,9 @@ let Theme = null;
     }
   
     if (Settings.IRLPriceWithCurrencyOn && Settings.IRLPriceWithCurrencyOn === true) {
-      const IRL = await Utilities.CalculateIRL(UserData.Bricks, Settings.IRLPriceWithCurrencyCurrency)
+      const IRLResult = await Utilities.CalculateIRL(UserData.Bricks, Settings.IRLPriceWithCurrencyCurrency)
       const BrickBalanceCount = [document.querySelector('.text-success .brickBalanceCount'), document.querySelector('.text-success .brickBalanceCont')]
-      BrickBalanceCount.forEach(element => {element.innerText = element.innerText + ` ($${IRL.bricks} ${IRL.display})`});
+      BrickBalanceCount.forEach(element => {element.innerText = element.innerText + ` ($${IRLResult.result} ${IRLResult.display})`});
     }
   
     if (Settings.HideNotifBadgesOn && Settings.HideNotifBadgesOn === true) {

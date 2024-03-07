@@ -68,9 +68,9 @@ Package.addEventListener('change', function(){
 async function Update(){
     //let DISPLAY = Type.options[Type.selectedIndex].value
     //let IRL = (parseInt(Input.value.replace(/,/g, '')) * Currencies.Data[Package.selectedIndex][DISPLAY]).toFixed(2)
-    const Result = await Utilities.CalculateIRL(Input.value, Type.selectedIndex)
+    const IRLResult = await Utilities.CalculateIRL(Input.value, Type.selectedIndex)
     console.log(Input.value, Type.options[Type.selectedIndex].value, Result)
-    Output.value = "$" + Result.bricks  + " " + Result.display
+    Output.value = "$" + IRLResult.result  + " " + IRLResult.display
 }
 
 function LoadFile(path, callback) {

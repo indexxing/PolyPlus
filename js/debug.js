@@ -60,6 +60,13 @@ document.querySelector('#main-content .container').innerHTML = `
             <button class="btn btn-secondary" id="clear-itemwishlist">Clear Item Wishlist</button>
         </div>
 
+        <label>Clear Specific Data Locations</label>
+        <p>Quickly clear specific locations of the extension's local data</p>
+        <div role="group" class="btn-group w-100 mb-3">
+            <button class="btn btn-secondary" id="delete-sync">Delete Sync Storage (primary, storage is backed up to Google account)</button>
+            <button class="btn btn-secondary" id="delete-local">Delete Local Storage (secondary, storage is only on local device)</button>
+        </div>
+
         <label style="color: red;">DANGER ZONE!</label>
         <p>This will clear all local data associated with the extension</p>
         <button class="btn btn-danger w-100" id="delete-all-data">Delete All Data</button>
@@ -166,9 +173,26 @@ document.getElementById('clear-itemwishlist').addEventListener('click', function
     });
 });
 
-document.getElementById('delete-all-data').addEventListener('click', function(){
-    if (confirm("Are you sure you'd like to delete all local data associated with the extension?") === false) { return }
+document.getElementById('delete-sync').addEventListener('click', function(){
+    if (confirm("Are you sure you'd like to delete all sync data associated with the extension?") === false) { return }
     chrome.storage.sync.clear(function() {
+        alert('Successfully deleted all sync data associated with the extension!')
+    });
+});
+
+document.getElementById('delete-local').addEventListener('click', function(){
+    if (confirm("Are you sure you'd like to delete all local data associated with the extension?") === false) { return }
+    chrome.storage.local.clear(function() {
+        alert('Successfully deleted all local data associated with the extension!')
+    });
+});
+
+document.getElementById('delete-all-data').addEventListener('click', function(){
+    if (confirm("Are you sure you'd like to delete all sync and local data associated with the extension?") === false) { return }
+    chrome.storage.sync.clear(function() {
+        alert('Successfully deleted all sync data associated with the extension!')
+    });
+    chrome.storage.local.clear(function() {
         alert('Successfully deleted all local data associated with the extension!')
     });
 });
