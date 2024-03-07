@@ -109,6 +109,11 @@
         {
             "matches": ["https://polytoria.com/inbox/*", "https://polytoria.com/inbox?*"],
             "js": ["/js/account/inbox.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/guilds/**"],
+            "js": ["/js/guilds.js"]
         }
     ],
     "background": {

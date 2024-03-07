@@ -12,7 +12,7 @@ let Theme = null;
   
     // If theme exists, create a style element to represent it
     if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true) {
-      Theme = document.createElement('style')
+      //Theme = document.createElement('style')
       switch (Settings.ThemeCreator.BGImageSize) {
         case 0:
           Settings.ThemeCreator.BGImageSize = 'fit'
@@ -24,7 +24,7 @@ let Theme = null;
           Settings.ThemeCreator.BGImageSize = 'contain'
           break
       }
-      Theme.innerHTML = `
+      Theme = `
       :root {
         --polyplus-navbgcolor: ${Settings.ThemeCreator.NavBGColor};
         --polyplus-navbordercolor: ${Settings.ThemeCreator.NavBorderColor};
@@ -111,6 +111,10 @@ let Theme = null;
         color: var(--polyplus-sidebaritemlabelcolor) !important;
       }
       `
+
+      const ThemeBlob = new Blob([Theme], { type: 'text/css' })
+      const ThemeURL = window.URL.createObjectURL(ThemeBlob)
+      document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`
     }
   });
   
@@ -119,6 +123,7 @@ let Theme = null;
       return
     }
   
+    /*
     // Check if Theme Exists, if so Load It
     if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true) {
       if (!(Settings.ThemeCreator.WebsiteLogo === null)) {
@@ -128,6 +133,7 @@ let Theme = null;
     if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true && Theme != null) {
       document.body.prepend(Theme)
     }
+    */
   
     // Define Data
     const UserData = {
