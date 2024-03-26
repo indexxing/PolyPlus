@@ -1,4 +1,8 @@
-// DEBUG PAGE FOR BETA TESTING
+/*
+    Debug page for Development
+    Accessable at /my/settings/polyplus-debug
+*/
+document.title = 'Poly+ Debug - Polytoria'
 const Version = chrome.runtime.getManifest().version
 document.querySelector('#main-content .container').innerHTML = `
 <style>
@@ -13,12 +17,16 @@ document.querySelector('#main-content .container').innerHTML = `
         margin-top: -4px;
     }
 </style>
+<div class="text-center mb-3">
+    <h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
+    <p class="w-75 d-block mx-auto">This page is used by developers for debugging most data related things. It is unrecommended you modify any data on this page, but if you ever want to go ahead.</p>
+</div>
 <div class="row">
-    <div class="col-md-2">
+    <div class="col-md-2" style="padding-left: 0px;">
         <div class="card">
             <div class="card-body">
                 <p class="text-muted mb-1">Version: v${Version}</p>
-                <p class="text-muted mb-1">Data Size: <span id="data-size">Loading</span> byte(s)</p>
+                <p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
                 <button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
                 <a href="https://github.com/IndexingGitHub/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
             </div>
@@ -40,7 +48,7 @@ document.querySelector('#main-content .container').innerHTML = `
         <div role="group" class="input-group mb-3">
             <input type="text" name="settingName" id="edit-setting-name" class="form-control" placeholder="Setting Name..">
             <input type="text" id="edit-setting-value" class="form-control" placeholder="New Value..">
-            <button class="btn btn-success" id="edit-setting">Submit</button>
+            <button class="btn btn-success w-25" id="edit-setting">Submit</button>
         </div>
 
         <label>Load Example Data</label>
@@ -60,16 +68,33 @@ document.querySelector('#main-content .container').innerHTML = `
             <button class="btn btn-secondary" id="clear-itemwishlist">Clear Item Wishlist</button>
         </div>
 
-        <label>Clear Specific Data Locations</label>
-        <p>Quickly clear specific locations of the extension's local data</p>
-        <div role="group" class="btn-group w-100 mb-3">
-            <button class="btn btn-secondary" id="delete-sync">Delete Sync Storage (primary, storage is backed up to Google account)</button>
-            <button class="btn btn-secondary" id="delete-local">Delete Local Storage (secondary, storage is only on local device)</button>
-        </div>
+        <hr>
 
-        <label style="color: red;">DANGER ZONE!</label>
-        <p>This will clear all local data associated with the extension</p>
-        <button class="btn btn-danger w-100" id="delete-all-data">Delete All Data</button>
+        <div class="card">
+            <div class="card-header text-primary">RUN TESTS</div>
+            <div class="card-body">
+                <label>Test "IRL Price with Brick Count"</label>
+                <p>will add later</p>
+            </div>
+        </div>
+        
+        <hr>
+
+        <div class="card">
+            <div class="card-header" style="color: red;">DANGER ZONE!</div>
+            <div class="card-body">
+                <label>Clear Specific Data Locations</label>
+                <p>Quickly clear specific locations of the extension's local data</p>
+                <div role="group" class="btn-group w-100 mb-3">
+                    <button class="btn btn-primary" id="delete-sync">Delete Sync Storage (primary, storage is backed up to Google account)</button>
+                    <button class="btn btn-secondary" id="delete-local">Delete Local Storage (secondary, storage is only on local device)</button>
+                </div>
+        
+                <label>Delete All Data</label>
+                <p>This will clear all local data associated with the extension</p>
+                <button class="btn btn-danger w-100 mb-3" id="delete-all-data">Delete All Data</button>
+            </div>
+        </div>
     </div>
 </div>
 `

@@ -1,5 +1,6 @@
 const UserID = window.location.pathname.split('/')[2];
 const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0]
+const AvatarHeading = document.querySelector('.section-title:has(i.fa-user-crown)')
 
 var Settings;
 var BestFriends;
@@ -26,14 +27,21 @@ if (UserID && !isNaN(UserID)) {
         }
 
         if (Settings.OutfitCostOn === true) {
-            CalculateButton = document.createElement('button')
-            CalculateButton.classList = 'btn btn-warning btn-sm'
-            CalculateButton.innerText = 'Calculate Avatar Cost'
-            AvatarRow.parentElement.parentElement.prepend(CalculateButton)
-            AvatarRow.parentElement.style.marginTop = '10px'
+            CalculateButton = document.createElement('small')
+            CalculateButton.classList = 'fw-normal text-success'
+            CalculateButton.style.letterSpacing = '0px'
+            CalculateButton.innerHTML = `
+            <a class="text-decoration-underline text-success" style="text-decoration-color: rgb(15, 132, 79) !important;">$ calculate</a>
+            `
+            AvatarHeading.appendChild(CalculateButton)
             
+            let Calculating = false
             CalculateButton.addEventListener('click', function(){
-                OutfitCost()
+                if (Calculating === false) {
+                    Calculating = true
+                    CalculateButton.innerText = '$ Calculating...'
+                    OutfitCost()
+                }
             });
         }
     });
@@ -104,7 +112,6 @@ if (UserID && !isNaN(UserID)) {
 
 async function IRLPrice() {
     const NetWorthElement = document.getElementsByClassName('float-end text-success')[0];
-    //const NetWorth = parseInt(NetWorthElement.innerText.replace(/,/g, ''));
     const IRLResult = await Utilities.CalculateIRL(NetWorthElement.innerText, Settings.IRLPriceWithCurrencyCurrency)
     NetWorthElement.innerText = NetWorthElement.innerText + " ($" + IRLResult.result + " " + IRLResult.display + ")"
 }
@@ -220,12 +227,11 @@ async function OutfitCost() {
             })
             .catch(error => {console.log(error)});
     }
-
-    const TotalCostText = document.createElement('small')
-    TotalCostText.classList = 'text-muted'
-    TotalCostText.style.padding = '20px'
-    TotalCostText.innerHTML = `${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' }<i class="pi pi-brick me-2"></i> ${AvatarCost.Total.toLocaleString()}${ (AvatarCost.Limiteds > 0) ? ` (has ${AvatarCost.Limiteds} limiteds)` : '' }${ (AvatarCost.Exclusives > 0) ? ` (has ${AvatarCost.Exclusives} exclusives)` : '' }`
-    AvatarRow.parentElement.parentElement.prepend(TotalCostText)
-    AvatarRow.parentElement.style.marginTop = '10px'
-    CalculateButton.remove();
+    const ResultText = document.createElement('small')
+    ResultText.classList = 'fw-normal text-success'
+    ResultText.style.letterSpacing = '0px'
+    ResultText.innerHTML = `(<i class="pi pi-brick mx-1"></i> ${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' } ${ AvatarCost.Total.toLocaleString() }${ (AvatarCost.Limiteds > 0) ? `, ${AvatarCost.Limiteds} limiteds` : '' }${ (AvatarCost.Exclusives > 0) ? `, ${AvatarCost.Exclusives} exclusives` : '' })`
+    
+    CalculateButton.remove()
+    AvatarHeading.appendChild(ResultText)
 }
