@@ -23,25 +23,6 @@ let Avatar = {
     "leftLegColor": "#e0e0e0",
     "rightLegColor": "#e0e0e0"
 }
-let ItemCardContents = `
-<div style="max-width: 150px;">
-    <div class="card mb-2 avatar-item-container">
-        <div class="p-2">
-            <img src=":ItemThumbnail" class="img-fluid">
-            <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
-                <span class="badge bg-secondary">:ItemType</span>
-            </span>
-            <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
-        </div>
-    </div>
-    <a href="/store/:ItemID" class="text-reset">
-        <h6 class="text-truncate mb-0"> :ItemName</h6>
-    </a>
-    <small class="text-muted d-block text-truncate">
-        by <a href="/users/:CreatorID" class="text-reset">:CreatorName</a>
-    </small>
-</div>
-`
 
 if (new URLSearchParams(new URL(window.location).search).get('sandbox') === 'true') {
     console.log('Avatar Sandbox!')
@@ -172,15 +153,27 @@ function RefreshItems() {
             data = data.assets
             data.forEach(item => {
                 let NewItemCard = document.createElement('div')
+                NewItemCard.setAttribute('data-id', item.id)
                 NewItemCard.classList = 'col-auto'
-                NewItemCard.innerHTML = ItemCardContents
-                    .replace(':ItemName', item.name)
-                    .replace(':ItemID', item.id)
-                    .replace(':ItemType', item.type)
-                    .replace(item.type.charAt(0), item.type.charAt(0).toUpperCase())
-                    .replace(':CreatorName', item.creator.name)
-                    .replace(':CreatorID', item.creator.id)
-                    .replace(':ItemThumbnail', item.thumbnail)
+                NewItemCard.innerHTML = `
+                <div style="max-width: 150px;">
+                    <div class="card mb-2 avatar-item-container">
+                        <div class="p-2">
+                            <img src="${item.thumbnail}" class="img-fluid">
+                            <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
+                                <span class="badge bg-secondary">${item.type.charAt(0).toUpperCase() + item.type.substring(1)}</span>
+                            </span>
+                            <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <a href="/store/${item.id}" class="text-reset">
+                        <h6 class="text-truncate mb-0">${item.name}</h6>
+                    </a>
+                    <small class="text-muted d-block text-truncate">
+                        by <a href="/users/${item.creator.id}" class="text-reset">${item.creator.name}</a>
+                    </small>
+                </div>
+                `
                 NewItemCard.getElementsByClassName('p-2')[0].addEventListener('click', function(){
                     WearAsset(NewItemCard, item)
                 });
@@ -268,7 +261,7 @@ function LoadMyself() {
 
 function WearAsset(element, info) {
     if (Avatar.items.indexOf(info.id) === -1 && Avatar[info.type] !== info.id) {
-        console.log('Equip')
+        console.log('Equip', info)
         switch(info.type) {
             case 'hat':
                 Avatar.items.push(info.id)
@@ -278,7 +271,7 @@ function WearAsset(element, info) {
                 break
         }
     } else {
-        console.log('unequip')
+        console.log('unequip', info)
         switch(info.type) {
             case 'hat':
                 Avatar.items.splice(Avatar.items.indexOf(info.id), 1)
@@ -290,6 +283,21 @@ function WearAsset(element, info) {
                 Avatar[info.type] = undefined
                 break
         }
+    }
+
+    const ToggleButton = element.getElementsByClassName('avatarAction')[0]
+    ToggleButton.classList.toggle('btn-success')
+    ToggleButton.classList.toggle('btn-danger')
+    ToggleButton.children[0].classList.toggle('fa-plus')
+    ToggleButton.children[0].classList.toggle('fa-minus')
+
+    const Duplicate = ItemGrid.querySelector(`[data-id="${info.id}"]`)
+    if (Duplicate !== null && Duplicate !== element) {
+        const DuplicateToggleButton = Duplicate.getElementsByClassName('avatarAction')[0]
+        DuplicateToggleButton.classList.toggle('btn-success')
+        DuplicateToggleButton.classList.toggle('btn-danger')
+        DuplicateToggleButton.children[0].classList.toggle('fa-plus')
+        DuplicateToggleButton.children[0].classList.toggle('fa-minus')
     }
 
     LoadWearing()
@@ -348,8 +356,8 @@ function LoadWearing() {
     });
 
     WearingItems.forEach(item => {
-
         const ExistingElement = Wearing.querySelector(`[data-itemid="${item}"]`);
+
         if (!ExistingElement) {
             fetch(`https://api.polytoria.com/v1/store/${item}`)
                 .then(response => {
@@ -363,14 +371,27 @@ function LoadWearing() {
                         Wearing.innerHTML = ''
                     }
                     let NewItemCard = document.createElement('div');
+                    NewItemCard.setAttribute('data-id', item.id)
                     NewItemCard.classList = 'col-auto';
-                    NewItemCard.innerHTML = ItemCardContents
-                        .replace(':ItemName', item.name)
-                        .replace(':ItemID', item.id)
-                        .replace(':ItemType', item.type.charAt(0).toUpperCase() + item.type.substring(1))
-                        .replace(':CreatorName', item.creator.name)
-                        .replace(':CreatorID', item.creator.id)
-                        .replace(':ItemThumbnail', item.thumbnail);
+                    NewItemCard.innerHTML = `
+                    <div style="max-width: 150px;">
+                        <div class="card mb-2 avatar-item-container">
+                            <div class="p-2">
+                                <img src="${item.thumbnail}" class="img-fluid">
+                                <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
+                                    <span class="badge bg-secondary">${item.type.charAt(0).toUpperCase() + item.type.substring(1)}</span>
+                                </span>
+                                <button class="avatarAction btn btn-danger btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <a href="/store/${item.id}" class="text-reset">
+                            <h6 class="text-truncate mb-0">${item.name}</h6>
+                        </a>
+                        <small class="text-muted d-block text-truncate">
+                            by <a href="/users/${item.creator.id}" class="text-reset">${item.creator.name}</a>
+                        </small>
+                    </div>
+                    `
                     Wearing.appendChild(NewItemCard);
                     NewItemCard.getElementsByClassName('p-2')[0].addEventListener('click', function () {
                         WearAsset(NewItemCard, item);
@@ -386,71 +407,3 @@ function LoadWearing() {
         Wearing.innerHTML = 'No items to show.'
     }
 }
-
-
-/*
-function LoadWearing() {
-    const WearingItems = [
-        ...Avatar.items,
-        Avatar.shirt,
-        Avatar.pants,
-        Avatar.face
-    ].filter(item => item !== null)
-
-    Array.from(Wearing.children).forEach(element => {
-        console.log('AAAAAAAAAAAA', element)
-    })
-}
-*/
-
-/*
-function LoadWearing() {
-    const AllItems = structuredClone(Avatar.items)
-    AllItems.push(Avatar.shirt)
-    AllItems.push(Avatar.pants)
-    AllItems.push(Avatar.face)
-    AllItems.forEach(item => {
-        if (item !== null) {
-            let Element = document.querySelector(`a[href="/store/${item}"]`)
-            if (Element !== null) {
-                console.log('exists - load wearing')
-                Element = Element.parentElement.parentElement
-                Wearing.appendChild(Element)
-            } else if (Element === null) {
-                console.log('doesn\' exist - load wearing')
-                fetch('https://api.polytoria.com/v1/store/:id'.replace(':id', item))
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network not ok')
-                        }
-                        return response.json()
-                    })
-                    .then(item => {
-                        let NewItemCard = document.createElement('div')
-                        NewItemCard.classList = 'col-auto'
-                        NewItemCard.innerHTML = ItemCardContents
-                            .replace(':ItemName', item.name)
-                            .replace(':ItemID', item.id)
-                            .replace(':ItemType', item.type.charAt(0).toUpperCase() + item.type.substring(1))
-                            .replace(':CreatorName', item.creator.name)
-                            .replace(':CreatorID', item.creator.id)
-                            .replace(':ItemThumbnail', item.thumbnail)
-                        Wearing.appendChild(NewItemCard)
-                        NewItemCard.getElementsByClassName('p-2')[0].addEventListener('click', function(){
-                            WearAsset(NewItemCard, item)
-                        });
-                    })
-                    .catch(error => {
-                        console.log('Fetch error: ' + error)
-                    });
-            } else if (item.type === TabSelected) {
-                console.log('item type is selected tab - load wearing')
-                ItemGrid.appendChild(Element)
-            } else {
-                console.log('remove item - load wearing')
-                Element.remove()
-            }
-        }
-    });
-}
-*/
