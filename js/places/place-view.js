@@ -92,6 +92,8 @@ let CalculateRevenueButton;
                 }
             })
         }
+
+        AchievementProgressBar()
     });
 })()
 
@@ -439,7 +441,6 @@ async function OwnedTags() {
 }
 
 async function PlaceRevenue() {
-    console.log('place revenue ran')
     const Visits = parseInt(document.querySelector('li:has(i.fad.fa-users.text-muted[style])').innerText)
     const BricksPerView = 5
     let Revenue = (round5(Visits) / 5)
@@ -456,8 +457,6 @@ async function PlaceRevenue() {
             CreatorTax = 0.15
             break
     }
-
-    console.log('CREATOR TAX: ' + CreatorTax)
 
     fetch(`https://api.polytoria.com/v1/places/${PlaceID}/gamepasses`)
         .then(response => {
@@ -486,3 +485,32 @@ async function PlaceRevenue() {
 }
 
 function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }
+
+function AchievementProgressBar() {
+    const Achievements = document.getElementById('achievements-tabpane')
+
+    const AchievementCount = Achievements.children.length
+    let AchievementsEarned = 0
+
+    for (let achievement of Array.from(Achievements.children)) {
+        const Achieved = (achievement.getElementsByClassName('fad fa-calendar')[0] !== undefined)
+
+        if (Achieved === true) {
+            AchievementsEarned++
+        }
+    }
+
+    const PercentageEarned = ((AchievementsEarned*100)/AchievementCount).toFixed(0)
+
+    const ProgressBar = document.createElement('div')
+    ProgressBar.role = 'progressbar'
+    ProgressBar.classList = 'progress'
+    ProgressBar.style.background = '#000'
+    ProgressBar.ariaValueNow = PercentageEarned
+    ProgressBar.ariaValueMin = "0"
+    ProgressBar.ariaValueMax = "100"
+    ProgressBar.innerHTML = `<div class="progress-bar progress-bar-striped text-bg-warning" style="width: ${PercentageEarned}%">${PercentageEarned}%</div>`
+
+    Achievements.prepend(document.createElement('hr'))
+    Achievements.prepend(ProgressBar)
+}

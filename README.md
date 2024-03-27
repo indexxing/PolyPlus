@@ -4,7 +4,7 @@
 > [!IMPORTANT]
 > This extension is currently in BETA. If you find any bugs, please report them in this repository's issues section as it'd be a great help towards development of the extension.
 
-> [!ROADMAP]
+> [!TIP]
 > Want to learn what's in store for Poly+? Check out the roadmap [here](https://github.com/users/indexxing/projects/2)!
 
 # Poly+

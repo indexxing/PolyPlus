@@ -230,7 +230,7 @@ async function OutfitCost() {
     const ResultText = document.createElement('small')
     ResultText.classList = 'fw-normal text-success'
     ResultText.style.letterSpacing = '0px'
-    ResultText.innerHTML = `(<i class="pi pi-brick mx-1"></i> ${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' } ${ AvatarCost.Total.toLocaleString() }${ (AvatarCost.Limiteds > 0) ? `, ${AvatarCost.Limiteds} limiteds` : '' }${ (AvatarCost.Exclusives > 0) ? `, ${AvatarCost.Exclusives} exclusives` : '' })`
+    ResultText.innerHTML = `(<i class="pi pi-brick mx-1"></i> ${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' }${ AvatarCost.Total.toLocaleString() }${ (AvatarCost.Limiteds > 0) ? `, ${AvatarCost.Limiteds} limited` : '' }${ (AvatarCost.Exclusives > 0) ? `, ${AvatarCost.Exclusives} exclusive` : '' })`
     
     CalculateButton.remove()
     AvatarHeading.appendChild(ResultText)
