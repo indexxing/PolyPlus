@@ -4,6 +4,9 @@
 > [!IMPORTANT]
 > This extension is currently in BETA. If you find any bugs, please report them in this repository's issues section as it'd be a great help towards development of the extension.
 
+> [!ROADMAP]
+> Want to learn what's in store for Poly+? Check out the roadmap [here](https://github.com/users/indexxing/projects/2)!
+
 # Poly+
 
 Poly+ is an upcoming quality-of-life browser extension for the Polytoria website! The extension provides tons of improvements to improve your experience on Polytoria! Visit the website [here](https://polyplus.vercel.app/)!

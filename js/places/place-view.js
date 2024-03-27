@@ -1,5 +1,6 @@
-const GameID = window.location.pathname.split('/')[2]
+const PlaceID = window.location.pathname.split('/')[2]
 const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2]
 
 let Utilities;
 
@@ -7,8 +8,11 @@ var Settings;
 var PinnedGamesData = []
 let GamePinned;
 
+let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-container) .card:last-child ul')
+let CalculateRevenueButton;
+
 !(() => {
-    if (GameID === undefined) { return }
+    if (PlaceID === undefined) { return }
 
     const DataContainer = document.getElementById('likes-data-container')
     const RatingsData = {
@@ -64,6 +68,30 @@ let GamePinned;
         if (Settings.StoreOwnTagsOn === true) {
             OwnedTags()
         }
+
+        if (Settings.ShowPlaceRevenueOn === true) {
+            const NameRow = document.createElement('li')
+            NameRow.innerText = 'Revenue:'
+
+            CalculateRevenueButton = document.createElement('li')
+            CalculateRevenueButton.classList = 'fw-normal text-success'
+            CalculateRevenueButton.style.letterSpacing = '0px'
+            CalculateRevenueButton.innerHTML = `
+            <a class="text-decoration-underline text-success" style="text-decoration-color: rgb(15, 132, 79) !important;">$ Calculate</a>
+            `
+
+            InfoColumns[0].appendChild(NameRow)
+            InfoColumns[1].appendChild(CalculateRevenueButton)
+
+            let Calculating = false
+            CalculateRevenueButton.addEventListener('click', function() {
+                if (Calculating === false) {
+                    Calculating = true
+                    CalculateRevenueButton.innerText = '$ Calculating...'
+                    PlaceRevenue()
+                }
+            })
+        }
     });
 })()
 
@@ -75,7 +103,7 @@ async function PinnedGames() {
         PinBtn.classList = 'btn btn-warning btn-sm';
         PinBtn.style = 'position: absolute; right: 0; margin-right: 7px;'
         
-        if (PinnedGamesData[GameID]) {
+        if (PinnedGamesData[PlaceID]) {
             PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
         } else {
             if (PinnedGames.length !== 5) {
@@ -90,7 +118,7 @@ async function PinnedGames() {
         PinBtn.classList = 'btn btn-warning btn-sm';
         PinBtn.style = 'position: absolute; right: 0; margin-right: 7px;'
         
-        if (PinnedGamesData.includes(parseInt(GameID))) {
+        if (PinnedGamesData.includes(parseInt(PlaceID))) {
             PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
         } else {
             if (PinnedGamesData.length !== 5) {
@@ -107,23 +135,23 @@ async function PinnedGames() {
             chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result) {
                 PinnedGamesData = result.PolyPlus_PinnedGames || [];
                 /*
-                const Index = PinnedGames.indexOf(parseInt(GameID))
+                const Index = PinnedGames.indexOf(parseInt(PlaceID))
                 if (Index !== -1) {
-                    //delete PinnedGames[GameID]
+                    //delete PinnedGames[PlaceID]
                     PinnedGames.splice(Index, 1)
                     PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Pin'
                 } else {
-                    //PinnedGames[GameID] = {lastVisited: new Date()}
-                    PinnedGames.push(parseInt(GameID))
+                    //PinnedGames[PlaceID] = {lastVisited: new Date()}
+                    PinnedGames.push(parseInt(PlaceID))
                     PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
                 }
                 */
-                const Index = PinnedGamesData.indexOf(parseInt(GameID));
+                const Index = PinnedGamesData.indexOf(parseInt(PlaceID));
                 if (Index !== -1) {
                     PinnedGamesData.splice(Index, 1);
                     PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Pin'
                 } else {
-                    PinnedGamesData.push(parseInt(GameID));
+                    PinnedGamesData.push(parseInt(PlaceID));
                     PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
                 }
                 
@@ -144,7 +172,7 @@ async function PinnedGames() {
                     PinnedGamesData = result.PolyPlus_PinnedGames || [];
         
                     /*
-                    if (PinnedGamesData[GameID]) {
+                    if (PinnedGamesData[PlaceID]) {
                         PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
                     } else {
                         if (PinnedGamesData.length !== 5) {
@@ -156,7 +184,7 @@ async function PinnedGames() {
                         }
                     }
                     */
-                    if (PinnedGamesData.includes(parseInt(GameID))) {
+                    if (PinnedGamesData.includes(parseInt(PlaceID))) {
                         PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
                     } else {
                         if (PinnedGamesData.length !== 5) {
@@ -179,7 +207,6 @@ async function InlineEditing() {
     // Add the ability to edit the game's genre
     // Improve editing visuals overall
 
-    const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2]
     if (GameCreator !== UserID) {
         return
     }
@@ -278,7 +305,7 @@ async function InlineEditing() {
         if (Editing === false) {
             const Send = new FormData()
             Send.append("_csrf", document.querySelector('input[name="_csrf"]').value)
-            Send.append("id", GameID)
+            Send.append("id", PlaceID)
             for (let input of Inputs) {
                 console.log('start of loop')
                 Send.append(input.name, input.element.value)
@@ -314,7 +341,7 @@ async function InlineEditing() {
         if (Editing === false) {
             const Send = new FormData()
             Send.append("_csrf", document.querySelector('input[name="_csrf"]').value)
-            Send.append("id", GameID)
+            Send.append("id", PlaceID)
             Send.append("name", PlaceTitle.innerText || '')
             
             fetch('/create/place/update', {method:"POST",body:Send})
@@ -394,7 +421,7 @@ async function IRLPrice() {
 
 async function OwnedTags() {
     /*
-    This feature is disabled due to the the public API for user inventories is broken when specifying an asset type
+    This feature is disabled due to Polytoria website now having this without the use of an extension - items are now grayed out if they are owned
     */
     return
     const Response = await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory/')
@@ -410,3 +437,52 @@ async function OwnedTags() {
         console.log(GamePassID)
     }
 }
+
+async function PlaceRevenue() {
+    console.log('place revenue ran')
+    const Visits = parseInt(document.querySelector('li:has(i.fad.fa-users.text-muted[style])').innerText)
+    const BricksPerView = 5
+    let Revenue = (round5(Visits) / 5)
+
+    let CreatorDetails = await fetch('https://api.polytoria.com/v1/users/' + GameCreator)
+    CreatorDetails = await CreatorDetails.json()
+
+    let CreatorTax = 0.35
+    switch (CreatorDetails.membershipType) {
+        case 'plus':
+            CreatorTax = 0.25
+            break
+        case 'plusDeluxe':
+            CreatorTax = 0.15
+            break
+    }
+
+    console.log('CREATOR TAX: ' + CreatorTax)
+
+    fetch(`https://api.polytoria.com/v1/places/${PlaceID}/gamepasses`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network not ok')
+            }
+            return response.json()
+        })
+        .then(data => {
+            for (let gamepass of data.gamepasses) {
+                const PriceAfterTax = Math.floor(gamepass.asset.price - (gamepass.asset.price * CreatorTax))
+                Revenue += (PriceAfterTax * gamepass.asset.sales)
+            }
+
+            const ResultText = document.createElement('li')
+            ResultText.classList = 'fw-normal text-success'
+            ResultText.style.letterSpacing = '0px'
+            ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString()
+    
+            CalculateRevenueButton.remove()
+            InfoColumns[1].appendChild(ResultText)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+}
+
+function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }
