@@ -11,6 +11,9 @@ let GamePinned;
 let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-container) .card:last-child ul')
 let CalculateRevenueButton;
 
+const AchievementsTab = document.getElementById('achievements-tabpane')
+const Achievements = Array.from(AchievementsTab.children)
+
 !(() => {
     if (PlaceID === undefined) { return }
 
@@ -93,7 +96,10 @@ let CalculateRevenueButton;
             })
         }
 
-        AchievementProgressBar()
+        if (AchievementsTab.getElementsByClassName('display-3')[0] === undefined) {
+            AchievementProgressBar()
+            AchievementEarnedPercentage()
+        }
     });
 })()
 
@@ -481,19 +487,17 @@ async function PlaceRevenue() {
         })
         .catch(error => {
             console.log(error)
-        })
+        });
 }
 
 function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }
 
 function AchievementProgressBar() {
-    const Achievements = document.getElementById('achievements-tabpane')
-
-    const AchievementCount = Achievements.children.length
+    const AchievementCount = Achievements.length
     let AchievementsEarned = 0
 
-    for (let achievement of Array.from(Achievements.children)) {
-        const Achieved = (achievement.getElementsByClassName('fad fa-calendar')[0] !== undefined)
+    for (let achievement of Achievements) {
+        Achieved = (achievement.getElementsByClassName('fad fa-calendar')[0] !== undefined)
 
         if (Achieved === true) {
             AchievementsEarned++
@@ -511,6 +515,35 @@ function AchievementProgressBar() {
     ProgressBar.ariaValueMax = "100"
     ProgressBar.innerHTML = `<div class="progress-bar progress-bar-striped text-bg-warning" style="width: ${PercentageEarned}%">${PercentageEarned}%</div>`
 
-    Achievements.prepend(document.createElement('hr'))
-    Achievements.prepend(ProgressBar)
+    AchievementsTab.prepend(document.createElement('hr'))
+    AchievementsTab.prepend(ProgressBar)
+}
+
+function AchievementEarnedPercentage() {
+    fetch ('https://api.polytoria.com/v1/users/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network not ok')
+            }
+            return response.json()
+        })
+        .then(data => {
+            const UserCount = data.total
+            for (let achievement of Achievements) {
+                const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0]
+                // thanks to Stackoverflow on how to remove everything except numbers from string
+                const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''))
+                const PercentageOfPlayers = ((OwnerCount*100)/UserCount).toFixed(2)
+
+                OwnerText.innerHTML += " (" + PercentageOfPlayers + "%)"
+
+                /*
+                const PercentageText = document.createElement('small')
+                PercentageText.style.fontSize = '0.75rem;'
+                PercentageText.innerText = PercentageOfPlayers + '% of Polytoria players have this achievement'
+                achievement.getElementsByClassName('col-10')[0].appendChild(PercentageText)
+                */
+            }
+        })
+        .catch(error => {console.log(error)});
 }
