@@ -1,17 +1,21 @@
-const ID = window.location.pathname.split('/')[3]
+const PlaceID = window.location.pathname.split('/')[3]
 const Form = document.querySelector('form[action="/create/place/update"]')
 
 var Settings;
+var PlaceData = null
 
 !(async () => {
     ActivityToggle()
     //RequestGameProfile()
+    CopyOwnedPlace()
 })()
 
 async function ActivityToggle() {
-    const Response = await fetch('https://api.polytoria.com/v1/places/'+ID)
-    let Status = await Response.json()
-    Status = Status.isActive
+    if (PlaceData === null) {
+        PlaceData = await fetch('https://api.polytoria.com/v1/places/' + PlaceID)
+        PlaceData = await PlaceData.json()
+    }
+    let Status = PlaceData.isActive
 
     const DIV = document.createElement('div')
     DIV.classList = 'form-group mt-4'
@@ -32,7 +36,7 @@ async function ActivityToggle() {
     DIV.appendChild(ActivityBtn)
 
     ActivityBtn.addEventListener('click', function() {
-        fetch(`https://polytoria.com/api/places/${ID}/toggle-active`, {
+        fetch(`https://polytoria.com/api/places/${PlaceID}/toggle-active`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -84,6 +88,71 @@ function RequestGameProfile() {
             cardBg: CardBody.children[4].value,
             text: CardBody.children[5].value
         }
-        window.location.href = 'https://polyplus.vercel.app/app/game-profile.html?gameId=' + ID + '&profile=' + encodeURIComponent(btoa(JSON.stringify(Result)))
+        window.location.href = 'https://polyplus.vercel.app/app/game-profile.html?gameId=' + PlaceID + '&profile=' + encodeURIComponent(btoa(JSON.stringify(Result)))
     });
+}
+
+async function CopyOwnedPlace() {
+    console.log('ran function')
+    if (PlaceData === null) {
+        PlaceData = await fetch('https://api.polytoria.com/v1/places/' + PlaceID)
+        PlaceData = await PlaceData.json()
+    }
+
+    if (PlaceData.creator.id !== parseInt(JSON.parse(window.localStorage.getItem('account_info')).ID)) {
+        console.log('returned')
+        return
+    }
+
+    const DIV = document.createElement('div')
+    DIV.classList = 'form-group mt-4'
+    DIV.innerHTML = `
+    <label class="mb-2">
+      <h5 class="mb-0">Download <code style="color: orange;">.poly</code> File</h5>
+      <small class="text-muted">Quickly download your place from the site!</small>
+    </label>
+    <br>
+    <button type="button" class="btn btn-primary">Download</button>
+    `
+
+    Form.insertBefore(DIV, Form.children[Form.children.length-1])
+
+    const DownloadButton = DIV.getElementsByTagName('button')[0]
+    DownloadButton.addEventListener('click', async function() {
+        console.log('clicked download epic')
+
+        let CreatorToken = await fetch('https://polytoria.com/api/places/edit', {
+            method: "POST",
+            headers: {
+                'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value
+            },
+            body: JSON.stringify({ placeID: PlaceID })
+        })
+        CreatorToken = await CreatorToken.json()
+        CreatorToken = CreatorToken.token
+
+        fetch(`https://api.polytoria.com/v1/places/get-place?id=${PlaceID}&tokenType=creator`, {
+            headers: {
+                'Authorization': CreatorToken
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network not ok')
+                }
+                return response.blob()
+            })
+            .then(data => {
+                //const JSONBlob = new Blob([data], {type: "application/xml"})
+                const DownloadURL = URL.createObjectURL(data)
+
+                const Link = document.createElement('a')
+                Link.href = DownloadURL
+                Link.download = PlaceData.name + '.poly'
+                document.body.appendChild(Link)
+                Link.click()
+                Link.remove()
+            })
+            .catch(error => {console.log(error)});
+    })
 }

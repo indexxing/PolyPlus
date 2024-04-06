@@ -12,7 +12,7 @@ let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-
 let CalculateRevenueButton;
 
 const AchievementsTab = document.getElementById('achievements-tabpane')
-const Achievements = Array.from(AchievementsTab.children)
+const Achievements = Array.from(AchievementsTab.getElementsByClassName('card'))
 
 !(() => {
     if (PlaceID === undefined) { return }
@@ -68,10 +68,6 @@ const Achievements = Array.from(AchievementsTab.children)
             })();
         }
 
-        if (Settings.StoreOwnTagsOn === true) {
-            OwnedTags()
-        }
-
         if (Settings.ShowPlaceRevenueOn === true) {
             const NameRow = document.createElement('li')
             NameRow.innerText = 'Revenue:'
@@ -99,6 +95,12 @@ const Achievements = Array.from(AchievementsTab.children)
         if (AchievementsTab.getElementsByClassName('display-3')[0] === undefined) {
             AchievementProgressBar()
             AchievementEarnedPercentage()
+
+            for (let achievement of Achievements) {
+                if ((achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined) === false) {
+                    achievement.style.opacity = '0.5'
+                }
+            }
         }
     });
 })()
@@ -339,39 +341,9 @@ async function InlineEditing() {
                     console.log('Error while editing game')
                 });
         }
-
-        /*
-        PlaceTitleSpan.setAttribute('contenteditable', Editing.toString())
-        if (PlaceDesc !== null) {
-            console.log('Description exists')
-            PlaceDesc.setAttribute('contenteditable', Editing.toString())
-        }
-        if (Editing === false) {
-            const Send = new FormData()
-            Send.append("_csrf", document.querySelector('input[name="_csrf"]').value)
-            Send.append("id", PlaceID)
-            Send.append("name", PlaceTitle.innerText || '')
-            
-            fetch('/create/place/update', {method:"POST",body:Send})
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network not ok')
-                    }
-                    return response.text()
-                })
-                .then(data => {
-                    console.log('Successfully edited game')
-                })
-                .catch(error => {
-                    console.log('Error while editing game')
-                });
-        }
-        */
     });
 }
 
-//const Data = JSON.parse('{"gameTitle": "Hyper[Fart]","bg": "#000","accent": "#007bff","secondary": "#","cardBg": "#313131","font": "","text": "#fff"}')
-const Data = JSON.parse('{"gameTitle":"Isolation: Brix High School","bg":"#0148af","accent":"#986c6a","secondary":"#b7d3f2","cardBg":"#313131","text":"#fff"}')
 async function GameProfiles(data) {
     return
     data = Data
@@ -427,25 +399,6 @@ async function IRLPrice() {
     }
 }
 
-async function OwnedTags() {
-    /*
-    This feature is disabled due to Polytoria website now having this without the use of an extension - items are now grayed out if they are owned
-    */
-    return
-    const Response = await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory/')
-    const Gamepasses = document.querySelector('#gamepasses-tabpane .row.flex-row').children
-    for (let gamepass of Gamepasses) {
-        const GamePassID = gamepass.getElementsByTagName('a')[0].getAttribute('href').split('/')
-        console.log(GamePassID)
-    }
-
-    const Achievements = document.querySelector('#achievements-tabpane .row.flex-row').children
-    for (let gamepass of Achievements) {
-        const GamePassID = gamepass.getElementsByTagName('a')[0].getAttribute('href').split('/')
-        console.log(GamePassID)
-    }
-}
-
 async function PlaceRevenue() {
     const Visits = parseInt(document.querySelector('li:has(i.fad.fa-users.text-muted[style])').innerText)
     const BricksPerView = 5
@@ -492,12 +445,60 @@ async function PlaceRevenue() {
 
 function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }
 
+function ImprovedAchievements() {
+    const AchievementCount = Achievements.length
+    let AchievementsEarned = 0
+
+    for (let achievement of Achievements) {
+        Achieved = (achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined)
+
+        if (Achieved === true) {
+            achievement.style.borderColor = 'gold'
+            AchievementsEarned++
+        }
+    }
+
+    const PercentageEarned = ((AchievementsEarned*100)/AchievementCount).toFixed(0)
+
+    const ProgressBar = document.createElement('div')
+    ProgressBar.role = 'progressbar'
+    ProgressBar.classList = 'progress'
+    ProgressBar.style.background = '#000'
+    ProgressBar.ariaValueNow = PercentageEarned
+    ProgressBar.ariaValueMin = "0"
+    ProgressBar.ariaValueMax = "100"
+    ProgressBar.innerHTML = `<div class="progress-bar progress-bar-striped text-bg-warning" style="width: ${PercentageEarned}%">${PercentageEarned}%</div>`
+
+    AchievementsTab.prepend(document.createElement('hr'))
+    AchievementsTab.prepend(ProgressBar)
+
+    fetch('https://api.polytoria.com/v1/users/')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network not ok')
+            }
+            return response.json()
+        })
+        .then(data => {
+            const UserCount = data.total
+            for (let achievement of Achievements) {
+                const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0]
+                // thanks to Stackoverflow on how to remove everything except numbers from string
+                const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''))
+                const PercentageOfPlayers = ((OwnerCount*100)/UserCount).toFixed(2)
+
+                OwnerText.innerHTML += " (" + PercentageOfPlayers + "%)"
+            }
+        })
+        .catch(error => {console.log(error)});
+}
+
 function AchievementProgressBar() {
     const AchievementCount = Achievements.length
     let AchievementsEarned = 0
 
     for (let achievement of Achievements) {
-        Achieved = (achievement.getElementsByClassName('fad fa-calendar')[0] !== undefined)
+        Achieved = (achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined)
 
         if (Achieved === true) {
             AchievementsEarned++
@@ -520,7 +521,7 @@ function AchievementProgressBar() {
 }
 
 function AchievementEarnedPercentage() {
-    fetch ('https://api.polytoria.com/v1/users/')
+    fetch('https://api.polytoria.com/v1/users/')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network not ok')
@@ -536,13 +537,6 @@ function AchievementEarnedPercentage() {
                 const PercentageOfPlayers = ((OwnerCount*100)/UserCount).toFixed(2)
 
                 OwnerText.innerHTML += " (" + PercentageOfPlayers + "%)"
-
-                /*
-                const PercentageText = document.createElement('small')
-                PercentageText.style.fontSize = '0.75rem;'
-                PercentageText.innerText = PercentageOfPlayers + '% of Polytoria players have this achievement'
-                achievement.getElementsByClassName('col-10')[0].appendChild(PercentageText)
-                */
             }
         })
         .catch(error => {console.log(error)});
