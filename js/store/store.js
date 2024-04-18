@@ -11,14 +11,11 @@ var Utilities;
 })();
 
 const ItemGrid = document.getElementById('assets')
-var Inventory = [];
+var Inventory = null;
 
-chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-    Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
-    console.log(Settings)
-});
+chrome.storage.sync.get(['PolyPlus_Settings'], function(result){ Settings = result.PolyPlus_Settings || Utilities.DefaultSettings; });
 
-function Update() {
+async function Update() {
     if (Settings.IRLPriceWithCurrencyOn === true) {
         Array.from(ItemGrid.children).forEach(element => {
             LoadIRLPrices(element)
@@ -26,38 +23,20 @@ function Update() {
     }
 
     if (Settings.StoreOwnTagOn === true) {
+        Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?limit=50')).json()).inventory
         Array.from(ItemGrid.children).forEach(element => {
             LoadOwnedTags(element)
         });
     }
+
 }
 
 const observer = new MutationObserver(async function (list){
     for (const record of list) {
         for (const element of record.addedNodes) {
             if (element.tagName === "DIV" && element.classList.value === 'mb-3 itemCardCont') {
-                if (Settings.IRLPriceWithCurrencyOn === true) {LoadIRLPrices(element)}
-                if (Settings.StoreOwnTagOn === true) {
-                    if (Inventory.length === 0) {
-                        await fetch("https://api.polytoria.com/v1/users/:id/inventory".replace(':id', UserID))
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network not ok')
-                                }
-                                return response.json()
-                            })
-                            .then(data => {
-                                Inventory = data.data;
-                                LoadOwnedTags(element)
-                                return
-                            })
-                            .catch(error => {
-                                console.log(error)
-                            });
-                    } else {
-                        LoadOwnedTags(element)
-                    }
-                }
+                if (Settings.IRLPriceWithCurrencyOn === true) { LoadIRLPrices(element) }
+                if (Settings.StoreOwnTagOn === true) { LoadOwnedTags(element) }
             }
         }
         observer.observe(ItemGrid, {attributes: false,childList: true,subtree: false});
@@ -67,7 +46,8 @@ const observer = new MutationObserver(async function (list){
 observer.observe(ItemGrid, {attributes: false,childList: true,subtree: false});
 
 async function LoadIRLPrices(element) {
-    if (element.tagName != "DIV") {return}
+    //if (element.tagName !=)
+    //if (element.tagName != "DIV") {return}
     if (element.querySelector('small.text-primary')) {return}
     const Parent = element.getElementsByTagName('small')[1]
     if (Parent.innerText === "") { return }
@@ -82,10 +62,10 @@ async function LoadIRLPrices(element) {
 
 function LoadOwnedTags(element) {
     let Item = CheckInventory(parseInt(element.querySelector('[href^="/store/"]').getAttribute('href').split('/')[2]))
-    if (Item.id) {
-        var Tag = document.createElement('span')
+    if (Item !== null) {
+        const Tag = document.createElement('span')
         Tag.classList = 'badge bg-primary polyplus-own-tag'
-        Tag.setAttribute('style', 'position: absolute;font-size: 0.7rem;top: 0px;left: 0px;padding: 5.5px;border-top-left-radius: var(--bs-border-radius-lg)!important;border-top-right-radius: 0px;border-bottom-left-radius: 0px;font-size: 0.65rem;')
+        Tag.style = 'position: absolute;font-size: 0.7rem;top: 0px;left: 0px;padding: 5.5px;border-top-left-radius: var(--bs-border-radius-lg)!important;border-top-right-radius: 0px;border-bottom-left-radius: 0px;font-size: 0.65rem;'
         if (Item.asset.isLimited === false) {
             Tag.innerText = "owned"
         } else {
@@ -96,11 +76,13 @@ function LoadOwnedTags(element) {
 }
 
 function CheckInventory(id) {
-    let Item = {}
+    let Item = null
     Inventory.forEach(element => {
         if (element.asset.id === id) {
             Item = element
         }
     })
     return Item
+}
+
 }
