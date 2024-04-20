@@ -1,5 +1,13 @@
 var Settings;
-let Theme = null;
+let Theme = `
+html:has(.polyplus-modal[open]), body:has(.polyplus-modal[open]) {
+  overflow: hidden;
+}
+
+.polyplus-modal::backdrop {
+  background: rgba(0, 0, 0, 0.73);
+}
+`;
 
 (async () => {
   let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
@@ -24,7 +32,7 @@ let Theme = null;
           Settings.ThemeCreator.BGImageSize = 'contain'
           break
       }
-      Theme = `
+      Theme += `
       :root {
         --polyplus-navbgcolor: ${Settings.ThemeCreator.NavBGColor};
         --polyplus-navbordercolor: ${Settings.ThemeCreator.NavBorderColor};
@@ -111,11 +119,11 @@ let Theme = null;
         color: var(--polyplus-sidebaritemlabelcolor) !important;
       }
       `
-
-      const ThemeBlob = new Blob([Theme], { type: 'text/css' })
-      const ThemeURL = window.URL.createObjectURL(ThemeBlob)
-      document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`
     }
+
+    const ThemeBlob = new Blob([Theme], { type: 'text/css' })
+    const ThemeURL = window.URL.createObjectURL(ThemeBlob)
+    document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`
   });
   
   document.addEventListener('DOMContentLoaded', async function() {

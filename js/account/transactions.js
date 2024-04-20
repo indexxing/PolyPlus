@@ -1,5 +1,3 @@
-setTimeout(function () {}, 100)
-
 /*
 let Currencies;
 
@@ -15,7 +13,7 @@ let Utilities;
     Utilities = Utilities.default
 })();
 
-let Nav = document.querySelector('.nav-pills')
+let Nav = document.getElementsByClassName('nav-pills')[0]
 let DIV = document.createElement('div')
 DIV.innerHTML = `
 <input id="polyplus-brickconverter-input" type="number" class="form-control bg-dark mb-2" placeholder="How many Bricks?">
@@ -66,10 +64,11 @@ Package.addEventListener('change', function(){
 */
 
 async function Update(){
-    //let DISPLAY = Type.options[Type.selectedIndex].value
-    //let IRL = (parseInt(Input.value.replace(/,/g, '')) * Currencies.Data[Package.selectedIndex][DISPLAY]).toFixed(2)
+    if (Input.value === "") {
+        Output.value = ''
+        return
+    }
     const IRLResult = await Utilities.CalculateIRL(Input.value, Type.selectedIndex)
-    console.log(Input.value, Type.options[Type.selectedIndex].value, Result)
     Output.value = "$" + IRLResult.result  + " " + IRLResult.display
 }
 

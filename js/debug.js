@@ -223,5 +223,5 @@ document.getElementById('delete-all-data').addEventListener('click', function(){
 });
 
 chrome.storage.sync.getBytesInUse(["PolyPlus_Settings", "PolyPlus_PinnedGames", "PolyPlus_BestFriends", "PolyPlus_ItemWishlist"], function(bytes){
-    document.getElementById('data-size').innerText = bytes
+    document.getElementById('data-size').innerText = bytes.toLocaleString()
 });

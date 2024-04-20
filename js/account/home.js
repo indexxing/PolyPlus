@@ -6,6 +6,8 @@ var Settings;
 var PinnedGamesData
 var BestFriendsData
 
+let Utilities;
+
 chrome.storage.sync.get(['PolyPlus_Settings'], async function(result) {
     Settings = result.PolyPlus_Settings || {}
 
@@ -170,19 +172,21 @@ SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[0]);
 
 async function IRLPrice() {
     (async () => {
-        let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+        Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
         Utilities = Utilities.default
 
         const TrendingItems = document.getElementById('home-trendingItems')
         for (let item of TrendingItems.children[1].getElementsByClassName('d-flex')[0].children) {
             const Price = item.getElementsByClassName('text-success')[0]
-            const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+            if (Price !== undefined) {
+                const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
             
-            let Span = document.createElement('span')
-            Span.classList = 'text-muted polyplus-price-tag'
-            Span.style.fontSize = '0.7rem'
-            Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
-            Price.appendChild(Span)
+                let Span = document.createElement('span')
+                Span.classList = 'text-muted polyplus-price-tag'
+                Span.style = 'font-size: 0.7rem; font-weight: lighter;'
+                Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
+                Price.appendChild(Span)
+            }
         }
     })();
 }

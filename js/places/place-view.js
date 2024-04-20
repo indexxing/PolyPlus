@@ -400,12 +400,16 @@ async function IRLPrice() {
 }
 
 async function PlaceRevenue() {
-    const Visits = parseInt(document.querySelector('li:has(i.fad.fa-users.text-muted[style])').innerText)
     const BricksPerView = 5
-    let Revenue = (round5(Visits) / 5)
+
+    let PlaceDetails = await fetch('https://api.polytoria.com/v1/places/' + PlaceID)
+    PlaceDetails = await PlaceDetails.json()
 
     let CreatorDetails = await fetch('https://api.polytoria.com/v1/users/' + GameCreator)
     CreatorDetails = await CreatorDetails.json()
+
+    let Total = (round5(PlaceDetails.uniqueVisits) / 5)
+    let Revenue = (round5(PlaceDetails.uniqueVisits) / 5)
 
     let CreatorTax = 0.35
     switch (CreatorDetails.membershipType) {
@@ -417,30 +421,30 @@ async function PlaceRevenue() {
             break
     }
 
-    fetch(`https://api.polytoria.com/v1/places/${PlaceID}/gamepasses`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network not ok')
-            }
-            return response.json()
-        })
-        .then(data => {
-            for (let gamepass of data.gamepasses) {
-                const PriceAfterTax = Math.floor(gamepass.asset.price - (gamepass.asset.price * CreatorTax))
-                Revenue += (PriceAfterTax * gamepass.asset.sales)
-            }
+    let Achievements = await fetch('https://api.polytoria.com/v1/places/' + PlaceID + '/achievements')
+    Achievements = await Achievements.json()
 
-            const ResultText = document.createElement('li')
-            ResultText.classList = 'fw-normal text-success'
-            ResultText.style.letterSpacing = '0px'
-            ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString()
-    
-            CalculateRevenueButton.remove()
-            InfoColumns[1].appendChild(ResultText)
-        })
-        .catch(error => {
-            console.log(error)
-        });
+    let Gamepasses = await fetch('https://api.polytoria.com/v1/places/' + PlaceID + '/gamepasses')
+    Gamepasses = await Gamepasses.json()
+
+    for (let gamepass of Gamepasses.gamepasses) {
+        const PriceAfterTax = Math.floor(gamepass.asset.price - (gamepass.asset.price * CreatorTax))
+        Revenue += (PriceAfterTax * gamepass.asset.sales)
+    }
+
+    /*
+    for (let achievement of Achievements.achievements) {
+        // decrease total by price of achievement creation based on when the achievement was created
+    }
+    */
+
+    const ResultText = document.createElement('li')
+    ResultText.classList = 'fw-normal text-success'
+    ResultText.style.letterSpacing = '0px'
+    ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString()
+
+    CalculateRevenueButton.remove()
+    InfoColumns[1].appendChild(ResultText)
 }
 
 function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }

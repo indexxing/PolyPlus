@@ -1,4 +1,3 @@
-setTimeout(function() {}, 100)
 var SelectedTrades = []
 
 let Parent = document.getElementsByClassName('card mcard p-5 text-center text-muted')[0].parentElement

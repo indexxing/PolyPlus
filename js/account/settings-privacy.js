@@ -1,5 +1,3 @@
-setTimeout(function () {}, 100)
-
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
     if (result.PolyPlus_Settings.MoreSearchFiltersOn === true) {
         const BlockedUsersCard = document.getElementsByClassName('card-body')[1]

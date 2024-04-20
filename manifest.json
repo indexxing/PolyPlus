@@ -92,7 +92,7 @@
         },
 
         {
-            "matches": ["https://polytoria.com/my/settings/transactions"],
+            "matches": ["https://polytoria.com/my/settings/transactions*"],
             "js": ["/js/account/transactions.js"]
         },
 

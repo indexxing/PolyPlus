@@ -63,7 +63,11 @@ export default {
     ApplyMembershipThemeTheme: 0,
     MultiCancelOutTradesOn: true,
     ItemWishlistOn: true,
-    HideUpgradeBtnOn: false
+    HideUpgradeBtnOn: false,
+    TryOnItemsOn: true,
+    OutfitCostOn: true,
+    ShowPlaceRevenueOn: true,
+    ReplaceItemSalesOn: false
   },
   CalculateIRL: async function(bricks, to, brickPackage) {
     /*
@@ -81,7 +85,6 @@ export default {
     let Display = "Currency Not Found";
 
     bricks = ParseFullNumber(bricks.replace(/,/g, ''))
-    console.log(bricks)
     switch (to) {
       // U.S. Dollar
       case 0:
@@ -91,43 +94,43 @@ export default {
 
       // Euro
       case 1:
-        Result = (bricks.replace(/,/g, '') * 0.009).toFixed(2)
+        Result = (bricks * 0.009).toFixed(2)
         Display = "EUR"
         break
 
       // Canadian Dollar
       case 2:
-        Result = (bricks.replace(/,/g, '') * 0.0131).toFixed(2)
+        Result = (bricks * 0.0131).toFixed(2)
         Display = "CAD"
         break
 
       // Great British Pound
       case 3:
-        Result = (bricks.replace(/,/g, '') * 0.0077).toFixed(2)
+        Result = (bricks * 0.0077).toFixed(2)
         Display = "GBP"
         break
 
       // Mexican Peso
       case 4:
-        Result = (bricks.replace(/,/g, '') * 0.1691).toFixed(2)
+        Result = (bricks * 0.1691).toFixed(2)
         Display = "MXN"
         break
 
       // Australia Dollar
       case 5:
-        Result = (bricks.replace(/,/g, '') * 0.0144).toFixed(2)
+        Result = (bricks * 0.0144).toFixed(2)
         Display = "AUD"
         break
 
       // Turkish Lira
       case 6:
-        Result = (bricks.replace(/,/g, '') *  0.2338).toFixed(2)
+        Result = (bricks *  0.2338).toFixed(2)
         Display = "TRY"
         break
 
       // Brazillian Real
       case 7:
-        Result = (bricks.replace(/,/g, '') * 0.49).toFixed(2)
+        Result = (bricks * 0.49).toFixed(2)
         Display = "BRL"
         break
     }

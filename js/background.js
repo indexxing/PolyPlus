@@ -71,45 +71,48 @@ function RunUpdateNotifier() {
         }
     });
 }
-chrome.contextMenus.create({
-    title: 'Run Update Notifier',
-    id: 'PolyPlus-RunUpdateNotifier',
-    contexts: ['all'],
-    documentUrlPatterns: [
-        "https://polytoria.com/my/settings/polyplus-debug",
-    ]
-});
 
-// COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
-chrome.contextMenus.create({
-    title: 'Copy Asset ID',
-    id: 'PolyPlus-CopyID',
-    contexts: ['link'],
-    documentUrlPatterns: [
-        "https://polytoria.com/*",
-        SettingsURL
-    ],
-    targetUrlPatterns: [
-        "https://polytoria.com/places/**",
-        "https://polytoria.com/users/**",
-        "https://polytoria.com/store/**"
-    ]
-});
-
-// COPY AVATAR HASH CONTEXT MENU ITEM REGISTRATION
-chrome.contextMenus.create({
-    title: 'Copy Avatar Hash',
-    id: 'PolyPlus-CopyAvatarHash',
-    contexts: ['image'],
-    documentUrlPatterns: [
-        "https://polytoria.com/*",
-        SettingsURL
-    ],
-    targetUrlPatterns: [
-        "https://c0.ptacdn.com/thumbnails/avatars/**",
-        "https://c0.ptacdn.com/thumbnails/avatars/**"
-    ]
-});
+chrome.contextMenus.removeAll(function() {
+    chrome.contextMenus.create({
+        title: 'Run Update Notifier',
+        id: 'PolyPlus-RunUpdateNotifier',
+        contexts: ['all'],
+        documentUrlPatterns: [
+            "https://polytoria.com/my/settings/polyplus-debug",
+        ]
+    });
+    
+    // COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
+    chrome.contextMenus.create({
+        title: 'Copy Asset ID',
+        id: 'PolyPlus-CopyID',
+        contexts: ['link'],
+        documentUrlPatterns: [
+            "https://polytoria.com/*",
+            SettingsURL
+        ],
+        targetUrlPatterns: [
+            "https://polytoria.com/places/**",
+            "https://polytoria.com/users/**",
+            "https://polytoria.com/store/**"
+        ]
+    });
+    
+    // COPY AVATAR HASH CONTEXT MENU ITEM REGISTRATION
+    chrome.contextMenus.create({
+        title: 'Copy Avatar Hash',
+        id: 'PolyPlus-CopyAvatarHash',
+        contexts: ['image'],
+        documentUrlPatterns: [
+            "https://polytoria.com/*",
+            SettingsURL
+        ],
+        targetUrlPatterns: [
+            "https://c0.ptacdn.com/thumbnails/avatars/**",
+            "https://c0.ptacdn.com/thumbnails/avatars/**"
+        ]
+    });
+})
 
 // HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(function (info, tab){
