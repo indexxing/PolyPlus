@@ -29,17 +29,11 @@ var ItemOwned;
   chrome.storage.sync.get(['PolyPlus_Settings'], async function(result){
     Settings = result.PolyPlus_Settings || {}
 
-    PurchaseBtn = document.querySelector('.btn[onclick^="buyAsset"]')
+    PurchaseBtn = document.querySelector('.btn[onclick^="buy"]')
     if (PurchaseBtn === null) {
       PurchaseBtn = document.querySelector('.btn#purchase-button')
     }
-    /*
-    if (ItemType === "gamePass") {
-      PurchaseBtn = document.querySelector('[onclick^="buyAsset"]')
-    }
-    */
     ItemOwned = (PurchaseBtn.innerText === ' Item owned' || document.querySelector('.btn[onclick="sellItem()"]') !== null)
-    console.log(PurchaseBtn, ItemOwned)
 
     if (Settings.IRLPriceWithCurrencyOn === true && ItemOwned === false) {
       IRLPrice()
@@ -210,11 +204,11 @@ function TryOnItems() {
   TryOnModal.setAttribute('style', 'width: 450px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;')
   TryOnModal.innerHTML = `
   <div class="text-muted mb-2" style="font-size: 0.8rem;">
-      <h5 class="mb-0" style="color: #fff;">Preview</h5>
-      Try on this item!
+    <h5 class="mb-0" style="color: #fff;">Preview</h5>
+    Try on this item!
   </div>
   <div class="modal-body">
-      <button class="btn btn-primary w-100 mx-auto" onclick="this.parentElement.parentElement.close();">Close</button>
+    <button class="btn btn-primary w-100 mx-auto" onclick="this.parentElement.parentElement.close();">Close</button>
   </div>
   `
   
@@ -266,10 +260,10 @@ function TryOnItems() {
             return response.json();
           })
           .then(data => {
-            if (AssetType === 'hat') {
-              Avatar.items[Avatar.items.length] = data.url
-            } else if (AssetType === 'tool') {
+            if (AssetType === 'tool') {
               Avatar.tool = data.url
+            } else {
+              Avatar.items.push(data.url)
             }
 
             console.log(Avatar)
