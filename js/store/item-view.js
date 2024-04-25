@@ -23,7 +23,7 @@ var ItemOwned;
 (async () => {
   if (!(window.location.href.split('/')[4]) || ItemType === "achievement") {return}
 
-  Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default
 
   chrome.storage.sync.get(['PolyPlus_Settings'], async function(result){
@@ -55,6 +55,10 @@ var ItemOwned;
         Sales.children[0].innerText = 'Owners'
         Sales.children[1].innerText = Owners.toLocaleString()
       }
+    }
+
+    if (Settings.HoardersListOn === true && document.getElementById('resellers') !== null) {
+      HoardersList()
     }
   })
 })();
@@ -179,12 +183,6 @@ function TryOnItems() {
   }
   
   let AssetType = document.querySelector('.px-4.px-lg-0.text-muted.text-uppercase.mb-3 .badge').innerHTML
-  console.log(AssetType, MeshTypes[AssetType], MeshTypes[AssetType.toLowerCase()])
-  /*
-  if (HatTypes[AssetType.toLowerCase()] !== undefined) {
-    AssetType = "hat"
-  }
-  */
   
   const ItemThumbnail = document.getElementsByClassName('store-thumbnail')[0]
   const IFrame = document.getElementsByClassName('store-thumbnail-3d')[0]
@@ -194,6 +192,8 @@ function TryOnItems() {
   const TryOnBtn = document.createElement('button')
   TryOnBtn.classList = 'btn btn-outline-warning'
   TryOnBtn.style = 'position: absolute; bottom: 60px; right: 10px;'
+  TryOnBtn.setAttribute('data-bs-toggle', 'tooltip')
+  TryOnBtn.setAttribute('data-bs-title', 'Try this item on your avatar')
   TryOnBtn.innerHTML = '<i class="fa-duotone fa-vial"></i>'
   TryOnBtn.addEventListener('click', function (){
     TryOnModal.showModal()
@@ -205,7 +205,7 @@ function TryOnItems() {
   TryOnModal.innerHTML = `
   <div class="text-muted mb-2" style="font-size: 0.8rem;">
     <h5 class="mb-0" style="color: #fff;">Preview</h5>
-    Try on this item!
+    Try this avatar on your avatar before purchasing it!
   </div>
   <div class="modal-body">
     <button class="btn btn-primary w-100 mx-auto" onclick="this.parentElement.parentElement.close();">Close</button>
@@ -215,6 +215,8 @@ function TryOnItems() {
   document.body.prepend(TryOnModal)
   ItemThumbnail.parentElement.appendChild(TryOnBtn)
   TryOnModal.children[1].prepend(TryIFrame)
+
+  Utilities.InjectResource('registerTooltips')
   
   fetch("https://api.polytoria.com/v1/users/:id/avatar".replace(':id', JSON.parse(window.localStorage.getItem('account_info')).ID))
     .then(response => {
@@ -282,15 +284,15 @@ function TryOnItems() {
           })
           .then(data => {
             switch (AssetType) {
-                case 'shirt':
-                    Avatar.shirt = data.url
-                    break
-                case 'pants':
-                    Avatar.pants = data.url
-                    break
-                case 'face':
-                    Avatar.face = data.url
-                    break
+              case 'shirt':
+                Avatar.shirt = data.url
+                break
+              case 'pants':
+                Avatar.pants = data.url
+                break
+              case 'face':
+                Avatar.face = data.url
+                break
             }
 
             TryIFrame.src = 'https://polytoria.com/ptstatic/itemview/#' + btoa(encodeURIComponent(JSON.stringify(Avatar)))
@@ -298,9 +300,229 @@ function TryOnItems() {
           .catch(error => {
             console.error('Fetch error:', error);
           });
-        }
+      }
     })
     .catch(error => {
-        console.error('Fetch error:', error);
+      console.error('Fetch error:', error);
     });
+}
+
+async function HoardersList() {
+  let Page = 0
+  const Tabs = document.getElementById('store-tabs')
+  const Owners = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100')).json()).inventories
+  const Formatted = {}
+  
+  for (let owner of Owners) {
+    if (Formatted[owner.user.id] !== undefined) {
+      Formatted[owner.user.id].copies++
+      Formatted[owner.user.id].serials.push(owner.serial)
+    } else {
+      Formatted[owner.user.id] = {
+        user: owner.user,
+        copies: 1,
+        serials: [owner.serial]
+      }
+    }
+  }
+
+  const Hoarders = new Promise(async (resolve, reject) => {
+    const Sorted = Object.values(Formatted).filter((x, index) => x.copies >= 2).sort((a, b) => b.copies - a.copies)
+    for (let hoarder of Sorted) {
+      const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json()).thumbnail.icon;
+      hoarder.user.avatar = Avatar;
+      if (Sorted.indexOf(hoarder) === Sorted.length-1) { resolve(Sorted) }
+    }
+  })
+  Hoarders.then(async (hoarders) => {
+    const AmountOfHoarders = hoarders.length
+    const Groups = []
+
+    while (hoarders.length > 0) {
+      Groups.push(hoarders.splice(0, 4))
+    }
+
+    const Tab = document.createElement('li')
+    Tab.classList = 'nav-item'
+    Tab.innerHTML = `
+    <a class="nav-link">
+      <i class="fas fa-calculator me-1"></i>
+      <span class="d-none d-sm-inline"><span class="pilltitle">Hoarders (${AmountOfHoarders})</span>
+    </a>
+    `
+    Tabs.appendChild(Tab)
+
+    const TabContent = document.createElement('div')
+    TabContent.classList = 'd-none'
+    TabContent.innerHTML = `
+    <div id="hoarders-container">
+      ${ Groups[Page].map((x) => `
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-auto">
+              <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+            </div>
+            <div class="col d-flex align-items-center">
+              <div>
+                <h6 class="mb-1">
+                  <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
+                </h6>
+                <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+              </div>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+              <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+                <i class="fad fa-exchange-alt me-1"></i>
+                <span class="d-none d-sm-inline">Trade</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      `).join('')
+      }
+    </div>
+    <nav aria-label="Hoarders">
+      <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+          <a class="page-link" href="#!" tabindex="-1" id="hoarders-prev-pg">
+            <i class="fad fa-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item active">
+          <a class="page-link" href="#!" id="hoarders-current-pg">
+            1
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="#!" id="hoarders-next-pg">
+            <i class="fad fa-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    `
+    document.getElementById('owners').parentElement.appendChild(TabContent)
+
+    Utilities.InjectResource('registerTooltips')
+
+    Array.from(Tabs.children).forEach(tab => {
+      tab.addEventListener('click', function() {
+        if (tab === Tab) {
+          Array.from(Tabs.children).forEach(tab => {tab.children[0].classList.remove('active')})
+          Array.from(document.getElementById('owners').parentElement.children).forEach(tab => {tab.classList.add('d-none')})
+          tab.children[0].classList.add('active')
+          TabContent.classList.remove('d-none')
+        }
+      })
+    })
+
+    const Container = document.getElementById('hoarders-container')
+
+    const Prev = document.getElementById('hoarders-prev-pg')
+    const Current = document.getElementById('hoarders-current-pg')
+    const Next = document.getElementById('hoarders-next-pg')
+
+    if (Page > 0) {
+      Prev.parentElement.classList.remove('disabled')
+    } else {
+      Prev.parentElement.classList.add('disabled')
+    }
+    if (Page < Groups.length-1) {
+      Next.parentElement.classList.remove('disabled')
+    } else {
+      Next.parentElement.classList.add('disabled')
+    }
+
+    Prev.addEventListener('click', function() {
+      if (Page > 0) {
+        Page--
+        Current.innerText = Page+1
+        Container.innerHTML = Groups[Page].map((x) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-auto">
+                <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+              </div>
+              <div class="col d-flex align-items-center">
+                <div>
+                  <h6 class="mb-1">
+                    <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
+                  </h6>
+                  <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+                </div>
+              </div>
+              <div class="col-auto d-flex align-items-center">
+                <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+                  <i class="fad fa-exchange-alt me-1"></i>
+                  <span class="d-none d-sm-inline">Trade</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        `).join('')
+
+        Utilities.InjectResource('registerTooltips')
+
+        if (Page > 0) {
+          Prev.parentElement.classList.remove('disabled')
+        } else {
+          Prev.parentElement.classList.add('disabled')
+        }
+        if (Page < Groups.length-1) {
+          Next.parentElement.classList.remove('disabled')
+        } else {
+          Next.parentElement.classList.add('disabled')
+        }
+      }
+    })
+
+    Next.addEventListener('click', function() {
+      if (Page < Groups.length-1) {
+        Page++
+        Current.innerText = Page+1
+        Container.innerHTML = Groups[Page].map((x) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-auto">
+                <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+              </div>
+              <div class="col d-flex align-items-center">
+                <div>
+                  <h6 class="mb-1">
+                    <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
+                  </h6>
+                  <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+                </div>
+              </div>
+              <div class="col-auto d-flex align-items-center">
+                <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+                  <i class="fad fa-exchange-alt me-1"></i>
+                  <span class="d-none d-sm-inline">Trade</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        `).join('')
+
+        Utilities.InjectResource('registerTooltips')
+
+        if (Page > 0) {
+          Prev.parentElement.classList.remove('disabled')
+        } else {
+          Prev.parentElement.classList.add('disabled')
+        }
+        if (Page < Groups.length-1) {
+          Next.parentElement.classList.remove('disabled')
+        } else {
+          Next.parentElement.classList.add('disabled')
+        }
+      }
+    })
+  })
 }

@@ -50,6 +50,7 @@
   
       p span.title {
         font-size: 1.4rem;
+        font-weight: lighter;
       }
   
       span.desc {
@@ -319,7 +320,7 @@
       </div>
     </dialog>
     <div id="page">
-      <h1 class="text-center">Poly+ Settings</h1>
+      <h1 class="text-center" style="text-shadow: 0px 0px 5px orange; padding-bottom: 5px; margin-bottom: 10px;">Poly+ Settings</h1>
       <p class="setting-container" id="pinned-games">
         <span class="indicator">&nbsp;</span>
         <span class="title">
@@ -530,12 +531,29 @@
         <br>
         <span class="desc">Replace the "Sales" statistic with the "Owners" statistic if the item has 0 sales (most likely meaning it is an item awarded by staff).</span>
       </p>
+      <p class="setting-container" id="hoarders-list">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Collectibles' Hoarders List
+          <button class="btn btn-sm toggle-btn" data-setting="HoardersListOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">List all the users that have more than 1 copy of a collectible!</span>
+      </p>
+      <p class="setting-container" id="hoarders-list">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Quick Library Downloads
+          <button class="btn btn-sm toggle-btn" data-setting="LibraryDownloadsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly download a model (as a <code>.ptmd</code> file), mesh, decal, or sound right from the page showing you details about the asset!</span>
+      </p>
       <div class="card">
         <div class="card-body">
           <h3>EXPERIMENTAL SETTINGS</h3>
           <p>These features are a work in progress.</p>
           <hr>
-          <!--
           <p class="setting-container" id="game-profiles">
             <span class="indicator">&nbsp;</span>
             <span class="title">
@@ -549,7 +567,6 @@
             <br>
             <span style="font-size: 0.8rem; color: orange;">* This feature will be expanded upon in the future.</span>
           </p>
-          -->
           <p class="setting-container" id="inline-editing">
             <span class="indicator">&nbsp;</span>
             <span class="title">

@@ -24,7 +24,7 @@ function ForumMentions() {
         let match;
         while ((match = Regex.exec(text.innerText)) !== null) {
             const Username = match[0].substring(1)
-            FormattedText = FormattedText.replaceAll(match[0], `<a href="/profile/${Username}?ref=${encodeURIComponent(window.location.pathname)}" class="polyplus-mention">${match[0]}</a>`)
+            FormattedText = FormattedText.replaceAll(match[0], `<a href="/users/@${Username}?ref=${encodeURIComponent(window.location.pathname)}" class="polyplus-mention">${match[0]}</a>`)
         }
         text.innerHTML = FormattedText
     }

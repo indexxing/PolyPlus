@@ -1,16 +1,8 @@
 var Settings;
-let Theme = `
-html:has(.polyplus-modal[open]), body:has(.polyplus-modal[open]) {
-  overflow: hidden;
-}
-
-.polyplus-modal::backdrop {
-  background: rgba(0, 0, 0, 0.73);
-}
-`;
+let Theme = null;
 
 (async () => {
-  let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default
 
   chrome.storage.sync.get(["PolyPlus_Settings"], function(result) {

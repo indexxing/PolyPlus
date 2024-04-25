@@ -1,3 +1,7 @@
+/*
+    FRONTEND FIXES / SPACING IMPROVEMENTS
+*/
+
 body[data-URL^="/my/friends"] .col-lg-3 {
     margin-bottom: 20px;
 }
@@ -15,3 +19,31 @@ body[data-URL^="/create/"] .col.d-flex.align-content-between.flex-wrap {
     overflow: hidden !important;
     text-overflow: ellipsis !important;
 }
+
+/* ------------------------------------------ */
+
+/*
+    INLINE EDITING
+*/
+
+body[data-polyplus-inlineEditing="true"] .polyplus-inlineEditing-visible {display: block !important;}
+.polyplus-inlineEditing-visible {display: none;}
+
+body[data-polyplus-inlineEditing="true"] .polyplus-inlineEditing-hidden {display: none !important;}
+.polyplus-inlineEditing-hidden {display: block;}
+
+/* ------------------------------------------ */
+
+/*
+    MODALS
+*/
+
+html:has(.polyplus-modal[open]), body:has(.polyplus-modal[open]) {
+    overflow: hidden;
+}
+  
+.polyplus-modal::backdrop {
+    background: rgba(0, 0, 0, 0.73);
+}
+
+/* ------------------------------------------ */

@@ -172,7 +172,7 @@ SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[0]);
 
 async function IRLPrice() {
     (async () => {
-        Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+        Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
         Utilities = Utilities.default
 
         const TrendingItems = document.getElementById('home-trendingItems')

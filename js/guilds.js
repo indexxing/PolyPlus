@@ -8,7 +8,7 @@ chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
 
     if (Settings.IRLPriceWithCurrencyOn === true) {
         (async () => {
-            Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+            Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
             Utilities = Utilities.default
 
             for (let item of Array.from(StoreItems.children)) {

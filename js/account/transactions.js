@@ -1,7 +1,7 @@
 /*
 let Currencies;
 
-LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
+LoadFile(chrome.runtime.getURL('resources/currencies.json'), function(text){
     Currencies = JSON.parse(text)
     console.log(new Date(Currencies.Date).toLocaleDateString("en-US", {day:"numeric",month:"long",year:"numeric"}), Currencies)
 })
@@ -9,7 +9,7 @@ LoadFile(chrome.runtime.getURL('js/resources/currencies.json'), function(text){
 
 let Utilities;
 (async () => {
-    Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+    Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
     Utilities = Utilities.default
 })();
 

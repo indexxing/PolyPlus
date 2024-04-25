@@ -48,8 +48,9 @@ function LoadCreatorTag(element) {
         Tag.style.marginLeft = '5px'
         Tag.style.verticalAlign = 'text-top'
         Tag.innerText = 'CREATOR'
+        if (Type === 'guilds') { Tag.innerText = 'LEADER' }
         NameElement.appendChild(Tag)
-        //console.log(window.bootstrap)
+        
         //new window.bootstrap.Tooltip(Tag, {toggle:"tooltip",title:"This user is the creator of this asset!"})
     }
 }

@@ -2,7 +2,7 @@
 HOW TO USE IN CONTENT SCRIPTS:
 
 (async () => {
-  let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default
 })();
 */
@@ -69,11 +69,14 @@ export default {
     ShowPlaceRevenueOn: true,
     ReplaceItemSalesOn: false
   },
+  Limits: {
+    PinnedGames: 10
+  },
   CalculateIRL: async function(bricks, to, brickPackage) {
     /*
     Disabled for now: currency retrieval from currencies.json
 
-    const response = await fetch(chrome.runtime.getURL('/js/resources/currencies.json'))
+    const response = await fetch(chrome.runtime.getURL('resources/currencies.json'))
     if (!response.ok) {
       throw new Error('Getting currency data failure')
     }
@@ -141,5 +144,19 @@ export default {
       result: Result,
       display: Display
     }
+  },
+  InjectResource: function(path, element) {
+    // Function by devjin0617 on GitHub
+    // Gist: https://gist.github.com/devjin0617/3e8d72d94c1b9e69690717a219644c7a
+    // Slightly modified to use constants and fit the rest of the code style more
+    // Function only used for registering bootstrap tooltips currently
+
+    if (element === undefined) { element = 'body' }
+    const Node = document.getElementsByTagName(element)[0];
+    const Script = document.createElement('script');
+    Script.setAttribute('type', 'text/javascript');
+    Script.setAttribute('src', chrome.runtime.getURL('resources/' + path + '.js'));
+    Script.addEventListener('load', function(){Script.remove()})
+    Node.appendChild(Script);
   }
 }

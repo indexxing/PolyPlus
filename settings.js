@@ -6,7 +6,7 @@ var ExpectedSettings;
 
 var Utilities;
 (async () => {
-  Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
+  Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default
 
   ExpectedSettings = Utilities.DefaultSettings
@@ -237,7 +237,7 @@ let CopyThemeJSONBtn = document.getElementById('CopyThemeJSONBtn')
 LoadThemeFromJSONBtn.addEventListener('click', function(){
   LoadThemeJSON(LoadThemeFromJSONBtn.previousElementSibling.value)
 });
-document.getElementById('ThemeCreator').getElementsByTagName('button')[1].addEventListener('click', function(){
+document.getElementById('theme-creator').getElementsByTagName('button')[1].addEventListener('click', function(){
   SaveThemeToJSONInput.value = JSON.stringify(Settings.ThemeCreator)
 });
 CopyThemeJSONBtn.addEventListener('click', function(){
@@ -333,7 +333,7 @@ function CheckForUpdates() {
 }
 CheckForUpdatesButton.addEventListener('click', CheckForUpdates)
 
-fetch(chrome.runtime.getURL('/js/resources/currencies.json'))
+fetch(chrome.runtime.getURL('resources/currencies.json'))
   .then(response => {
     if (!response.ok) {
       throw new Error('Network not ok')

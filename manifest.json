@@ -1,9 +1,12 @@
 {
     "manifest_version": 3,
+    "author": "Index",
     "name": "Poly+",
     "version": "1.11",
     "version_name": "Pre-Release Build (stable: v1.1.1)",
     "description": "Power-up your Polytoria experience with Poly+! Created by Index.",
+    "homepage_url": "https://polyplus.vercel.app/",
+    "download_url": "https://github.com/indexxing/PolyPlus/releases",
     "permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
     "content_scripts": [
         {
@@ -114,6 +117,11 @@
         {
             "matches": ["https://polytoria.com/guilds/**"],
             "js": ["/js/guilds.js"]
+        },
+
+        {
+            "matches": ["https://polytoria.com/store/**", "https://polytoria.com/models/**"],
+            "js": ["/js/library-download.js"]
         }
     ],
     "background": {
@@ -125,7 +133,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["js/resources/*"],
+            "resources": ["resources/*"],
             "matches": ["https://polytoria.com/*"]
         },
 
@@ -138,16 +146,16 @@
     "action": {
         "default_title": "Poly+",
         "default_icon": {
-            "16": "/icon.png",
-            "32": "/icon.png",
-            "48": "/icon.png",
-            "128": "/icon.png"
+            "16": "/icons/icon.png",
+            "32": "/icons/icon.png",
+            "48": "/icons/icon.png",
+            "128": "/icons/icon.png"
         }
     },
     "icons": {
-        "16": "/icon.png",
-        "32": "/icon.png",
-        "48": "/icon.png",
-        "128": "/icon.png"
+        "16": "/icons/icon.png",
+        "32": "/icons/icon.png",
+        "48": "/icons/icon.png",
+        "128": "/icons/icon.png"
     }
 }

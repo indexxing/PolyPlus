@@ -155,7 +155,7 @@ document.getElementById('edit-setting').addEventListener('click', function(){
 });
 
 document.getElementById('reset-settings').addEventListener('click', async function(){
-    let Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'))
+    let Utilities = await import(chrome.runtime.getURL('resources/utils.js'))
     Utilities = Utilities.default
     chrome.storage.sync.set({ 'PolyPlus_Settings': Utilities.DefaultSettings }, function() {
         alert('Successfully reset settings to their defaults!')

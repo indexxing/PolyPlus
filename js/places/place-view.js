@@ -12,7 +12,9 @@ let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-
 let CalculateRevenueButton;
 
 const AchievementsTab = document.getElementById('achievements-tabpane')
-const Achievements = Array.from(AchievementsTab.getElementsByClassName('card'))
+const GamepassesTab = document.getElementById('gamepasses-tabpane')
+const Achievements = Array.from(AchievementsTab.getElementsByClassName('card')) || []
+const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || []
 
 !(() => {
     if (PlaceID === undefined) { return }
@@ -42,30 +44,29 @@ const Achievements = Array.from(AchievementsTab.getElementsByClassName('card'))
 
     chrome.storage.sync.get(['PolyPlus_Settings'], async function(result) {
         Settings = result.PolyPlus_Settings || {}
+
+        Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
+        Utilities = Utilities.default
     
         if (Settings.PinnedGamesOn === true) {
             PinnedGames()
         }
 
-        // Work in Progress
-        if (Settings.InlineEditingOn === true) {
+        if (Settings.InlineEditingOn === true && GameCreator === UserID) {
             InlineEditing()
         }
 
-        // Work in Progress
-        /*
-        if (Settings.GameProfilesOn === true) {
-            GameProfiles()
+        const Description = document.querySelector('.col:has(#likes-data-container) .card.mcard.mb-2 .card-body.p-3.small')
+        if (Settings.GameProfilesOn === true && Description !== null) {
+            const GameProfileRegex = /p\+gp;(#(?:[A-Fa-f0-9]{3}){1,2}\b(;#(?:[A-Fa-f0-9]{3}){1,2}\b)+)/gm
+            if (GameProfileRegex.test(Description.innerText)) {
+                const Info = GameProfileRegex.exec(Description.innerText)[1].split(';')
+                GameProfile(Info)
+            }
         }
-        */
 
         if (Settings.IRLPriceWithCurrencyOn === true) {
-            (async () => {
-                Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
-                Utilities = Utilities.default
-
-                IRLPrice()
-            })();
+            IRLPrice()
         }
 
         if (Settings.ShowPlaceRevenueOn === true) {
@@ -108,22 +109,7 @@ const Achievements = Array.from(AchievementsTab.getElementsByClassName('card'))
 async function PinnedGames() {
     chrome.storage.sync.get(['PolyPlus_PinnedGames'], function(result){
         PinnedGamesData = result.PolyPlus_PinnedGames || [];
-        /*
-        const PinBtn = document.createElement('button');
-        PinBtn.classList = 'btn btn-warning btn-sm';
-        PinBtn.style = 'position: absolute; right: 0; margin-right: 7px;'
-        
-        if (PinnedGamesData[PlaceID]) {
-            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
-        } else {
-            if (PinnedGames.length !== 5) {
-                PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
-            } else {
-                PinBtn.setAttribute('disabled', true)
-                PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
-            }
-        }
-        */
+
         const PinBtn = document.createElement('button');
         PinBtn.classList = 'btn btn-warning btn-sm';
         PinBtn.style = 'position: absolute; right: 0; margin-right: 7px;'
@@ -131,11 +117,11 @@ async function PinnedGames() {
         if (PinnedGamesData.includes(parseInt(PlaceID))) {
             PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
         } else {
-            if (PinnedGamesData.length !== 5) {
+            if (PinnedGamesData.length !== Utilities.Limits.PinnedGames) {
                 PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
             } else {
                 PinBtn.setAttribute('disabled', true)
-                PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
+                PinBtn.innerHTML = `<i class="fa-duotone fa-star"></i>  Pin (max ${Utilities.Limits.PinnedGames}/${Utilities.Limits.PinnedGames})`
             }
         }
 
@@ -197,12 +183,12 @@ async function PinnedGames() {
                     if (PinnedGamesData.includes(parseInt(PlaceID))) {
                         PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
                     } else {
-                        if (PinnedGamesData.length !== 5) {
+                        if (PinnedGamesData.length !== Utilities.Limits.PinnedGames) {
                             PinBtn.removeAttribute('disabled')
                             PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
                         } else {
                             PinBtn.setAttribute('disabled', true)
-                            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
+                            PinBtn.innerHTML = `<i class="fa-duotone fa-star"></i>  Pin (max ${Utilities.Limits.PinnedGames}/${Utilities.Limits.PinnedGames})`
                         }
                     }
                 });
@@ -212,14 +198,11 @@ async function PinnedGames() {
 }
 
 async function InlineEditing() {
-    // Fix description editing
-    // Make it possible to edit description even if the game doesn't initially have a description
-    // Add the ability to edit the game's genre
-    // Improve editing visuals overall
-
-    if (GameCreator !== UserID) {
-        return
-    }
+    /*
+        INLINE EDITING TO-DO:
+            - Make it possible to edit the description even if there is no description initially
+            - Make it possible to edit the place's genre
+    */
 
     let Editing = false
 
@@ -344,9 +327,7 @@ async function InlineEditing() {
     });
 }
 
-async function GameProfiles(data) {
-    return
-    data = Data
+async function GameProfile(data) {
     document.querySelector('h1.my-0')
         .setAttribute('game-key', 'true');
     document.querySelector('div[style="min-height: 60vh;"]')
@@ -356,16 +337,16 @@ async function GameProfiles(data) {
 
     Style.innerHTML = `
     div#app {
-        background: ${Data.bg} !important;
+        background: ${data[0]} !important;
     }
 
     #gameprofile {
-        /*font-family: ${Data.font} !important;*/
-        color: ${Data.text} !important;
+        /*font-family: no !important;*/
+        color: ${data[4]} !important;
     }
 
     #gameprofile .card {
-        --bs-card-bg: ${Data.cardBg};
+        --bs-card-bg: ${data[3]};
     }
 
     /*
@@ -376,7 +357,7 @@ async function GameProfiles(data) {
     */
 
     #gameprofile .card.mcard [game-key] {
-        background: linear-gradient(to bottom, ${Data.accent}, ${Data.secondary});
+        background: linear-gradient(to bottom, ${data[1]}, ${data[2]});
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;

@@ -1,6 +1,14 @@
 const Manifest = chrome.runtime.getManifest()
 const SettingsURL = chrome.runtime.getURL('settings.html')
 
+/*
+ON INSTALL:
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.tabs.create({url: 'https://polyplus.vercel.app/app/welcome.html'})
+});
+*/
+
 // WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
 chrome.action.onClicked.addListener((tab) => {
     chrome.tabs.create({ active: true, url: SettingsURL });
@@ -143,6 +151,20 @@ chrome.contextMenus.onClicked.addListener(function (info, tab){
     }
 });
 
+chrome.runtime.onMessage.addListener(function (message, sender) {
+    console.log('hi')
+    message = message.message || ''
+    console.log(message)
+    if (message === 'tooltip') {
+        console.log('is about tooltip')
+        chrome.scripting
+            .executeScript({
+                target: {tabId: sender.tab.id},
+                func: UpdateTooltips
+            })
+    }
+});
+
 /*
 GREEN LOGO WHEN EXTENSION APPLIES TO CURRENT TAB PAGE, RED WHEN IT DOESN'T
 COMING SOON
@@ -196,4 +218,13 @@ function CopyAvatarHash(hash) {
         .catch(() => {
             alert('Failure to copy avatar hash.')
         });
+}
+
+function UpdateTooltips() {
+    const Script = document.createElement('script')
+    Script.innerHTML = `
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    `
+    document.body.appendChild(Script)
 }

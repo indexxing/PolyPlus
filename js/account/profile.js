@@ -10,41 +10,46 @@ let CalculateButton;
 let Utilities;
 
 if (UserID && !isNaN(UserID)) {
-    chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-        Settings = result.PolyPlus_Settings || {}
+    (async () => {
+        Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
+        Utilities = Utilities.default
+        
+        chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
+            Settings = result.PolyPlus_Settings || {}
 
-        if (Settings.IRLPriceWithCurrencyOn === true) {
-            (async () => {
-                Utilities = await import(chrome.runtime.getURL('/js/resources/utils.js'));
-                Utilities = Utilities.default
-
+            if (Settings.IRLPriceWithCurrencyOn === true) {
                 IRLPrice()
-            })();
-        }
-    
-        if (Settings.BestFriendsOn === true) {
-            BestFriends()
-        }
+            }
+        
+            if (Settings.BestFriendsOn === true) {
+                BestFriends()
+            }
 
-        if (Settings.OutfitCostOn === true) {
-            CalculateButton = document.createElement('small')
-            CalculateButton.classList = 'fw-normal text-success'
-            CalculateButton.style.letterSpacing = '0px'
-            CalculateButton.innerHTML = `
-            <a class="text-decoration-underline text-success" style="text-decoration-color: rgb(15, 132, 79) !important;">$ calculate</a>
-            `
-            AvatarHeading.appendChild(CalculateButton)
-            
-            let Calculating = false
-            CalculateButton.addEventListener('click', function(){
-                if (Calculating === false) {
-                    Calculating = true
-                    CalculateButton.innerText = '$ Calculating...'
-                    OutfitCost()
-                }
-            });
-        }
-    });
+            if (Settings.OutfitCostOn === true) {
+                CalculateButton = document.createElement('small')
+                CalculateButton.classList = 'fw-normal text-success'
+                CalculateButton.style.letterSpacing = '0px'
+                CalculateButton.setAttribute('data-bs-toggle', 'tooltip')
+                CalculateButton.setAttribute('data-bs-title', 'Calculate this avatar\'s cost!')
+                CalculateButton.setAttribute('data-bs-placement', 'right')
+                CalculateButton.innerHTML = `
+                <a class="text-decoration-underline text-success" style="text-decoration-color: rgb(15, 132, 79) !important;">$ calculate</a>
+                `
+                AvatarHeading.appendChild(CalculateButton)
+
+                Utilities.InjectResource('registerTooltips')
+                
+                let Calculating = false
+                CalculateButton.addEventListener('click', function(){
+                    if (Calculating === false) {
+                        Calculating = true
+                        CalculateButton.innerText = '$ Calculating...'
+                        OutfitCost()
+                    }
+                });
+            }
+        });
+    })();
 
     const AvatarIFrame = document.querySelector('[src^="/ptstatic"]')
     const DropdownMenu = document.getElementsByClassName('dropdown-menu dropdown-menu-right')[0]
