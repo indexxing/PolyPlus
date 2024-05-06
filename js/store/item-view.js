@@ -1,5 +1,5 @@
 const ItemID = window.location.pathname.split('/')[2]
-const ItemType = document.querySelector('.col-12 .badge').innerHTML
+const ItemType = document.querySelector('.row .badge').innerHTML
 const MeshTypes = [
   "hat",
   "hair",
@@ -57,8 +57,10 @@ var ItemOwned;
       }
     }
 
-    if (Settings.HoardersListOn === true && document.getElementById('resellers') !== null) {
-      HoardersList()
+    if (new URLSearchParams(window.location.search).get('hoardersList') === 'true') {
+      HoardersList(1)
+    } else if ((Settings.HoardersListOn === true && document.getElementById('resellers') !== null)) {
+      HoardersList(2)
     }
   })
 })();
@@ -307,10 +309,24 @@ function TryOnItems() {
     });
 }
 
-async function HoardersList() {
+async function HoardersList(min) {
   let Page = 0
-  const Tabs = document.getElementById('store-tabs')
-  const Owners = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100')).json()).inventories
+  let Tabs = null
+  if (new URLSearchParams(window.location.search).get('hoardersList') !== 'true') {
+    Tabs = document.getElementById('store-tabs')
+  }
+  const Owners = []
+  const InitialOwners = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100')).json())
+  Owners.push(...InitialOwners.inventories)
+  if (InitialOwners.pages > 1) {
+    if (InitialOwners.pages > 3) {InitialOwners.pages = 3}
+    for (let i = 1; i < InitialOwners.pages; i++) {
+      console.log(i)
+      const PageResult = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100&page=' + (i+1))).json()).inventories
+      console.log(PageResult)
+      Owners.push(...PageResult)
+    }
+  }
   const Formatted = {}
   
   for (let owner of Owners) {
@@ -327,7 +343,7 @@ async function HoardersList() {
   }
 
   const Hoarders = new Promise(async (resolve, reject) => {
-    const Sorted = Object.values(Formatted).filter((x, index) => x.copies >= 2).sort((a, b) => b.copies - a.copies)
+    const Sorted = Object.values(Formatted).filter((x, index) => x.copies >= min).sort((a, b) => b.copies - a.copies)
     for (let hoarder of Sorted) {
       const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json()).thumbnail.icon;
       hoarder.user.avatar = Avatar;
@@ -340,6 +356,10 @@ async function HoardersList() {
 
     while (hoarders.length > 0) {
       Groups.push(hoarders.splice(0, 4))
+    }
+    if (min === 1) {
+      console.log('HOARDER LIST: ', Groups)
+      return
     }
 
     const Tab = document.createElement('li')
