@@ -67,11 +67,32 @@ export default {
     TryOnItemsOn: true,
     OutfitCostOn: true,
     ShowPlaceRevenueOn: true,
-    ReplaceItemSalesOn: false
+    ReplaceItemSalesOn: false,
+    HoardersListOn: true,
+    LibraryDownloadsOn: true
   },
   Limits: {
-    PinnedGames: 10
+    PinnedGames: 10,
+    BestFriends: 10,
+    ImprovedFrLists: 25,
+    ItemWishlist: 30
   },
+  MeshTypes: [
+    "hat",
+    "hair",
+    "head attachment",
+    "face accessory",
+    "neck accessory",
+    "head cover",
+    "back accessory",
+    "shoulder accessory",
+    "tool"
+  ],
+  TextureTypes: [
+    "Shirt",
+    "Pants",
+    "Face"
+  ],
   CalculateIRL: async function(bricks, to, brickPackage) {
     /*
     Disabled for now: currency retrieval from currencies.json
@@ -84,8 +105,12 @@ export default {
     const UnitPrice = data.Data[brickPackage][to]
     */
 
+    let Icon = "$"
     let Result = "N/A";
     let Display = "Currency Not Found";
+
+    // is the icon abbreviated text, or an entity
+    let IsIconAbbr = false
 
     bricks = ParseFullNumber(bricks.replace(/,/g, ''))
     switch (to) {
@@ -93,48 +118,71 @@ export default {
       case 0:
         Result = (bricks * 0.0099).toFixed(2)
         Display = "USD"
+
         break
 
       // Euro
       case 1:
+        Icon = "&#8364;"
         Result = (bricks * 0.009).toFixed(2)
         Display = "EUR"
+
         break
 
       // Canadian Dollar
       case 2:
+        Icon = "CAD$"
+        IsIconAbbr = true
+
         Result = (bricks * 0.0131).toFixed(2)
         Display = "CAD"
+
         break
 
       // Great British Pound
       case 3:
+        Icon = "&#163;"
         Result = (bricks * 0.0077).toFixed(2)
         Display = "GBP"
+
         break
 
       // Mexican Peso
       case 4:
+        Icon = "MXN$"
+        IsIconAbbr = true
+
         Result = (bricks * 0.1691).toFixed(2)
         Display = "MXN"
+
         break
 
       // Australia Dollar
       case 5:
+        Icon = "AU$"
+        IsIconAbbr = true
+
         Result = (bricks * 0.0144).toFixed(2)
         Display = "AUD"
+
         break
 
       // Turkish Lira
       case 6:
+        Icon = "&#8378;"
         Result = (bricks *  0.2338).toFixed(2)
         Display = "TRY"
+
         break
 
       // Brazillian Real
       case 7:
+        Icon = "R$"
+        IsIconAbbr = true
+
         Result = (bricks * 0.49).toFixed(2)
         Display = "BRL"
+
         break
     }
 
@@ -142,7 +190,9 @@ export default {
 
     return {
       result: Result,
-      display: Display
+      display: Display,
+      icon: Icon,
+      isIconAbbr: IsIconAbbr
     }
   },
   InjectResource: function(path, element) {

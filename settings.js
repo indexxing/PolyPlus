@@ -10,8 +10,12 @@ var Utilities;
   Utilities = Utilities.default
 
   ExpectedSettings = Utilities.DefaultSettings
-
   LoadCurrent()
+
+  document.getElementById('PinnedGames-limit').innerText = Utilities.Limits.PinnedGames
+  document.getElementById('BestFriends-limit').innerText = Utilities.Limits.BestFriends
+  document.getElementById('ImprovedFrLists-limit').innerText = Utilities.Limits.ImprovedFrLists
+  document.getElementById('ItemWishlist-limit').innerText = Utilities.Limits.ItemWishlist
 })();
 
 // Handle buttons at the bottom of the page
@@ -50,12 +54,53 @@ Elements.forEach(element => {
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
   let Select = element.getElementsByTagName('select') || []
+  let Checkbox = element.getElementsByTagName('input') || []
+  console.log(Checkbox)
 
   if (Button) {
     Button.addEventListener('click', function() {
-      ToggleSetting(Button.getAttribute('data-setting'), element)
+      if (!(Button.getAttribute('data-parent'))) {
+        ToggleSetting(Button.getAttribute('data-setting'), element)
+      } else {
+        let Parent = Button.getAttribute('data-parent')
+        if (!isNaN(parseInt(Parent))) {
+          Parent = parseInt(Parent)
+        }
+
+        if (!Settings[Parent]) {
+          Settings[Parent] = {}
+          console.log('empty btn')
+        }
+        console.log(Button.getAttribute('data-setting'), Parent, Settings[Parent])
+        ToggleSetting(Button.getAttribute('data-setting'), element, Parent)
+      }
     });
   }
+
+  Array.from(Checkbox).forEach(check => {
+    console.log('anotha one')
+    check.addEventListener('click', function(){
+      console.log('clicky')
+      if (!(check.getAttribute('data-parent'))) {
+        console.log('no dad?')
+        ToggleSetting(check.getAttribute('data-setting'), element)
+      } else {
+        console.log('dad came back with milk')
+        let Parent = check.getAttribute('data-parent')
+        if (!isNaN(parseInt(Parent))) {
+          Parent = parseInt(Parent)
+        }
+
+        if (!Settings[Parent]) {
+          Settings[Parent] = {}
+          console.log('empty')
+        }
+
+        console.log(check.getAttribute('data-setting'), Parent, Settings[Parent])
+        ToggleSetting(check.getAttribute('data-setting'), null, Parent)
+      }
+    })
+  })
 
   if (Options) {
     Options.addEventListener('click', function() {
@@ -192,20 +237,36 @@ function LoadCurrent() {
   });
 }
 
-function ToggleSetting(Name, Element) {
-  const ToggleBtn = Element.getElementsByClassName('toggle-btn')[0]
+function ToggleSetting(Name, Element, Parent) {
   document.title = "*unsaved | Poly+ Settings"
-  if (Settings[Name] === true) {
-    Settings[Name] = false;
-    ToggleBtn.innerText = 'Enable'
+  let Status;
+  if (!Parent) {
+    Status = Settings[Name]
+    if (Settings[Name] === true) {
+      Settings[Name] = false;
+    } else {
+      Settings[Name] = true;
+    }
   } else {
-    Settings[Name] = true;
-    ToggleBtn.innerText = 'Disable'
+    Status = Settings[Parent][Name]
+    if (Settings[Parent][Name] === true) {
+      Settings[Parent][Name] = false;
+    } else {
+      Settings[Parent][Name] = true;
+    }
   }
-  Element.classList.toggle('enabled')
-  Element.classList.toggle('disabled')
-  ToggleBtn.classList.toggle('btn-success')
-  ToggleBtn.classList.toggle('btn-danger')
+  if (Element !== null) {
+    const ToggleBtn = Element.getElementsByClassName('toggle-btn')[0]
+    if (Status === false) {
+      ToggleBtn.innerText = 'Enable'
+    } else {
+      ToggleBtn.innerText = 'Disable'
+    }
+    Element.classList.toggle('enabled')
+    Element.classList.toggle('disabled')
+    ToggleBtn.classList.toggle('btn-success')
+    ToggleBtn.classList.toggle('btn-danger')
+  }
 
   if (SaveBtn.getAttribute('disabled')) {
     SaveBtn.removeAttribute('disabled')

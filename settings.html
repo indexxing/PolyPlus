@@ -328,7 +328,7 @@
           <button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
         </span>
         <br>
-        <span class="desc">Pin your favorite places to the top of the homepage! (limit: 5 places)</span>
+        <span class="desc">Pin your favorite places to the top of the homepage! (limit: <span id="PinnedGames-limit"></span> places)</span>
       </p>
       <p class="setting-container" id="forum-mentions">
         <span class="indicator">&nbsp;</span>
@@ -339,7 +339,7 @@
         <br>
         <span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
         <br>
-        <span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user.</span>
+        <span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
       </p>
       <p class="setting-container" id="best-friends">
         <span class="indicator">&nbsp;</span>
@@ -348,7 +348,7 @@
           <button class="btn btn-sm toggle-btn" data-setting="BestFriendsOn">Toggle</button>
         </span>
         <br>
-        <span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: 7 best friends)</span>
+        <span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: <span id="BestFriends-limit"></span> best friends)</span>
       </p>
       <p class="setting-container" id="improved-friend-lists">
         <span class="indicator">&nbsp;</span>
@@ -360,7 +360,7 @@
         <span class="desc">
           Accept or decline all friend requests with the click of a button or multi-remove existing friends!
           <br>
-          <span style="font-size: 0.8rem; color: orange;">* You can only remove up to 25 friends at once.</span>
+          <span style="font-size: 0.8rem; color: orange;">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
         </span>
       </p>
       <p class="setting-container" id="irl-price-with-brick-count">
@@ -434,6 +434,8 @@
         </span>
         <br>
         <span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
       </p>
       <p class="setting-container" id="apply-membership-theme">
         <span class="indicator">&nbsp;</span>
@@ -484,6 +486,7 @@
           Wishlist that item that you REALLY want!
         </span>
       </p>
+      <!--
       <p class="setting-container" id="hide-upgrade-button">
         <span class="indicator">&nbsp;</span>
         <span class="title">
@@ -493,6 +496,7 @@
         <br>
         <span class="desc">Hide the ugly blue "Upgrade" button on the sidebar!</span>
       </p>
+      -->
       <p class="setting-container" id="try-on-items">
         <span class="indicator">&nbsp;</span>
         <span class="title">
@@ -535,10 +539,14 @@
         <span class="indicator">&nbsp;</span>
         <span class="title">
           Collectibles' Hoarders List
-          <button class="btn btn-sm toggle-btn" data-setting="HoardersListOn">Toggle</button>
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HoardersList">Toggle</button>
         </span>
         <br>
         <span class="desc">List all the users that have more than 1 copy of a collectible!</span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hoarders-list-avatars" data-setting="AvatarsEnabled" data-parent="HoardersList">
+          <label class="form-check-label" for="hoarders-list-avatars">Show Avatar Icons (more requests, resulting in more ratelimiting potentially)</label>
+        </span>
       </p>
       <p class="setting-container" id="hoarders-list">
         <span class="indicator">&nbsp;</span>
@@ -548,6 +556,24 @@
         </span>
         <br>
         <span class="desc">Quickly download a model (as a <code>.ptmd</code> file), mesh, decal, or sound right from the page showing you details about the asset!</span>
+      </p>
+      <p class="setting-container" id="event-items-store">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          "Event Items" Store Category
+          <button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">List all the on-going and past event items separated by their event with a store category!</span>
+      </p>
+      <p class="setting-container" id="event-items-store">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show Friend Count on Homepage
+          <button class="btn btn-sm toggle-btn" data-setting="HomeFriendsCountOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">See how many friends you have on your homepage/dashboard, just scroll to the "friends" section and you'll see it next to the heading!</span>
       </p>
       <div class="card">
         <div class="card-body">
@@ -591,16 +617,16 @@
             <br>
             <span style="font-size: 0.8rem; color: orange;">* The styling for this feature is not yet done.</span>
           </p>
-          <p class="setting-container" id="event-items-store">
+          <p class="setting-container" id="avatar-sandbox">
             <span class="indicator">&nbsp;</span>
             <span class="title">
-              "Event Items" Store Category
-              <button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
+              Avatar Sandbox
+              <button class="btn btn-sm toggle-btn" data-setting="AvatarSandboxOn">Toggle</button>
             </span>
             <br>
-            <span class="desc">List all the on-going and past event items separated by their event with a store category!</span>
+            <span class="desc">Create an avatar with all the item possibilities available to your heart's content!</span>
             <br>
-            <span style="font-size: 0.8rem; color: orange;">* This feature is expected to break when messing with store filters.</span>
+            <span style="font-size: 0.8rem; color: orange;">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
           </p>
         </div>
       </div>

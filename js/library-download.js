@@ -7,8 +7,6 @@ const LibraryTypes = [
     "Mesh"
 ]
 
-var Success = true;
-
 if (LibraryTypes.indexOf(LibraryType) !== -1) {
     chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
         Settings = result.PolyPlus_Settings || {};

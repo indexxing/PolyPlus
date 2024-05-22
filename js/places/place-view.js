@@ -8,7 +8,7 @@ var Settings;
 var PinnedGamesData = []
 let GamePinned;
 
-let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-container) .card:last-child ul')
+let InfoColumns = document.querySelectorAll('#main-content .col:has(#likes-data-container) .card:has(.fas.fa-chart-bar) ul')
 let CalculateRevenueButton;
 
 const AchievementsTab = document.getElementById('achievements-tabpane')
@@ -414,8 +414,12 @@ async function PlaceRevenue() {
     }
 
     /*
+    let AchievementCost = 0
+    let FreeAchievements = null;
     for (let achievement of Achievements.achievements) {
         // decrease total by price of achievement creation based on when the achievement was created
+
+        if ()
     }
     */
 
@@ -429,54 +433,6 @@ async function PlaceRevenue() {
 }
 
 function round5(number) { const remainder = number % 5; if (remainder < 2.5) { return number - remainder; } else { return number + (5 - remainder); } }
-
-function ImprovedAchievements() {
-    const AchievementCount = Achievements.length
-    let AchievementsEarned = 0
-
-    for (let achievement of Achievements) {
-        Achieved = (achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined)
-
-        if (Achieved === true) {
-            achievement.style.borderColor = 'gold'
-            AchievementsEarned++
-        }
-    }
-
-    const PercentageEarned = ((AchievementsEarned*100)/AchievementCount).toFixed(0)
-
-    const ProgressBar = document.createElement('div')
-    ProgressBar.role = 'progressbar'
-    ProgressBar.classList = 'progress'
-    ProgressBar.style.background = '#000'
-    ProgressBar.ariaValueNow = PercentageEarned
-    ProgressBar.ariaValueMin = "0"
-    ProgressBar.ariaValueMax = "100"
-    ProgressBar.innerHTML = `<div class="progress-bar progress-bar-striped text-bg-warning" style="width: ${PercentageEarned}%">${PercentageEarned}%</div>`
-
-    AchievementsTab.prepend(document.createElement('hr'))
-    AchievementsTab.prepend(ProgressBar)
-
-    fetch('https://api.polytoria.com/v1/users/')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network not ok')
-            }
-            return response.json()
-        })
-        .then(data => {
-            const UserCount = data.total
-            for (let achievement of Achievements) {
-                const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0]
-                // thanks to Stackoverflow on how to remove everything except numbers from string
-                const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''))
-                const PercentageOfPlayers = ((OwnerCount*100)/UserCount).toFixed(2)
-
-                OwnerText.innerHTML += " (" + PercentageOfPlayers + "%)"
-            }
-        })
-        .catch(error => {console.log(error)});
-}
 
 function AchievementProgressBar() {
     const AchievementCount = Achievements.length
@@ -506,7 +462,7 @@ function AchievementProgressBar() {
 }
 
 function AchievementEarnedPercentage() {
-    fetch('https://api.polytoria.com/v1/users/')
+    fetch('https://api.polytoria.com/v1/places/' + PlaceID)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network not ok')
@@ -514,15 +470,37 @@ function AchievementEarnedPercentage() {
             return response.json()
         })
         .then(data => {
-            const UserCount = data.total
+            const UserCount = data.uniqueVisits
             for (let achievement of Achievements) {
                 const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0]
                 // thanks to Stackoverflow on how to remove everything except numbers from string
                 const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''))
                 const PercentageOfPlayers = ((OwnerCount*100)/UserCount).toFixed(2)
 
-                OwnerText.innerHTML += " (" + PercentageOfPlayers + "%)"
+                OwnerText.innerHTML += " (" + PercentageOfPlayers + "%, " + GetAchievementDifficulty(PercentageOfPlayers) + ")"
             }
         })
         .catch(error => {console.log(error)});
+}
+
+function GetAchievementDifficulty(percent) {
+    if (percent >= 90 && percent <= 100) {
+        return 'Freebie'
+    } else if (percent >= 80 && percent <= 89.9) {
+        return 'Cake Walk'
+    } else if (percent >= 50 && percent <= 79.9) {
+        return 'Easy'
+    } else if (percent >= 30 && percent <= 49.9) {
+        return 'Moderate'
+    } else if (percent >= 20 && percent <= 29.9) {
+        return 'Challenging'
+    } else if (percent >= 10 && percent <= 19.9) {
+        return 'Hard'
+    } else if (percent >= 5 && percent <= 9.9) {
+        return 'Extreme'
+    } else if (percent >= 1 && percent <= 4.9) {
+        return 'Insane'
+    } else if (percent >= 0 && percent <= 0.9) {
+        return 'Impossible'
+    }
 }

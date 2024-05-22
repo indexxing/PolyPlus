@@ -1,4 +1,4 @@
-const UserID = window.location.pathname.split('/')[2];
+let UserID = window.location.pathname.split('/')[2];
 const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0]
 const AvatarHeading = document.querySelector('.section-title:has(i.fa-user-crown)')
 
@@ -9,8 +9,9 @@ let CalculateButton;
 
 let Utilities;
 
-if (UserID && !isNaN(UserID)) {
+if (UserID) {
     (async () => {
+        UserID = (await (await fetch('https://api.polytoria.com/v1/users/')).json()).id
         Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
         Utilities = Utilities.default
         
@@ -94,15 +95,15 @@ if (UserID && !isNaN(UserID)) {
 } else if (UserID && UserID[0] === "@") {
     const Username = window.location.pathname.split('/')[2].substring(1)
 
-    let Reference = new URLSearchParams(new URL(window.location.href).search).get('ref')
-    if (Reference === null) {
+    let Reference = new URLSearchParams(new URL(window.location.href).search)
+    if (!Reference.has('ref')) {
         Reference = ""
     }
 
     fetch("https://api.polytoria.com/v1/users/find?username=" + Username)
         .then(response => {
             if (!response.ok) {
-                window.location.href = window.location.origin + decodeURIComponent(Reference)
+                window.location.href = window.location.origin + decodeURIComponent(Reference.get('ref'))
             } else {
                 return response.json()
             }
@@ -127,14 +128,14 @@ function BestFriends() {
     
         FavoriteBtn = document.createElement('button');
         FavoriteBtn.classList = 'btn btn-warning btn-sm ml-2';
-        if (!(BestFriends.length === 7)) {
+        if (!(BestFriends.length === Utilities.Limits.BestFriends)) {
             if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
                 FavoriteBtn.innerText = 'Remove Best Friend Status';
             } else {
                 FavoriteBtn.innerText = 'Best Friend';
             }
         } else {
-            FavoriteBtn.innerText = 'Remove Best Friend Status (max 7/7)'
+            FavoriteBtn.innerText = 'Remove Best Friend Status (max ' + Utilities.Limits.BestFriends + '/' + Utilities.Limits.BestFriends + ')'
         }
         if (UserID !== JSON.parse(window.localStorage.getItem('account_info')).ID && document.getElementById('add-friend-button').classList.contains('btn-success') === false) {
             FavoriteBtn.addEventListener('click', function() {
@@ -180,14 +181,14 @@ function BestFriends() {
             chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {
                 BestFriends = result.PolyPlus_BestFriends || [];
     
-                if (!(BestFriends.length === 7)) {
+                if (!(BestFriends.length === Utilities.Limits.BestFriends)) {
                     if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
                         FavoriteBtn.innerText = 'Remove Best Friend Status'
                     } else {
                         FavoriteBtn.innerText = 'Best Friend'
                     }
                 } else {
-                    FavoriteBtn.innerText = 'Remove Best Friend Status (max 7/7)'
+                    FavoriteBtn.innerText = 'Remove Best Friend Status (max ' + Utilities.Limits.BestFriends + '/' + Utilities.Limits.BestFriends + ')'
                 }
             });
         }
@@ -206,8 +207,9 @@ function BestFriends() {
 async function OutfitCost() {
     const AvatarCost = {
         Total: 0,
-        Limiteds: 0,
-        Exclusives: 0
+        Collectibles: 0,
+        Offsale: 0,
+        HasProfileTheme: false
     }
     for (let item of AvatarRow.children) {
         const ItemID = item.getElementsByTagName('a')[0].href.split('/')[4]
@@ -221,10 +223,13 @@ async function OutfitCost() {
             .then(data => {
                 let Price = data.price
                 if (data.isLimited === true) {
-                    AvatarCost.Limiteds += 1
+                    AvatarCost.Collectibles += 1
                     Price = data.averagePrice
                 } else if (data.sales === 0) {
-                    AvatarCost.Exclusives += 1
+                    AvatarCost.Offsale += 1
+                    Price = 0
+                } else if (data.type === 'profileTheme') {
+                    AvatarCost.HasProfileTheme = true
                     Price = 0
                 }
 
@@ -235,7 +240,7 @@ async function OutfitCost() {
     const ResultText = document.createElement('small')
     ResultText.classList = 'fw-normal text-success'
     ResultText.style.letterSpacing = '0px'
-    ResultText.innerHTML = `(<i class="pi pi-brick mx-1"></i> ${ (AvatarCost.Limiteds > 0 || AvatarCost.Exclusives > 0) ? '~' : '' }${ AvatarCost.Total.toLocaleString() }${ (AvatarCost.Limiteds > 0) ? `, ${AvatarCost.Limiteds} limited` : '' }${ (AvatarCost.Exclusives > 0) ? `, ${AvatarCost.Exclusives} exclusive` : '' })`
+    ResultText.innerHTML = `(<i class="pi pi-brick mx-1"></i> ${ (AvatarCost.Collectibles > 0 || AvatarCost.Offsale > 0 || AvatarCost.HasProfileTheme === true) ? '~' : '' }${ AvatarCost.Total.toLocaleString() } | ${ (AvatarCost.Collectibles > 0) ? AvatarCost.Collectibles + ' collectible' : '' }${ (AvatarCost.Offsale > 0) ? `, ${AvatarCost.Offsale} offsale` : '' }${ (AvatarCost.HasProfileTheme === true) ? ', profile theme excluded' : '' })`
     
     CalculateButton.remove()
     AvatarHeading.appendChild(ResultText)

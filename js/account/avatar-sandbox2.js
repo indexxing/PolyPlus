@@ -1,5 +1,70 @@
-setTimeout(function () {}, 100)
 const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+const BodyColors = [
+    "#f8f8f8",
+    "#cdcdcd",
+    "#111111",
+    "#ff0000",
+    "#a34b4b",
+    "#ffc9c9",
+    "#957977",
+    "#c4281c",
+    "#da867a",
+    "#694028",
+    "#cc8e69",
+    "#a05f35",
+    "#7c5c46",
+    "#eab892",
+    "#da8541",
+    "#aa5500",
+    "#ffcc99",
+    "#e29b40",
+    "#ffaf00",
+    "#ffb000",
+    "#d7c59a",
+    "#f5cd30",
+    "#fdea8d",
+    "#e5e4df",
+    "#c1be42",
+    "#ffff00",
+    "#ffffcc",
+    "#a4bd47",
+    "#7f8e64",
+    "#a1c48c",
+    "#3a7d15",
+    "#4b974b",
+    "#00ff00",
+    "#ccffcc",
+    "#27462d",
+    "#287f47",
+    "#789082",
+    "#9ff3e9",
+    "#12eed4",
+    "#f2f3f3",
+    "#00ffff",
+    "#008f9c",
+    "#04afec",
+    "#80bbdb",
+    "#b4d2e4",
+    "#0d69ac",
+    "#1b2a35",
+    "#afddff",
+    "#6e99ca",
+    "#74869d",
+    "#2154b9",
+    "#002060",
+    "#0000ff",
+    "#b1a7ff",
+    "#a3a2a5",
+    "#6225d1",
+    "#b480ff",
+    "#8c5b9f",
+    "#6b327c",
+    "#aa00aa",
+    "#635f62",
+    "#ff00bf",
+    "#ff66cc",
+    "#e8bac8"
+]
 
 let PageContainer = document.querySelector('.container.p-0.p-lg-5')
 let ItemGrid;
@@ -24,7 +89,7 @@ let Avatar = {
     "rightLegColor": "#e0e0e0"
 }
 
-if (new URLSearchParams(new URL(window.location).search).get('sandbox') === 'true') {
+if (new URLSearchParams(window.location.search).has('sandbox')) {
     console.log('Avatar Sandbox!')
 
     LoadFile(chrome.runtime.getURL('resources/avatar-sandbox.html'), function(html){
@@ -110,6 +175,12 @@ if (new URLSearchParams(new URL(window.location).search).get('sandbox') === 'tru
             UpdateAvatar()
         });
     });
+} else {
+    const SandboxButton = document.createElement('a')
+    SandboxButton.classList = 'btn btn-outline-success w-100 mt-3'
+    SandboxButton.href = '?sandbox=true'
+    SandboxButton.innerHTML = '<i class="fas fa-shirt"></i> Avatar Sandbox'
+    document.getElementById('cont-move').parentElement.appendChild(SandboxButton)
 }
 
 function UpdateAvatar() {

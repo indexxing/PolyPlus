@@ -15,10 +15,6 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function(result){
     Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
     Utilities = Utilities.default
 
-    Update()
-});
-
-async function Update() {
     if (Settings.IRLPriceWithCurrencyOn === true) {
         Array.from(ItemGrid.children).forEach(element => {
             LoadIRLPrices(element)
@@ -33,22 +29,22 @@ async function Update() {
     }
 
     if (Settings.EventItemsCatOn === true) {
-        console.log('is event yay!!')
         EventItems()
     }
-}
+});
 
-let UpdateCount = 0
 const observer = new MutationObserver(async function (list){
-    UpdateCount++
-    console.log(Settings.EventItemsCatOn, document.getElementById('event-items-pagination'), EventItemsShown, UpdateCount)
     if (Settings.EventItemsCatOn === true) {
         if (document.getElementById('event-items-pagination') === null) {
             ItemGrid.classList.add('itemgrid')
+            ItemGrid.parentElement.classList.remove('col-lg-9')
             document.getElementById('pagination').style.display = 'block'
-            document.getElementById('storecat-eventitems').checked = false
+            if (document.getElementById('storecat-eventitems') !== null) {
+                document.getElementById('storecat-eventitems').checked = false
+            }
         } else {
             ItemGrid.classList.remove('itemgrid')
+            ItemGrid.parentElement.classList.add('col-lg-9')
             document.getElementById('pagination').style.display = 'none'
         }
     }
@@ -139,7 +135,7 @@ function EventItems() {
 
             Object.values(EventData.eventDetails).forEach((x, index) => {Events.push({
                 ...x,
-                items: EventData.items.filter((x) => x.event === Object.keys(EventData.eventDetails)[index])
+                items: EventData.items.filter((x) => x.event === Object.keys(EventData.eventDetails)[index]).sort((a, b) => a.id - b.id)
             })})
             while (Events.length > 0) {
                 Groups.push(Events.splice(0, 5))
@@ -156,6 +152,14 @@ function EventItems() {
                         <h6 class="dash-ctitle2">${x.date}</h6>
                         <h5 class="dash-ctitle">${x.name}</h5>
                     </div>
+                    ${ (x.link !== undefined) ? `
+                    <div class="col-auto d-flex align-items-center">
+						<a class="text-muted" href="${x.link}">
+							<span class="d-none d-lg-inline">${ (x.link.startsWith('https://polytoria.com/places/')) ? 'Event Place' : 'Blog Post' }</span>
+							<i class="fas fa-angle-right ms-2"></i>
+						</a>
+					</div>
+                    ` : '' }
                 </div>
                 <div class="card card-dash mcard mb-3" style="animation-delay: 0.27s;">
                     <div class="card-body p-0 m-1 scrollFadeContainer">
@@ -211,22 +215,33 @@ function EventItems() {
 
         const Container = document.getElementById('p+ei')
         const Pagination = document.getElementById('event-items-pagination')
-        //const First = document.getElementById('p+ei-pagination-first')
+        const First = document.getElementById('p+ei-pagination-first')
         const Prev = document.getElementById('p+ei-pagination-prev')
         const Current = document.getElementById('p+ei-pagination-current')
         const Next = document.getElementById('p+ei-pagination-next')
-        //const Last = document.getElementById('p+ei-pagination-last')
+        const Last = document.getElementById('p+ei-pagination-last')
 
         if (Page > 0) {
             Prev.parentElement.classList.remove('disabled')
+            First.parentElement.classList.remove('disabled')
         } else {
             Prev.parentElement.classList.add('disabled')
+            First.parentElement.classList.add('disabled')
         }
         if (Page < Groups.length-1) {
             Next.parentElement.classList.remove('disabled')
+            Last.parentElement.classList.remove('disabled')
         } else {
             Next.parentElement.classList.add('disabled')
+            Last.parentElement.classList.add('disabled')
         }
+
+        First.addEventListener('click', function() {
+            if (Page > 0) {
+                Page = 0
+                UpdateEventItems()
+            }
+        })
       
         Prev.addEventListener('click', function() {
             if (Page > 0) {
@@ -238,6 +253,13 @@ function EventItems() {
         Next.addEventListener('click', function() {
             if (Page < Groups.length-1) {
                 Page++
+                UpdateEventItems()
+            }
+        })
+
+        Last.addEventListener('click', function() {
+            if (Page < Groups.length-1) {
+                Page = Groups.length-1
                 UpdateEventItems()
             }
         })
@@ -278,13 +300,17 @@ function EventItems() {
     
             if (Page > 0) {
                 Prev.parentElement.classList.remove('disabled')
+                First.parentElement.classList.remove('disabled')
             } else {
                 Prev.parentElement.classList.add('disabled')
+                First.parentElement.classList.add('disabled')
             }
             if (Page < Groups.length-1) {
                 Next.parentElement.classList.remove('disabled')
+                Last.parentElement.classList.remove('disabled')
             } else {
                 Next.parentElement.classList.add('disabled')
+                Last.parentElement.classList.add('disabled')
             }
         }
     })

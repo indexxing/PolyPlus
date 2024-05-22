@@ -15,6 +15,10 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function(result) {
         IRLPrice()
     }
 
+    if (Settings.ShowFriendCount === true) { 
+        ShowFriendCount()
+    }
+
     if (Settings.PinnedGamesOn === true || Settings.BestFriendsOn === true) {
         Update()
     }
@@ -189,4 +193,23 @@ async function IRLPrice() {
             }
         }
     })();
+}
+
+async function ShowFriendCount() {
+    let FriendCount = (await (await fetch('https://polytoria.com/api/friends?page=1')).json()).meta.total
+    /*
+    const FirstPage = (await (await fetch('https://polytoria.com/api/friends?page=1')).json())
+    if (FirstPage.meta.lastPage > 1) {
+        const LastPage = (await (await fetch('https://polytoria.com/api/friends?page=' + Pages)).json())
+        FriendCount = (12*(FirstPage.meta.pages-1)) + LastPage.data.length
+    } else {
+        FriendCount = FirstPage.data.length
+    }
+    */
+
+    const CountText = document.createElement('small')
+    CountText.classList = 'text-muted fw-lighter'
+    CountText.style.fontSize = '0.8rem'
+    CountText.innerText = ' (' + FriendCount + ')'
+    document.querySelector('#home-friendsOnline h5').appendChild(CountText)
 }

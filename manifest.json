@@ -3,10 +3,9 @@
     "author": "Index",
     "name": "Poly+",
     "version": "1.11",
-    "version_name": "Pre-Release Build (stable: v1.1.1)",
+    "version_name": "Pre-Release Build (v1.1.1)",
     "description": "Power-up your Polytoria experience with Poly+! Created by Index.",
     "homepage_url": "https://polyplus.vercel.app/",
-    "download_url": "https://github.com/indexxing/PolyPlus/releases",
     "permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
     "content_scripts": [
         {
@@ -29,18 +28,13 @@
         },
 
         {
-            "matches": ["https://polytoria.com/my/settings/polyplus-debug/*"],
+            "matches": ["https://polytoria.com/my/settings/polyplus#dev"],
             "js": ["/js/debug.js"]
         },
 
         {
             "matches": ["https://polytoria.com/places/**"],
             "js": ["/js/places/place-view.js"]
-        },
-
-        {
-            "matches": ["https://polytoria.com/join-place/**"],
-            "js": ["/js/places/place-join.js"]
         },
 
         {
@@ -54,7 +48,7 @@
         },
 
         {
-            "matches": ["https://polytoria.com/users/**"],
+            "matches": ["https://polytoria.com/u/**"],
             "js": ["/js/account/profile.js"]
         },
 
@@ -105,7 +99,7 @@
         },
 
         {
-            "matches": ["https://polytoria.com/my/avatar?sandbox=true"],
+            "matches": ["https://polytoria.com/my/avatar*"],
             "js": ["/js/account/avatar-sandbox2.js"]
         },
 
