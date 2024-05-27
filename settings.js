@@ -2,14 +2,11 @@ const SaveBtn = document.getElementById('Save')
 const Elements = Array.from(document.getElementsByClassName('setting-container'))
 
 var Settings;
-var ExpectedSettings;
 
 var Utilities;
 (async () => {
   Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default
-
-  ExpectedSettings = Utilities.DefaultSettings
   LoadCurrent()
 
   document.getElementById('PinnedGames-limit').innerText = Utilities.Limits.PinnedGames
@@ -28,7 +25,7 @@ SaveBtn.addEventListener("click", function() {
 
 // Handle modal buttons for Reset Defaults modal
 document.getElementById('ResetDefaults-Modal-Yes').addEventListener('click', function() {
-  Settings = ExpectedSettings
+  Settings = Utilities.DefaultSettings
   Save()
   setTimeout(function () {
     LoadCurrent();
@@ -40,247 +37,227 @@ document.getElementById('ResetDefaults-Modal-No').addEventListener('click', func
 });
 
 // Handle leaving the settings page before saving
-/*
 window.onbeforeunload = function() {
-  if (SaveBtn.getAttribute('disabled') !== null) {
+  if (SaveBtn.getAttribute('disabled') !== undefined) {
     return "Are you sure you'd like to leave? Your Poly+ settings haven't been saved."
   }
-  return "aaa"
 }
-*/
 
 // Loop thru each setting container and handle toggling, selecting, opening modal, etc
 Elements.forEach(element => {
+  console.log('Handle Element', element)
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
-  let Select = element.getElementsByTagName('select') || []
-  //let Checkbox = element.getElementsByTagName('input') || []
-  //console.log(Checkbox)
+  let Select = element.getElementsByTagName('select')[0]
+  let Checkbox = element.getElementsByTagName('input')[0]
 
   if (Button) {
     Button.addEventListener('click', function() {
-      ToggleSetting(Button.getAttribute('data-setting'), element)
-
-      /*
-      if (!(Button.getAttribute('data-parent'))) {
-        ToggleSetting(Button.getAttribute('data-setting'), element)
-      } else {
-        let Parent = Button.getAttribute('data-parent')
-        if (!isNaN(parseInt(Parent))) {
-          Parent = parseInt(Parent)
-        }
-
-        if (!Settings[Parent]) {
-          Settings[Parent] = {}
-          console.log('empty btn')
-        }
-        console.log(Button.getAttribute('data-setting'), Parent, Settings[Parent])
-        ToggleSetting(Button.getAttribute('data-setting'), element, Parent)
-      }
-      */
+      SetSetting(Button, "bool")
     });
   }
 
-  /*
-  Array.from(Checkbox).forEach(check => {
-    check.addEventListener('click', function(){
-      if (!(check.getAttribute('data-parent'))) {
-        ToggleSetting(check.getAttribute('data-setting'), element)
+  if (Select) {
+    Select.addEventListener('change', function(){
+      if (Select.getAttribute('data-useValue') !== undefined) {
+        let Value = Select.options[Select.selectedIndex].value
+        if (!isNaN(Value)) { Value = parseInt(Value) }
+        SetSetting(Select, Value, false)
       } else {
-        let Parent = check.getAttribute('data-parent')
-        if (!isNaN(parseInt(Parent))) {
-          Parent = parseInt(Parent)
-        }
-
-        if (!Settings[Parent]) {
-          Settings[Parent] = {}
-          console.log('empty')
-        }
-
-        console.log(check.getAttribute('data-setting'), Parent, Settings[Parent])
-        ToggleSetting(check.getAttribute('data-setting'), null, Parent)
+        SetSetting(Select, Select.selectedIndex, false)
       }
     })
-  })
-  */
+  }
+
+  if (Checkbox) {
+    Checkbox.addEventListener('change', function(){
+      SetSetting(Checkbox, Checkbox.checked, false)
+    })
+  }
 
   if (Options) {
-    Options.addEventListener('click', function() {
-      let Modal = document.getElementById(Options.getAttribute('data-modal') + '-Modal')
-      let ModalButtons = Modal.getElementsByTagName('button')
-      let ModalInputs = Modal.getElementsByTagName('input')
-      let ModalSelect = Modal.getElementsByTagName('select')
+    const Modal = document.getElementById(Options.getAttribute('data-modal') + '-Modal')
+    const ModalButtons = Modal.getElementsByTagName('button')
+    const ModalInputs = Modal.getElementsByTagName('input')
+    const ModalSelect = Modal.getElementsByTagName('select')
 
-      Array.from(ModalButtons).forEach(btn => {
-        if (!(btn.getAttribute('data-ignore') === 'true')) {
-          btn.addEventListener('click', function(){
-            let Setting = btn.getAttribute('data-setting')
-            if (Setting === '[save]') {
-              Array.from(ModalInputs).forEach(input => {
-                if (!(input.getAttribute('data-ignore') === 'true')) {
-                  if (!(input.getAttribute('data-parent'))) {
-                    Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] = input.value || null
-                  } else {
-                    let Parent = input.getAttribute('data-parent')
-                    if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
-                    Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] = input.value || null
-                  }
-                }
-              });
-              Array.from(ModalSelect).forEach(select => {
-                if (!(select.getAttribute('data-ignore') === 'true')) {
-                  if (!(select.getAttribute('data-parent'))) {
-                    Settings[Modal.getAttribute('data-setting')][select.getAttribute('data-setting')] = select.selectedIndex
-                  } else {
-                    let Parent = input.getAttribute('data-parent')
-                    if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
-                    Settings[Modal.getAttribute('data-setting')][Parent][select.getAttribute('data-setting')] = select.selectedIndex
-                  }
-                }
-              });
-              Save();
-              setTimeout(function () {
-                LoadCurrent();
-                Modal.close();
-              }, 400)
-            } else if (Setting === '[reset-default]') {
-              if (confirm("Are you sure you'd like to reset these options to their defaults?") === true) {
-                Settings[Modal.getAttribute('data-setting')] = ExpectedSettings[Modal.getAttribute('data-setting')]
-                Save()
-                Modal.close();
-              }
-            } else if (Setting === '[cancel]') {
+    Options.addEventListener('click', function(){
+      Array.from(ModalButtons).filter((x) => !x.classList.contains('ignore')).forEach(button => {
+        button.addEventListener('click', function(){
+          const Setting = button.getAttribute('data-setting')
+
+          if (Setting === '[save]') {
+            // Save Modal Button
+
+            Array.from(ModalInputs).filter((x) => !x.classList.contains('ignore')).forEach(input => {
+              SetSetting(input, input.value, false, Modal.getAttribute('data-setting'))
+            });
+            Array.from(ModalSelect).filter((x) => !x.classList.contains('ignore')).forEach(select => {
+              SetSetting(select, select.selectedIndex, false, Modal.getAttribute('data-setting'))
+            });
+            Save();
+            setTimeout(function () {
+              LoadCurrent();
               Modal.close();
-            } else {
-              if (!(btn.getAttribute('data-parent'))) {
-                ToggleSetting(Modal.getAttribute('data-setting')[btn.getAttribute('data-setting')], null)
-              } else {
-                let Parent = input.getAttribute('data-parent')
-                if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
-                ToggleSetting(Modal.getAttribute('data-setting')[Parent][btn.getAttribute('data-setting')], null)
-              }
+            }, 400)
+          } else if (Setting === '[reset-default]') {
+            // Reset to Defaults Modal Button
+
+            if (confirm("Are you sure you'd like to reset these options to their defaults?") === true) {
+              Settings[Modal.getAttribute('data-setting')] = Utilities.DefaultSettings[Modal.getAttribute('data-setting')]
+              Save()
+              Modal.close();
             }
-          });
+          } else if (Setting === '[cancel]') {
+            // Cancel Changes Button
+
+            Modal.close();
+          } else {
+            // Default Toggle Button
+
+            SetSetting(button, "bool", false, Modal.getAttribute('data-setting'))
+          }
+        })
+      })
+
+      Array.from(ModalInputs).filter((x) => !x.classList.contains('ignore')).forEach(input => {
+        const Status = GetSettingValue(input, Modal.getAttribute('data-setting'))
+        if (Status !== "undefined" && Status !== undefined) {
+          input.value = Status
+        } else {
+          input.value = ''
         }
       });
 
-      Array.from(ModalInputs).forEach(input => {
-        if (!(input.getAttribute('data-ignore') === 'true')) {
-          if (!(input.getAttribute('data-parent'))) {
-            if (Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] !== "undefined" && Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')] !== undefined) {
-              input.value = Settings[Modal.getAttribute('data-setting')][input.getAttribute('data-setting')]
-            } else {
-              input.value = ''
-            }
-          } else {
-            let Parent = input.getAttribute('data-parent')
-            if (Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] !== "undefined" && Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')] !== undefined) {
-              if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
-              input.value = Settings[Modal.getAttribute('data-setting')][Parent][input.getAttribute('data-setting')]
-            } else {
-              input.value = ''
-            }
-          }
-        }
-      });
-
-      Array.from(ModalSelect).forEach(select => {
-        if (!(select.getAttribute('data-ignore') === 'true')) {
-          if (!(select.getAttribute('data-parent'))) {
-            if (Settings[Modal.getAttribute('data-setting')][select.getAttribute('data-setting')] !== "undefined") {
-              select.selectedIndex = Settings[Modal.getAttribute('data-setting')][select.getAttribute('data-setting')]
-            }
-          } else {
-            let Parent = input.getAttribute('data-parent')
-            if (Settings[Modal.getAttribute('data-setting')][Parent][select.getAttribute('data-setting')] !== "undefined") {
-              if (!isNaN(parseInt(Parent))) {Parent = parseInt(Parent)}
-              select.selectedIndex = Settings[Modal.getAttribute('data-setting')][Parent][select.getAttribute('data-setting')]
-            }
-          }
+      Array.from(ModalSelect).filter((x) => !x.classList.contains('ignore')).forEach(select => {
+        const Status = GetSettingValue(select, Modal.getAttribute('data-setting'))
+        if (Status !== "undefined" && Status !== undefined) {
+          select.selectedIndex = Status
         }
       });
 
       Modal.showModal()
-    });
-  }
-
-  if (Select.length > 0) {
-    Array.from(Select).forEach(element => {
-      element.addEventListener('change', function() {
-        SetSetting(element.getAttribute('data-setting'), element, element.selectedIndex)
-        Save()
-      });
-    });
+    })
   }
 });
 
 function LoadCurrent() {
   chrome.storage.sync.get(["PolyPlus_Settings"], function(result) {
-    Settings = MergeObjects(result.PolyPlus_Settings || ExpectedSettings, ExpectedSettings)
+    Settings = MergeObjects(result.PolyPlus_Settings || Utilities.DefaultSettings, Utilities.DefaultSettings)
 
-    console.log("Current: ", Settings)
+    console.log("Current Settings: ", Settings)
 
     Elements.forEach(element => {
-      const ToggleBtn = element.getElementsByClassName('toggle-btn')[0]
-      if (Settings[ToggleBtn.getAttribute('data-setting')] === true) {
-        element.classList.add('enabled')
-        ToggleBtn.innerText = 'Disable'
-        ToggleBtn.classList.add('btn-danger')
-      } else {
-        element.classList.add('disabled')
-        ToggleBtn.innerText = 'Enable'
-        ToggleBtn.classList.add('btn-success')
-      }
-      let SelectInput = element.getElementsByTagName('select')[0]
-      if (SelectInput) {
-        SelectInput.selectedIndex = Settings[SelectInput.getAttribute('data-setting')]
-      }
+      console.log('For Each Update')
+      UpdateElementState(element)
     });
   });
 }
 
-function ToggleSetting(Name, Element, Parent) {
-  document.title = "*unsaved | Poly+ Settings"
-  let Status;
-  if (!Parent) {
-    Status = Settings[Name]
-    if (Settings[Name] === true) {
-      Settings[Name] = false;
-    } else {
-      Settings[Name] = true;
-    }
-  } else {
-    Status = Settings[Parent][Name]
-    if (Settings[Parent][Name] === true) {
-      Settings[Parent][Name] = false;
-    } else {
-      Settings[Parent][Name] = true;
-    }
-  }
-  if (Element !== null) {
-    const ToggleBtn = Element.getElementsByClassName('toggle-btn')[0]
-    if (Status === false) {
-      ToggleBtn.innerText = 'Enable'
-    } else {
-      ToggleBtn.innerText = 'Disable'
-    }
-    Element.classList.toggle('enabled')
-    Element.classList.toggle('disabled')
-    ToggleBtn.classList.toggle('btn-success')
-    ToggleBtn.classList.toggle('btn-danger')
+function SetSetting(element, value, update, modalParent) {
+  const name = element.getAttribute('data-setting')
+  let parent = element.getAttribute('data-parent')
+
+  if (modalParent !== undefined) {
+    console.log(modalParent)
+    parent = modalParent
   }
 
+  if (value === "bool") {
+    value = !GetSettingValue(element, modalParent)
+  }
+  if (parent !== null) {
+    let Parent = Object.values(Settings)[Object.keys(Settings).indexOf(parent)]
+    if (!isNaN(element.getAttribute('data-parent')) && element.getAttribute('data-parent') !== null) {
+      console.log('is numbere!!!!')
+      Parent = Parent[parseInt(element.getAttribute('data-parent'))]
+    }
+    Parent[name] = value
+  } else {
+    Settings[name] = value
+  }
+  if (update !== false) {
+    UpdateElementState(document.querySelector(`.setting-container:has([data-setting="${name}"])${ (parent !== null) ? `:has([data-parent="${parent}"])` : '' }`), value)
+  }
   if (SaveBtn.getAttribute('disabled')) {
     SaveBtn.removeAttribute('disabled')
   }
+
+  const getInObject = function(a, b) { return Object.values(a)[Object.keys(a).indexOf(b)] }
 }
 
-function SetSetting(Name, Element, Value) {
-  console.log(Settings)
-  Settings[Name] = Value
+function GetSettingValue(element, modalParent) {
+  const name = element.getAttribute('data-setting')
+  let parent = element.getAttribute('data-parent')
 
-  if (SaveBtn.getAttribute('disabled')) {
-    SaveBtn.removeAttribute('disabled')
+  if (modalParent !== undefined) {
+    parent = modalParent
+  }
+
+  let Status = name;
+  if (parent !== null) {
+
+    let Parent = Object.values(Settings)[Object.keys(Settings).indexOf(parent)]
+    if (!isNaN(element.getAttribute('data-parent')) && element.getAttribute('data-parent') !== null) {
+      Parent = Parent[parseInt(element.getAttribute('data-parent'))]
+      Status = Parent[name]
+    } else {
+      Status = Object.values(Parent)[Object.keys(Parent).indexOf(name)]
+    }
+
+    /*
+    if (!isNaN(element.getAttribute('data-parent'))) {
+      Parent = Parent[parseInt(element.getAttribute('data-parent'))]
+    }
+    Status = Object.values(Parent)[Object.keys(Parent).indexOf(Status)]
+    */
+  } else {
+    Status = Settings[Status]
+  }
+  console.log('Get Value Result', Status)
+
+  return Status
+}
+
+function UpdateElementState(element, status) {
+  console.log('Update Element State', element, status)
+
+  const Button = element.getElementsByClassName('toggle-btn')[0]
+
+  if (status === undefined) {
+    console.log('Update Element State, no status provided')
+    status = GetSettingValue(Button)
+  }
+
+  if (status === true) {
+    console.log('Is Enabled so Set False')
+    element.classList.add('enabled')
+    element.classList.remove('disabled')
+    Button.innerText = 'Disable'
+    Button.classList.add('btn-danger')
+    Button.classList.remove('btn-success')
+  } else {
+    console.log('Is Disabled so Set True')
+    element.classList.add('disabled')
+    element.classList.remove('enabled')
+    Button.innerText = 'Enable'
+    Button.classList.add('btn-success')
+    Button.classList.remove('btn-danger')
+  }
+
+  let SelectInput = element.getElementsByTagName('select')[0]
+  if (SelectInput) {
+    console.log('Select Found')
+    SelectInput.selectedIndex = GetSettingValue(SelectInput)
+  }
+
+  let Checkbox = Array.from(element.getElementsByTagName('input'))
+  if (Checkbox.length > 0) {
+    console.log('Checkbox/Input(s) Found', Checkbox)
+    Checkbox.forEach(check => {
+      console.log('check', GetSettingValue(check))
+      check.checked = GetSettingValue(check)
+    })
   }
 }
 
@@ -318,7 +295,7 @@ CopyThemeJSONBtn.addEventListener('click', function(){
 function LoadThemeJSON(string) {
   try {
     let JSONTable = JSON.parse(string)
-    if (JSONTable.length === ExpectedSettings.ThemeCreator.length) {
+    if (JSONTable.length === Utilities.DefaultSettings.ThemeCreator.length) {
       if (confirm('Are you sure you\'d like to replace this theme with the theme specified in the JSON?') === true) {
         LoadThemeFromJSONBtn.previousElementSibling.value = ''
         document.getElementById('ThemeCreator-Modal').close()
@@ -327,7 +304,7 @@ function LoadThemeJSON(string) {
             JSONTable[i] = ""
           }
         }
-        Settings.ThemeCreator = MergeObjects(JSONTable, ExpectedSettings.ThemeCreator)
+        Settings.ThemeCreator = MergeObjects(JSONTable, Utilities.DefaultSettings.ThemeCreator)
         Save();
         console.log(JSONTable.length, JSONTable, 'applied')
         document.getElementById('ThemeCreator').getElementsByTagName('button')[1].click();

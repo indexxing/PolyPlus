@@ -10,7 +10,7 @@
     "content_scripts": [
         {
             "matches": ["https://polytoria.com/*"],
-            "js": ["/js/everywhere.js","/js/membership-themes.js"],
+            "js": ["/js/sitewide.js","/js/membership-themes.js"],
             "css": ["/css/specific.css"],
             "run_at": "document_start"
         },
