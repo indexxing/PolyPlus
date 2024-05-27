@@ -1,5 +1,5 @@
 const PlaceID = window.location.pathname.split('/')[2]
-const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+const UserID = JSON.parse(window.localStorage.getItem('p+account_info')).ID
 const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2]
 
 let Utilities;
@@ -65,7 +65,7 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
             }
         }
 
-        if (Settings.IRLPriceWithCurrencyOn === true) {
+        if (Settings.IRLPriceWithCurrency.Enabled === true) {
             IRLPrice()
         }
 
@@ -370,7 +370,7 @@ async function IRLPrice() {
     const Gamepasses = document.querySelector('#gamepasses-tabpane .row.flex-row').children
     for (let gamepass of Gamepasses) {
         const Price = gamepass.getElementsByClassName('text-success')[0]
-        const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+        const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrency.Currency)
 
         let Span = document.createElement('span')
         Span.classList = 'text-muted polyplus-price-tag'

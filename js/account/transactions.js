@@ -45,7 +45,7 @@ let Input = document.getElementById('polyplus-brickconverter-input')
 let Output = document.getElementById('polyplus-brickconverter-output')
 let Type = document.getElementById('polyplus-brickconverter-type')
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-    Type.selectedIndex = result.PolyPlus_Settings.IRLPriceWithCurrencyCurrency || 0
+    Type.selectedIndex = result.PolyPlus_Settings.IRLPriceWithCurrency.Currency || 0
 });
 //let Package = document.getElementById('polyplus-brickconverter-package')
 

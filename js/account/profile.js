@@ -18,7 +18,7 @@ if (UserID) {
         chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
             Settings = result.PolyPlus_Settings || {}
 
-            if (Settings.IRLPriceWithCurrencyOn === true) {
+            if (Settings.IRLPriceWithCurrency.Enabled === true) {
                 IRLPrice()
             }
         
@@ -118,8 +118,8 @@ if (UserID) {
 
 async function IRLPrice() {
     const NetWorthElement = document.getElementsByClassName('float-end text-success')[0];
-    const IRLResult = await Utilities.CalculateIRL(NetWorthElement.innerText, Settings.IRLPriceWithCurrencyCurrency)
-    NetWorthElement.innerText = NetWorthElement.innerText + " ($" + IRLResult.result + " " + IRLResult.display + ")"
+    const IRLResult = await Utilities.CalculateIRL(NetWorthElement.innerText, Settings.IRLPriceWithCurrency.Currency)
+    NetWorthElement.innerHTML = NetWorthElement.innerHTML + '<div class="text-muted" style="font-size: 0.6rem;">(' + IRLResult.icon + IRLResult.result + ' ' + IRLResult.display + ')</div>'
 }
 
 function BestFriends() {
@@ -137,7 +137,7 @@ function BestFriends() {
         } else {
             FavoriteBtn.innerText = 'Remove Best Friend Status (max ' + Utilities.Limits.BestFriends + '/' + Utilities.Limits.BestFriends + ')'
         }
-        if (UserID !== JSON.parse(window.localStorage.getItem('account_info')).ID && document.getElementById('add-friend-button').classList.contains('btn-success') === false) {
+        if (UserID !== JSON.parse(window.localStorage.getItem('p+account_info')).ID && document.getElementById('add-friend-button').classList.contains('btn-success') === false) {
             FavoriteBtn.addEventListener('click', function() {
                 Fav(UserID, FavoriteBtn);
             });
@@ -147,7 +147,7 @@ function BestFriends() {
         document.querySelectorAll('.section-title.px-3.px-lg-0.mt-3')[0].appendChild(FavoriteBtn);
 
         function Fav(UserID, btn) {
-            if (UserID === JSON.parse(window.localStorage.getItem('account_info')).ID) { return }
+            if (UserID === JSON.parse(window.localStorage.getItem('p+account_info')).ID) { return }
             btn.setAttribute('disabled', 'true')
 
             chrome.storage.sync.get(['PolyPlus_BestFriends'], function(result) {

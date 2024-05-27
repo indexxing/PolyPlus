@@ -1,4 +1,4 @@
-const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+const UserID = JSON.parse(window.localStorage.getItem('p+account_info')).ID
 const BodyColors = [
     "#f8f8f8",
     "#cdcdcd",
@@ -174,6 +174,14 @@ if (new URLSearchParams(window.location.search).has('sandbox')) {
         OpenInNewTab.addEventListener('click', function(){
             UpdateAvatar()
         });
+
+        let LoadAsset = document.getElementById('load-asset')
+        LoadAsset.addEventListener('click', async function(){
+            console.log('clickk')
+            const MeshURL = (await (await fetch('https://api.polytoria.com/v1/assets/serve-mesh/' + LoadAsset.previousElementSibling.value)).json()).url
+            Avatar.items.push(MeshURL)
+            UpdateAvatar()
+        })
     });
 } else {
     const SandboxButton = document.createElement('a')

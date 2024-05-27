@@ -20,6 +20,11 @@ export default {
     ForumMentsOn: true,
     BestFriendsOn: false,
     ImprovedFrListsOn: false,
+    IRLPriceWithCurrency: {
+      Enabled: true,
+      Currency: 0,
+      Package: 0
+    },
     IRLPriceWithCurrencyOn: true,
     IRLPriceWithCurrencyCurrency: 0,
     IRLPriceWithCurrencyPackage: 0,
@@ -27,6 +32,7 @@ export default {
     StoreOwnTagOn: true,
     ThemeCreatorOn: false,
     ThemeCreator: {
+      Enabled: false,
       BGColor: null,
       BGImage: null,
       BGImageSize: 'fit',
@@ -38,7 +44,7 @@ export default {
     ModifyNavOn: false,
     ModifyNav: [
       {
-        Label: "Play",
+        Label: "Places",
         Link: "https://polytoria.com/places"
       },
       {
@@ -59,6 +65,10 @@ export default {
       }
     ],
     MoreSearchFiltersOn: true,
+    ApplyMembershipTheme: {
+      Enabled: false,
+      Theme: 0
+    },
     ApplyMembershipThemeOn: false,
     ApplyMembershipThemeTheme: 0,
     MultiCancelOutTradesOn: true,
@@ -69,13 +79,25 @@ export default {
     ShowPlaceRevenueOn: true,
     ReplaceItemSalesOn: false,
     HoardersListOn: true,
-    LibraryDownloadsOn: true
+    HoardersList: {
+      Enabled: true,
+      AvatarsEnabled: false,
+      MinCopies: 2
+    },
+    LibraryDownloadsOn: true,
+    EventItemsCatOn: true,
+    HomeFriendCountOn: true,
+    HideUserAds: {
+      Enabled: false,
+      Banners: true,
+      Rectangles: true
+    }
   },
   Limits: {
     PinnedGames: 10,
-    BestFriends: 10,
-    ImprovedFrLists: 25,
-    ItemWishlist: 30
+    BestFriends: 15,
+    ImprovedFrLists: 20,
+    ItemWishlist: 20
   },
   MeshTypes: [
     "hat",
@@ -89,9 +111,9 @@ export default {
     "tool"
   ],
   TextureTypes: [
-    "Shirt",
-    "Pants",
-    "Face"
+    "shirt",
+    "pants",
+    "face"
   ],
   CalculateIRL: async function(bricks, to, brickPackage) {
     /*

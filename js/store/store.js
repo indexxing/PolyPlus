@@ -1,5 +1,5 @@
 const ItemID = window.location.pathname.split('/')[2]
-const UserID = JSON.parse(window.localStorage.getItem('account_info')).ID
+const UserID = JSON.parse(window.localStorage.getItem('p+account_info')).ID
 const ItemGrid = document.getElementById('assets')
 const Categories = document.getElementById('store-categories').children[0]
 
@@ -15,14 +15,17 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function(result){
     Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
     Utilities = Utilities.default
 
-    if (Settings.IRLPriceWithCurrencyOn === true) {
+    if (Settings.IRLPriceWithCurrency.Enabled === true) {
         Array.from(ItemGrid.children).forEach(element => {
             LoadIRLPrices(element)
         });
     }
 
     if (Settings.StoreOwnTagOn === true) {
-        Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?limit=50')).json()).inventory
+        Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=hat&limit=100')).json()).inventory
+        Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory
+        Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory
+        console.log(Inventory)
         Array.from(ItemGrid.children).forEach(element => {
             LoadOwnedTags(element)
         });
@@ -51,7 +54,7 @@ const observer = new MutationObserver(async function (list){
     for (const record of list) {
         for (const element of record.addedNodes) {
             if (element.tagName === "DIV" && element.classList.value === 'mb-3 itemCardCont') {
-                if (Settings.IRLPriceWithCurrencyOn === true) {
+                if (Settings.IRLPriceWithCurrency.Enabled === true) {
                     LoadIRLPrices(element)
                 }
 
@@ -74,7 +77,7 @@ async function LoadIRLPrices(element) {
         Span.classList = 'text-muted polyplus-price-tag'
         Span.style = 'font-size: 0.7rem; font-weight: lighter;'
         const Price = Parent.innerText.split(' ')[1]
-        const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
+        const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrency.Currency)
         Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
         Parent.appendChild(Span)
     }

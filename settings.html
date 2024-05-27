@@ -19,7 +19,7 @@
 
       #page {
         margin-top: 7.5rem;
-        width: 50%;
+        width: 65%;
         margin-right: auto;
         margin-left: auto;
         margin-bottom: 3.5rem;
@@ -132,14 +132,14 @@
   
         <label>Save Theme to JSON</label>
         <div class="input-group mb-3">
-          <input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark" placeholder="JSON String..." data-ignore="true" disabled>
+          <input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark ignore" placeholder="JSON String..." disabled>
           <button id="CopyThemeJSONBtn" class="btn btn-warning">Copy</button>
         </div>
 
         <label>Load Theme from JSON</label>
         <div class="input-group">
-          <input type="text" class="form-control bg-dark" placeholder="JSON..." data-ignore="true">
-          <button id="LoadThemeFromJSONBtn" class="btn btn-success" data-ignore="true" data-onclick="LoadThemeJSON(this.previousElementSibling.value)">Load</button>
+          <input type="text" class="form-control bg-dark ignore" placeholder="JSON...">
+          <button id="LoadThemeFromJSONBtn" class="btn btn-success ignore">Load</button>
         </div>
   
         <hr class="mt-2 mb-3">
@@ -367,7 +367,7 @@
         <span class="indicator">&nbsp;</span>
         <span class="title">
           Show IRL price with Brick Count
-          <button class="btn btn-sm toggle-btn" data-setting="IRLPriceWithCurrencyOn">Toggle</button>
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="IRLPriceWithCurrency">Toggle</button>
         </span>
         <br>
         <span class="desc mb-4">
@@ -377,7 +377,7 @@
           <br>
           <span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
         </span>
-        <select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyCurrency">
+        <select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Currency" data-parent="IRLPriceWithCurrency">
           <option value="USD" selected>United States Dollar (USD)</option>
           <option value="EUR">Euro (EUR)</option>
           <option value="CAD">Canadian Dollar (CAD)</option>
@@ -388,7 +388,7 @@
           <option value="BRL">Brazilian Real (BRL)</option>
         </select>
         <!--
-        <select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="IRLPriceWithCurrencyPackage">
+        <select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Package" data-parent="IRLPriceWithCurrency">
           <option value="0" selected>$0.99 Brick Package</option>
           <option value="1">$4.99 Brick Package</option>
           <option value="2">$9.99 Brick Package</option>
@@ -420,7 +420,7 @@
         <span class="indicator">&nbsp;</span>
         <span class="title">
           Theme Creator
-          <button class="btn btn-sm toggle-btn" data-setting="ThemeCreatorOn">Toggle</button>
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ThemeCreator">Toggle</button>
           <button id="ThemeCreator-Options" class="btn btn-primary btn-sm" data-modal="ThemeCreator">Options</button>
         </span>
         <br>
@@ -441,11 +441,11 @@
         <span class="indicator">&nbsp;</span>
         <span class="title">
           Apply Membership Theme for <b>Free</b>
-          <button class="btn btn-sm toggle-btn" data-setting="ApplyMembershipThemeOn">Toggle</button>
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ApplyMembershipTheme">Toggle</button>
         </span>
         <br>
         <span class="desc">Ever want the fancy membership themes for completely <b>free</b>? Well now you can get apply them site-wide!</span>
-        <select id="ApplyMembershipThemeTheme" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="ApplyMembershipThemeTheme">
+        <select id="ApplyMembershipThemeTheme" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Theme" data-parent="ApplyMembershipTheme">
           <option value="Plus" selected>Plus</option>
           <option value="PlusDX">Plus Deluxe</option>
         </select>
@@ -543,12 +543,22 @@
         </span>
         <br>
         <span class="desc">List all the users that have more than 1 copy of a collectible!</span>
-        <!--
         <span class="form-check form-switch">
           <input class="form-check-input" type="checkbox" role="switch" id="hoarders-list-avatars" data-setting="AvatarsEnabled" data-parent="HoardersList">
-          <label class="form-check-label" for="hoarders-list-avatars">Show Avatar Icons (more requests, resulting in more ratelimiting potentially)</label>
+          <label class="form-check-label" for="hoarders-list-avatars">
+            Show Avatar Icons
+            <br>
+            <span style="font-size: 0.6rem; color: orange;">* Avatar icons will result in more requests, potentially leading to more ratelimiting and slower hoarder list loading.</span>
+          </label>
         </span>
-        -->
+        <select class="form-select form-select-sm mb-2" style="width:350px;" data-setting="MinCopies" data-parent="HoardersList" data-useValue="true">
+          <option value="2">Min. 2+ Copies</option>
+          <option value="3">Min. 3+ Copies</option>
+          <option value="5">Min. 5+ Copies</option>
+          <option value="10">Min. 10+ Copies</option>
+          <option value="15">Min. 15+ Copies</option>
+          <option value="35">Min. 35+ Copies</option>
+        </select>
       </p>
       <p class="setting-container" id="hoarders-list">
         <span class="indicator">&nbsp;</span>
@@ -576,6 +586,38 @@
         </span>
         <br>
         <span class="desc">See how many friends you have on your homepage/dashboard, just scroll to the "friends" section and you'll see it next to the heading!</span>
+      </p>
+      <p class="setting-container" id="timed-item-owner-check">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Timed-Item Owner Check
+          <button class="btn btn-sm toggle-btn" data-setting="ItemOwnerCheckOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Click the shopping bags icon in the bottom left-hand corner of the timed item's item thumbnail to toggle an input and a button. Then just enter someone's username and it'll tell you whether they own it or not and if so what serial!</span>
+      </p>
+      <p class="setting-container" id="hide-user-ads">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Hide User Ads
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HideUserAds">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Hide those annoying <s>out of context Discord message</s> user ads!</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* Ads that are shown to help support Polytoria are not hidden.</span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-banner" data-setting="Banners" data-parent="HideUserAds">
+          <label class="form-check-label" for="hide-user-ads-banner">
+            Hide Banner User Ads
+          </label>
+        </span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-rectangle" data-setting="Rectangles" data-parent="HideUserAds">
+          <label class="form-check-label" for="hide-user-ads-rectangle">
+            Hide Rectangle User Ads
+          </label>
+        </span>
       </p>
       <div class="card">
         <div class="card-body">
@@ -642,9 +684,9 @@
         |
         <a id="check-for-updates"><b>Check for Updates</b></a>
         <br>
-        made by Index with the help of several contributors <3
+        made by <a href="https://polytoria.com/u/Index" target="_blank">Index</a> with the help of several contributors <3
       </p>
     </div>
-    <script src="settings.js"></script>
+    <script src="settings2.js"></script>
   </body>
 </html>

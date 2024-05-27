@@ -9,13 +9,13 @@ var BestFriendsData
 let Utilities;
 
 chrome.storage.sync.get(['PolyPlus_Settings'], async function(result) {
-    Settings = result.PolyPlus_Settings || {}
+    Settings = result.PolyPlus_Settings || Utilities.DefaultSettings
 
-    if (Settings.IRLPriceWithCurrencyOn === true) {
+    if (Settings.IRLPriceWithCurrency.Enabled === true) {
         IRLPrice()
     }
 
-    if (Settings.ShowFriendCount === true) { 
+    if (Settings.HomeFriendCountOn === true) { 
         ShowFriendCount()
     }
 
@@ -183,7 +183,7 @@ async function IRLPrice() {
         for (let item of TrendingItems.children[1].getElementsByClassName('d-flex')[0].children) {
             const Price = item.getElementsByClassName('text-success')[0]
             if (Price !== undefined) {
-                const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+                const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrency.Currency)
             
                 let Span = document.createElement('span')
                 Span.classList = 'text-muted polyplus-price-tag'
