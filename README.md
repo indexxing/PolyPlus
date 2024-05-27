@@ -35,17 +35,15 @@ Poly+ is an upcoming quality-of-life browser extension for the Polytoria website
 - Multi-Cancel Outbound Trades
 - Item Wishlist
 - Outfit Cost
-
+  
 And there is more to come!
 
 # Supported Browsers
 
 As of right now, Poly+ only works on Chromium-based browsers. Currently, there are no plans to bring it to other browsers in the future.
-
 > TL;DR Chromium-based browsers
 
 ## Examples of Browsers that are Chromium-based
-
 - Google Chrome
 - Chromium
 - Edge
@@ -58,12 +56,12 @@ As of right now, Poly+ only works on Chromium-based browsers. Currently, there a
 ## How to Download - Stable Build?
 
 1. Go to the releases section of this GitHub repository
-2. Go to the latest release and download the .ZIP file for that release
-3. Extract the .ZIP
-4. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
-5. Click the "Load Unpacked" button
-6. When the file selector comes up, open the unzipped folder from this GitHub repository
-7. Go to Polytoria and you should see some changes!
+3. Go to the latest release and download the .ZIP file for that release
+4. Extract the .ZIP
+5. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
+6. Click the "Load Unpacked" button
+7. When the file selector comes up, open the unzipped folder from this GitHub repository
+8. Go to Polytoria and you should see some changes!
 
 ## How to Download - Pre-Release Build?
 
@@ -75,6 +73,6 @@ As of right now, Poly+ only works on Chromium-based browsers. Currently, there a
 4. Extract the .ZIP
 5. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
 6. Go to your browsers extensions page (usually `browserName://extensions`)
-7. Click the "Load Unpacked" button
-8. When the file selector comes up, open the unzipped folder of this repository's source code
-9. Go to Polytoria and you should see some changes!
+8. Click the "Load Unpacked" button
+9. When the file selector comes up, open the unzipped folder of this repository's source code
+10. Go to Polytoria and you should see some changes!
