@@ -1,5 +1,5 @@
 var Settings;
-let Theme = null;
+let Theme = ``;
 
 (async () => {
   let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
@@ -11,7 +11,7 @@ let Theme = null;
     Settings = MergeObjects(RawSettings || Utilities.DefaultSettings, Utilities.DefaultSettings);
   
     // If theme exists, create a style element to represent it
-    if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true) {
+    if (Settings.ThemeCreator.Enabled && Settings.ThemeCreator.Enabled === true) {
       switch (Settings.ThemeCreator.BGImageSize) {
         case 0:
           Settings.ThemeCreator.BGImageSize = 'fit'
@@ -111,43 +111,57 @@ let Theme = null;
       }
       `
     }
-
-    // Credit to @SK-Fast (also known as DevPixels) for the improved loading code (taken from his original Poly+, and reformatted to Index Poly+)
-    const ThemeBlob = new Blob([Theme], { type: 'text/css' })
-    const ThemeURL = URL.createObjectURL(ThemeBlob)
-    document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`
   });
+
+  if (Settings.HideUserAdsOn === true) {
+    if (Settings.HideUserAdsOn.Banners === true) {
+      Theme += `
+      div[style^="max-width: 728px;"]:has(.text-center a[href^="/ads/"]) {
+        display: none;
+      }
+      `
+    }
+
+    if (Settings.HideUserAdsOn.Rectangles === true) {
+      Theme += `
+      div[style^="max-width: 300px;"]:has(.text-center a[href^="/ads/"]) {
+        display: none;
+      }
+      `
+    }
+  }
+  
+  if (Settings.HideNotifBadgesOn === true) {
+    Theme += `
+    .notif-nav .notif-sidebar {
+      display: none;
+    }
+    `
+  }
+
+  // Credit to @SK-Fast (also known as DevPixels) for the improved loading code (taken from his original Poly+, and reformatted to Index Poly+)
+  const ThemeBlob = new Blob([Theme], { type: 'text/css' })
+  const ThemeURL = URL.createObjectURL(ThemeBlob)
+  document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`
   
   document.addEventListener('DOMContentLoaded', async function() {
     if (document.getElementsByClassName('card-header')[0] && document.getElementsByClassName('card-header')[0].innerText === ' Page not found') {
       return
     }
-  
-    /*
-    // Check if Theme Exists, if so Load It
-    if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true) {
-      if (!(Settings.ThemeCreator.WebsiteLogo === null)) {
-        document.querySelector('.nav-sidebar img').setAttribute('src', Settings.ThemeCreator.WebsiteLogo)
-      }
-    }
-    if (Settings.ThemeCreatorOn && Settings.ThemeCreatorOn === true && Theme != null) {
-      document.body.prepend(Theme)
-    }
-    */
-  
-    // Define Data
-    const UserData = {
-      ID: document.querySelector('.text-reset.text-decoration-none[href^="/users/"]').getAttribute('href').split('/')[2],
-      Bricks: document.querySelector('.brickBalanceCont').innerText.replace(/\s+/g,'')
-    }
-  
-    window.localStorage.setItem('account_info', JSON.stringify(UserData))
+
+    Utilities.InjectResource('getUserDetails')
     document.body.setAttribute('data-URL', window.location.pathname)
 
-    if (Settings.IRLPriceWithCurrencyOn === true) {
-      const IRLResult = await Utilities.CalculateIRL(UserData.Bricks, Settings.IRLPriceWithCurrencyCurrency)
-      const BrickBalanceCount = [document.querySelector('.text-success .brickBalanceCount'), document.querySelector('.text-success .brickBalanceCont')]
-      BrickBalanceCount.forEach(element => {element.innerHTML += ` (${IRLResult.icon}${IRLResult.result} ${IRLResult.display})`});
+    const UserData = JSON.parse(window.localStorage.getItem('p+account_info'))
+
+    if (Settings.IRLPriceWithCurrency.Enabled === true) {
+      const IRLResult = await Utilities.CalculateIRL(document.querySelector('.brickBalanceCont').innerText.replace(/\s+/g,''), Settings.IRLPriceWithCurrency.Currency)
+      // Desktop
+      document.querySelector('.text-success .brickBalanceCount').innerHTML += ` (${IRLResult.icon}${IRLResult.result} ${IRLResult.display})` 
+      
+      // Mobile
+      document.querySelector('.text-success .brickBalanceCont').innerHTML += ` (${IRLResult.icon}${IRLResult.result} ${IRLResult.display})` 
+      //document.querySelector('.text-success .brickBalanceCont').innerHTML += `<div class="text-muted" style="font-size: 0.6rem;text-align: right;">(${IRLResult.icon}${IRLResult.result} ${IRLResult.display})</div>`
     }
   
     if (Settings.ModifyNavOn && Settings.ModifyNavOn === true) {
@@ -161,6 +175,12 @@ let Theme = null;
         }
       }
     }
+
+    /*
+    if (Settings.HideUserAdsOn === true) {
+      Array.from(document.querySelectorAll('.text-center:has(a[href^="/ads"])')).forEach(ad => {ad.remove()})
+    }
+    */
   
     if (Settings.HideNotifBadgesOn === true) {
       document.getElementsByClassName('notif-nav notif-sidebar').forEach(element => {element.remove();});

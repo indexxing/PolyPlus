@@ -54,11 +54,14 @@ Elements.forEach(element => {
   let Button = element.getElementsByTagName('button')[0]
   let Options = element.getElementsByTagName('button')[1]
   let Select = element.getElementsByTagName('select') || []
-  let Checkbox = element.getElementsByTagName('input') || []
-  console.log(Checkbox)
+  //let Checkbox = element.getElementsByTagName('input') || []
+  //console.log(Checkbox)
 
   if (Button) {
     Button.addEventListener('click', function() {
+      ToggleSetting(Button.getAttribute('data-setting'), element)
+
+      /*
       if (!(Button.getAttribute('data-parent'))) {
         ToggleSetting(Button.getAttribute('data-setting'), element)
       } else {
@@ -74,18 +77,16 @@ Elements.forEach(element => {
         console.log(Button.getAttribute('data-setting'), Parent, Settings[Parent])
         ToggleSetting(Button.getAttribute('data-setting'), element, Parent)
       }
+      */
     });
   }
 
+  /*
   Array.from(Checkbox).forEach(check => {
-    console.log('anotha one')
     check.addEventListener('click', function(){
-      console.log('clicky')
       if (!(check.getAttribute('data-parent'))) {
-        console.log('no dad?')
         ToggleSetting(check.getAttribute('data-setting'), element)
       } else {
-        console.log('dad came back with milk')
         let Parent = check.getAttribute('data-parent')
         if (!isNaN(parseInt(Parent))) {
           Parent = parseInt(Parent)
@@ -101,6 +102,7 @@ Elements.forEach(element => {
       }
     })
   })
+  */
 
   if (Options) {
     Options.addEventListener('click', function() {

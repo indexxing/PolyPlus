@@ -6,7 +6,7 @@ let Utilities;
 chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
     Settings = result.PolyPlus_Settings
 
-    if (Settings.IRLPriceWithCurrencyOn === true) {
+    if (Settings.IRLPriceWithCurrency.Enabled === true) {
         (async () => {
             Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
             Utilities = Utilities.default
@@ -26,7 +26,7 @@ chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
 async function IRLPrice(item) {
     const Price = item.getElementsByClassName('text-success')[0]
     if (Price !== undefined && Price.innerText !== "Free") {
-        const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrencyCurrency)
+        const IRLResult = await Utilities.CalculateIRL(Price.innerText, Settings.IRLPriceWithCurrency.Currency)
     
         let Span = document.createElement('span')
         Span.classList = 'text-muted polyplus-price-tag'
@@ -40,7 +40,7 @@ const observer = new MutationObserver(async function (list){
     for (const record of list) {
         for (const element of record.addedNodes) {
             if (element.tagName === "DIV" && element.classList.value === 'col-auto mb-3') {
-                if (Settings.IRLPriceWithCurrencyOn === true) {
+                if (Settings.IRLPriceWithCurrency.Enabled === true) {
                     IRLPrice(element)
                 }
             }

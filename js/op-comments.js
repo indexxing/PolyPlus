@@ -30,7 +30,6 @@
     Observer.observe(Comments, {attributes: false, childList: true, subtree: false})
 
     const LoadCreatorTag = function(element) {
-        console.log(element)
         let NameElement = element.querySelector('.text-reset[href^="/users/"]')
         if (Type === 'guilds') {
             NameElement = element.querySelector('[class^="userlink-"][href^="/users/"]')
