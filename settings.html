@@ -1,395 +1,393 @@
 <html>
-	<head>
-		<!-- META TAGS -->
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <head>
+    <!-- META TAGS -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+    <!-- PUBLIC -->
+    <title>Poly+ Settings</title>
+ 
+    <!-- RESOURCES -->
+    <link rel="stylesheet" href="css/polytoria.css">
+  </head>
+  <body data-bs-theme="dark">
+    <style>
+      html, body, #page {
+        background: #202020;
+        color: #fff;
+      }
 
-		<!-- PUBLIC -->
-		<title>Poly+ Settings</title>
+      #page {
+        margin-top: 7.5rem;
+        width: 65%;
+        margin-right: auto;
+        margin-left: auto;
+        margin-bottom: 3.5rem;
+      }
 
-		<!-- RESOURCES -->
-		<link rel="stylesheet" href="css/polytoria.css" />
-	</head>
-	<body data-bs-theme="dark">
-		<style>
-			html,
-			body,
-			#page {
-				background: #202020;
-				color: #fff;
-			}
+      h1 {
+        font-size: 4.6rem;
+        /*color: rgb(48, 48, 48);*/
+      }
+  
+      h1 span.indent {
+        border-left: 10px solid rgb(48, 48, 48);
+        margin-right: 15px;
+      }
+  
+      h1 span.highlight {
+        color: red;
+      }
+  
+      h2 {
+        color: rgb(48, 48, 48);
+      }
+  
+      h2 span.indent {
+        border-left: 7.5px solid rgb(48, 48, 48);
+        margin-right: 15px;
+      }
+  
+      p span.title {
+        font-size: 1.4rem;
+        font-weight: lighter;
+      }
+  
+      span.desc {
+        color: rgb(120, 120, 120);
+      }
+  
+      .goback {
+        color: rgb(120, 120, 120);
+        text-decoration: none;
+      }
+  
+      dialog {
+        background-color: #080808;
+        color: #c4c4c4;
+        border: 1px solid #3bafff;
+        border-radius: 10px;
+      }
+  
+      .input-group-text {
+        background-color: #000;
+        border-color: #000;
+        color: #fff;
+      }
+  
+      label {
+        font-size: 0.8rem;
+        margin-bottom: 2.75px;
+      }
+  
+      dialog::backdrop {
+        background-color: rgba(0, 0, 0, 0.73);
+      }
+  
+      dialog .modal-header p {
+        margin-bottom: 0px;
+        color: #fff;
+      }
+  
+      dialog .modal-body p:first-child {
+        font-size: 0.9rem;
+      }
 
-			#page {
-				margin-top: 7.5rem;
-				width: 65%;
-				margin-right: auto;
-				margin-left: auto;
-				margin-bottom: 3.5rem;
-			}
+      .setting-container .indicator {
+        border-radius: 5rem;
+        display: inline-block;
+        cursor: default;
+      }
+  
+      .setting-container.enabled .indicator {
+        background-color: #007bff;
+      }
 
-			h1 {
-				font-size: 4.6rem;
-				/*color: rgb(48, 48, 48);*/
-			}
+      .setting-container.disabled .indicator {
+        background-color: orangered;
+      }
 
-			h1 span.indent {
-				border-left: 10px solid rgb(48, 48, 48);
-				margin-right: 15px;
-			}
+      .toggle-btn {
+        float: right;
+        width: 100px;
+      }
+    </style>
+    <dialog class="w-50" id="ResetDefaults-Modal">
+      <div class="modal-header">
+        <p>Are you sure?</p>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you'd like to reset all settings to their defaults? (this action is irreversible)</p>
+        <button id="ResetDefaults-Modal-Yes" class="btn btn-danger">Yes</button>
+        <button id="ResetDefaults-Modal-No" class="btn btn-primary">No</button>
+      </div>
+    </dialog>
+    <dialog class="w-50" id="ThemeCreator-Modal" data-setting="ThemeCreator">
+      <div class="modal-header">
+        <p>Theme Creator</p>
+      </div>
+      <div class="modal-body">
+        <p>Let out your creativity and turn it into a reality on Polytoria's website!</p>
+        <hr class="mt-3 mb-3">
+  
+        <label>Save Theme to JSON</label>
+        <div class="input-group mb-3">
+          <input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark ignore" placeholder="JSON String..." disabled>
+          <button id="CopyThemeJSONBtn" class="btn btn-warning">Copy</button>
+        </div>
 
-			h1 span.highlight {
-				color: red;
-			}
+        <label>Load Theme from JSON</label>
+        <div class="input-group">
+          <input type="text" class="form-control bg-dark ignore" placeholder="JSON...">
+          <button id="LoadThemeFromJSONBtn" class="btn btn-success ignore">Load</button>
+        </div>
+  
+        <hr class="mt-2 mb-3">
+  
+        <div class="card mb-2">
+          <div class="card-header">Navigation</div>
+          <div class="card-body">
+            <label>Navbar Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavBGColor">
+  
+            <label>Navbar Border Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavBorderColor">
+  
+            <label>Sidebar Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideBGColor">
+  
+            <label>Sidebar Border Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideBorderColor">
+  
+            <hr class="navbar-divider">
+  
+            <label>Navbar Item Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavItemColor">
+  
+            <label>Sidebar Item Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemBGColor">
+  
+            <label>Sidebar Item Border Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemBorderColor">
+  
+            <label>Sidebar Item Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemColor">
+  
+            <label>Sidebar Item Label Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemLabelColor">
+          </div>
+        </div>
+  
+        <div class="card mb-2">
+          <div class="card-header">Background</div>
+          <div class="card-body">
+            <label>Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="BGColor">
+        
+            <label>Background Image (URL)</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="BGImage">
+        
+            <label>Background Image Size (if there is a background image)</label>
+            <select class="form-select bg-dark mb-2" data-setting="BGImageSize">
+              <option value="fit" selected>Fit (default)</option>
+              <option value="cover">Cover</option>
+              <option value="contain">Contain</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="card mb-2">
+          <div class="card-header">Text</div>
+          <div class="card-body">
+            <label>Primary Text Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="PrimaryTextColor">
+        
+            <label>Secondary Text Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="SecondaryTextColor">
+        
+            <div class="row">
+              <div class="col">
+                <label>Link (state: default) Text Color</label>
+              </div>
+              <div class="col">
+                <label>Link (state: hovered) Text Color</label>
+              </div>
+              <div class="col">
+                <label>Link (state: focused) Text Color</label>
+              </div>
+            </div>
 
-			h2 {
-				color: rgb(48, 48, 48);
-			}
+            <div class="input-group">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkTextColor">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkHoveredTextColor">
+              <input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkFocusedTextColor">
+            </div>
+          </div>
+        </div>
+  
+        <div class="card mb-2">
+          <div class="card-header">Cards</div>
+          <div class="card-body">
+            <label>Card (Header) Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardHeadBGColor">
+  
+            <label>Card (Body) Background Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardBodyBGColor">
+  
+            <label>Card Border Color</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardBorderColor">
+          </div>
+        </div>
+  
+        <div class="card mb-2">
+          <div class="card-header">Branding</div>
+          <div class="card-body">
+            <label>Website Logo (URL)</label>
+            <input class="form-control bg-dark mb-2" placeholder="..." data-setting="WebsiteLogo">
+          </div>
+        </div>
+  
+        <div role="group" class="btn-group w-100">
+          <button class="btn btn-success w-25" data-setting="[save]">Save</button>
+          <button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
+          <button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
+        </div>
+      </div>
+    </dialog>
+    <dialog class="w-50" id="ModifyNav-Modal" data-setting="ModifyNav">
+      <div class="modal-header">
+        <p>Modify Navbar</p>
+      </div>
+      <div class="modal-body">
+        <p>Customize the navbar to your liking!</p>
+        <hr class="mt-2 mb-3">
+        <div class="card mb-2">
+          <div class="card-header">#1 Navbar Item</div>
+          <div class="card-body">
+            <label>Label</label>
+            <input class="form-control bg-dark mb-2" placeholder="Play" data-parent="0" data-setting="Label">
+  
+            <label>Link</label>
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/places/" data-parent="0" data-setting="Link">
+          </div>
+        </div>
+        <div class="card mb-2">
+          <div class="card-header">#2 Navbar Item</div>
+          <div class="card-body">
+            <label>Label</label>
+            <input class="form-control bg-dark mb-2" placeholder="Store" data-parent="1" data-setting="Label">
+  
+            <label>Link</label>
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/store/" data-parent="1" data-setting="Link">
+          </div>
+        </div>
+        <div class="card mb-2">
+          <div class="card-header">#3 Navbar Item</div>
+          <div class="card-body">
+            <label>Label</label>
+            <input class="form-control bg-dark mb-2" placeholder="Guilds" data-parent="2" data-setting="Label">
+  
+            <label>Link</label>
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/guilds/" data-parent="2" data-setting="Link">
+          </div>
+        </div>
+        <div class="card mb-2">
+          <div class="card-header">#4 Navbar Item</div>
+          <div class="card-body">
+            <label>Label</label>
+            <input class="form-control bg-dark mb-2" placeholder="People" data-parent="3" data-setting="Label">
+  
+            <label>Link</label>
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/users/" data-parent="3" data-setting="Link">
+          </div>
+        </div>
+        <div class="card mb-2">
+          <div class="card-header">#5 Navbar Item</div>
+          <div class="card-body">
+            <label>Label</label>
+            <input class="form-control bg-dark mb-2" placeholder="Forum" data-parent="4" data-setting="Label">
+  
+            <label>Link</label>
+            <input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/forum" data-parent="4" data-setting="Link">
+          </div>
+        </div>
 
-			h2 span.indent {
-				border-left: 7.5px solid rgb(48, 48, 48);
-				margin-right: 15px;
-			}
-
-			p span.title {
-				font-size: 1.4rem;
-				font-weight: lighter;
-			}
-
-			span.desc {
-				color: rgb(120, 120, 120);
-			}
-
-			.goback {
-				color: rgb(120, 120, 120);
-				text-decoration: none;
-			}
-
-			dialog {
-				background-color: #080808;
-				color: #c4c4c4;
-				border: 1px solid #3bafff;
-				border-radius: 10px;
-			}
-
-			.input-group-text {
-				background-color: #000;
-				border-color: #000;
-				color: #fff;
-			}
-
-			label {
-				font-size: 0.8rem;
-				margin-bottom: 2.75px;
-			}
-
-			dialog::backdrop {
-				background-color: rgba(0, 0, 0, 0.73);
-			}
-
-			dialog .modal-header p {
-				margin-bottom: 0px;
-				color: #fff;
-			}
-
-			dialog .modal-body p:first-child {
-				font-size: 0.9rem;
-			}
-
-			.setting-container .indicator {
-				border-radius: 5rem;
-				display: inline-block;
-				cursor: default;
-			}
-
-			.setting-container.enabled .indicator {
-				background-color: #007bff;
-			}
-
-			.setting-container.disabled .indicator {
-				background-color: orangered;
-			}
-
-			.toggle-btn {
-				float: right;
-				width: 100px;
-			}
-		</style>
-		<dialog class="w-50" id="ResetDefaults-Modal">
-			<div class="modal-header">
-				<p>Are you sure?</p>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure you'd like to reset all settings to their defaults? (this action is irreversible)</p>
-				<button id="ResetDefaults-Modal-Yes" class="btn btn-danger">Yes</button>
-				<button id="ResetDefaults-Modal-No" class="btn btn-primary">No</button>
-			</div>
-		</dialog>
-		<dialog class="w-50" id="ThemeCreator-Modal" data-setting="ThemeCreator">
-			<div class="modal-header">
-				<p>Theme Creator</p>
-			</div>
-			<div class="modal-body">
-				<p>Let out your creativity and turn it into a reality on Polytoria's website!</p>
-				<hr class="mt-3 mb-3" />
-
-				<label>Save Theme to JSON</label>
-				<div class="input-group mb-3">
-					<input id="SaveThemeToJSONInput" type="text" class="form-control bg-dark ignore" placeholder="JSON String..." disabled />
-					<button id="CopyThemeJSONBtn" class="btn btn-warning">Copy</button>
-				</div>
-
-				<label>Load Theme from JSON</label>
-				<div class="input-group">
-					<input type="text" class="form-control bg-dark ignore" placeholder="JSON..." />
-					<button id="LoadThemeFromJSONBtn" class="btn btn-success ignore">Load</button>
-				</div>
-
-				<hr class="mt-2 mb-3" />
-
-				<div class="card mb-2">
-					<div class="card-header">Navigation</div>
-					<div class="card-body">
-						<label>Navbar Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavBGColor" />
-
-						<label>Navbar Border Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavBorderColor" />
-
-						<label>Sidebar Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideBGColor" />
-
-						<label>Sidebar Border Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideBorderColor" />
-
-						<hr class="navbar-divider" />
-
-						<label>Navbar Item Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="NavItemColor" />
-
-						<label>Sidebar Item Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemBGColor" />
-
-						<label>Sidebar Item Border Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemBorderColor" />
-
-						<label>Sidebar Item Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemColor" />
-
-						<label>Sidebar Item Label Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SideItemLabelColor" />
-					</div>
-				</div>
-
-				<div class="card mb-2">
-					<div class="card-header">Background</div>
-					<div class="card-body">
-						<label>Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="BGColor" />
-
-						<label>Background Image (URL)</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="BGImage" />
-
-						<label>Background Image Size (if there is a background image)</label>
-						<select class="form-select bg-dark mb-2" data-setting="BGImageSize">
-							<option value="fit" selected>Fit (default)</option>
-							<option value="cover">Cover</option>
-							<option value="contain">Contain</option>
-						</select>
-					</div>
-				</div>
-
-				<div class="card mb-2">
-					<div class="card-header">Text</div>
-					<div class="card-body">
-						<label>Primary Text Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="PrimaryTextColor" />
-
-						<label>Secondary Text Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="SecondaryTextColor" />
-
-						<div class="row">
-							<div class="col">
-								<label>Link (state: default) Text Color</label>
-							</div>
-							<div class="col">
-								<label>Link (state: hovered) Text Color</label>
-							</div>
-							<div class="col">
-								<label>Link (state: focused) Text Color</label>
-							</div>
-						</div>
-
-						<div class="input-group">
-							<input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkTextColor" />
-							<input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkHoveredTextColor" />
-							<input class="form-control bg-dark mb-2" placeholder="..." data-setting="LinkFocusedTextColor" />
-						</div>
-					</div>
-				</div>
-
-				<div class="card mb-2">
-					<div class="card-header">Cards</div>
-					<div class="card-body">
-						<label>Card (Header) Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardHeadBGColor" />
-
-						<label>Card (Body) Background Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardBodyBGColor" />
-
-						<label>Card Border Color</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="CardBorderColor" />
-					</div>
-				</div>
-
-				<div class="card mb-2">
-					<div class="card-header">Branding</div>
-					<div class="card-body">
-						<label>Website Logo (URL)</label>
-						<input class="form-control bg-dark mb-2" placeholder="..." data-setting="WebsiteLogo" />
-					</div>
-				</div>
-
-				<div role="group" class="btn-group w-100">
-					<button class="btn btn-success w-25" data-setting="[save]">Save</button>
-					<button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
-					<button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
-				</div>
-			</div>
-		</dialog>
-		<dialog class="w-50" id="ModifyNav-Modal" data-setting="ModifyNav">
-			<div class="modal-header">
-				<p>Modify Navbar</p>
-			</div>
-			<div class="modal-body">
-				<p>Customize the navbar to your liking!</p>
-				<hr class="mt-2 mb-3" />
-				<div class="card mb-2">
-					<div class="card-header">#1 Navbar Item</div>
-					<div class="card-body">
-						<label>Label</label>
-						<input class="form-control bg-dark mb-2" placeholder="Play" data-parent="0" data-setting="Label" />
-
-						<label>Link</label>
-						<input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/places/" data-parent="0" data-setting="Link" />
-					</div>
-				</div>
-				<div class="card mb-2">
-					<div class="card-header">#2 Navbar Item</div>
-					<div class="card-body">
-						<label>Label</label>
-						<input class="form-control bg-dark mb-2" placeholder="Store" data-parent="1" data-setting="Label" />
-
-						<label>Link</label>
-						<input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/store/" data-parent="1" data-setting="Link" />
-					</div>
-				</div>
-				<div class="card mb-2">
-					<div class="card-header">#3 Navbar Item</div>
-					<div class="card-body">
-						<label>Label</label>
-						<input class="form-control bg-dark mb-2" placeholder="Guilds" data-parent="2" data-setting="Label" />
-
-						<label>Link</label>
-						<input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/guilds/" data-parent="2" data-setting="Link" />
-					</div>
-				</div>
-				<div class="card mb-2">
-					<div class="card-header">#4 Navbar Item</div>
-					<div class="card-body">
-						<label>Label</label>
-						<input class="form-control bg-dark mb-2" placeholder="People" data-parent="3" data-setting="Label" />
-
-						<label>Link</label>
-						<input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/users/" data-parent="3" data-setting="Link" />
-					</div>
-				</div>
-				<div class="card mb-2">
-					<div class="card-header">#5 Navbar Item</div>
-					<div class="card-body">
-						<label>Label</label>
-						<input class="form-control bg-dark mb-2" placeholder="Forum" data-parent="4" data-setting="Label" />
-
-						<label>Link</label>
-						<input class="form-control bg-dark mb-2" placeholder="https://polytoria.com/forum" data-parent="4" data-setting="Link" />
-					</div>
-				</div>
-
-				<div role="group" class="btn-group w-100">
-					<button class="btn btn-success w-25" data-setting="[save]">Save</button>
-					<button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
-					<button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
-				</div>
-			</div>
-		</dialog>
-		<div id="page">
-			<h1 class="text-center" style="text-shadow: 0px 0px 5px orange; padding-bottom: 5px; margin-bottom: 10px;">Poly+ Settings</h1>
-			<p class="setting-container" id="pinned-games">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Pinned Games
-					<button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Pin your favorite places to the top of the homepage! (limit: <span id="PinnedGames-limit"></span> places)</span>
-			</p>
-			<p class="setting-container" id="forum-mentions">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Forum Mentions
-					<button class="btn btn-sm toggle-btn" data-setting="ForumMentsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
-				<br />
-				<span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
-			</p>
-			<p class="setting-container" id="best-friends">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Best Friends
-					<button class="btn btn-sm toggle-btn" data-setting="BestFriendsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: <span id="BestFriends-limit"></span> best friends)</span>
-			</p>
-			<p class="setting-container" id="improved-friend-lists">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Improved Friend Lists
-					<button class="btn btn-sm toggle-btn" data-setting="ImprovedFrListsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">
-					Accept or decline all friend requests with the click of a button or multi-remove existing friends!
-					<br />
-					<span style="font-size: 0.8rem; color: orange;">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
-				</span>
-			</p>
-			<p class="setting-container" id="irl-price-with-brick-count">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show IRL price with Brick Count
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="IRLPriceWithCurrency">Toggle</button>
-				</span>
-				<br />
-				<span class="desc mb-4">
-					See the real life currency value along with Bricks across the site!
-					<br />
-					<span style="font-size: 0.8rem; color: orange;">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
-					<br />
-					<span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
-				</span>
-				<select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Currency" data-parent="IRLPriceWithCurrency">
-					<option value="USD" selected>United States Dollar (USD)</option>
-					<option value="EUR">Euro (EUR)</option>
-					<option value="CAD">Canadian Dollar (CAD)</option>
-					<option value="GBP">Great British Pound (GBP)</option>
-					<option value="MXN">Mexican Peso (MXN)</option>
-					<option value="AUD">Australian Dollar (AUD)</option>
-					<option value="TRY">Turkish Lira (TRY)</option>
-					<option value="BRL">Brazilian Real (BRL)</option>
-				</select>
-				<!--
+        <div role="group" class="btn-group w-100">
+          <button class="btn btn-success w-25" data-setting="[save]">Save</button>
+          <button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
+          <button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
+        </div>
+      </div>
+    </dialog>
+    <div id="page">
+      <h1 class="text-center" style="text-shadow: 0px 0px 5px orange; padding-bottom: 5px; margin-bottom: 10px;">Poly+ Settings</h1>
+      <p class="setting-container" id="pinned-games">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Pinned Games
+          <button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Pin your favorite places to the top of the homepage! (limit: <span id="PinnedGames-limit"></span> places)</span>
+      </p>
+      <p class="setting-container" id="forum-mentions">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Forum Mentions
+          <button class="btn btn-sm toggle-btn" data-setting="ForumMentsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
+      </p>
+      <p class="setting-container" id="best-friends">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Best Friends
+          <button class="btn btn-sm toggle-btn" data-setting="BestFriendsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: <span id="BestFriends-limit"></span> best friends)</span>
+      </p>
+      <p class="setting-container" id="improved-friend-lists">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Improved Friend Lists
+          <button class="btn btn-sm toggle-btn" data-setting="ImprovedFrListsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">
+          Accept or decline all friend requests with the click of a button or multi-remove existing friends!
+          <br>
+          <span style="font-size: 0.8rem; color: orange;">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
+        </span>
+      </p>
+      <p class="setting-container" id="irl-price-with-brick-count">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show IRL price with Brick Count
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="IRLPriceWithCurrency">Toggle</button>
+        </span>
+        <br>
+        <span class="desc mb-4">
+          See the real life currency value along with Bricks across the site!
+          <br>
+          <span style="font-size: 0.8rem; color: orange;">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
+          <br>
+          <span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
+        </span>
+        <select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Currency" data-parent="IRLPriceWithCurrency">
+          <option value="USD" selected>United States Dollar (USD)</option>
+          <option value="EUR">Euro (EUR)</option>
+          <option value="CAD">Canadian Dollar (CAD)</option>
+          <option value="GBP">Great British Pound (GBP)</option>
+          <option value="MXN">Mexican Peso (MXN)</option>
+          <option value="AUD">Australian Dollar (AUD)</option>
+          <option value="TRY">Turkish Lira (TRY)</option>
+          <option value="BRL">Brazilian Real (BRL)</option>
+        </select>
+        <!--
         <select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Package" data-parent="IRLPriceWithCurrency">
           <option value="0" selected>$0.99 Brick Package</option>
           <option value="1">$4.99 Brick Package</option>
@@ -399,92 +397,96 @@
           <option value="5">$99.99 Brick Package</option>
         </select>
         -->
-			</p>
-			<p class="setting-container" id="hide-notification-badges">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Hide Notification Badges
-					<button class="btn btn-sm toggle-btn" data-setting="HideNotifBadgesOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Hide the annoying red circles on the sidebar!</span>
-			</p>
-			<p class="setting-container" id="store-own-tag">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show "OWNED" Tag on Store Main Page
-					<button class="btn btn-sm toggle-btn" data-setting="StoreOwnTagOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Quickly see if you own the item at a glance with a little tag in the top left corner of item cards on the main store page!</span>
-			</p>
-			<p class="setting-container" id="theme-creator">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Theme Creator
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ThemeCreator">Toggle</button>
-					<button id="ThemeCreator-Options" class="btn btn-primary btn-sm" data-modal="ThemeCreator">Options</button>
-				</span>
-				<br />
-				<span class="desc">Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</span>
-			</p>
-			<p class="setting-container" id="more-search-filters">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					More Search Filters
-					<button class="btn btn-sm toggle-btn" data-setting="MoreSearchFiltersOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
-				<br />
-				<span style="font-size: 0.8rem; color: orange;">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
-			</p>
-			<p class="setting-container" id="apply-membership-theme">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Apply Membership Theme for <b>Free</b>
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ApplyMembershipTheme">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Ever want the fancy membership themes for completely <b>free</b>? Well now you can get apply them site-wide!</span>
-				<select id="ApplyMembershipThemeTheme" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Theme" data-parent="ApplyMembershipTheme">
-					<option value="Plus" selected>Plus</option>
-					<option value="PlusDX">Plus Deluxe</option>
-				</select>
-			</p>
-			<p class="setting-container" id="multi-cancel-outbound-trades">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Multi-Cancel Outbound Trades
-					<button class="btn btn-sm toggle-btn" data-setting="MultiCancelOutTradesOns">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">
-					Quickly cancel several out-bound trades (trades that you have sent) all at once
-					<br />
-					<span style="font-size: 0.8rem; color: orange;">* You can only cancel up to 10 trades at once.</span>
-				</span>
-			</p>
-			<p class="setting-container" id="modify-navbar">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Modify Navbar
-					<button class="btn btn-sm toggle-btn" data-setting="ModifyNavOn">Toggle</button>
-					<button id="ModifyNav-Options" class="btn btn-primary btn-sm" data-modal="ModifyNav">Options</button>
-				</span>
-				<br />
-				<span class="desc"> Customize the navbar to your liking! </span>
-			</p>
-			<p class="setting-container" id="item-wishlist">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Item Wishlist
-					<button class="btn btn-sm toggle-btn" data-setting="ItemWishlistOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc"> Wishlist that item that you REALLY want! </span>
-			</p>
-			<!--
+      </p>
+      <p class="setting-container" id="hide-notification-badges">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Hide Notification Badges
+          <button class="btn btn-sm toggle-btn" data-setting="HideNotifBadgesOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Hide the annoying red circles on the sidebar!</span>
+      </p>
+      <p class="setting-container" id="store-own-tag">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show "OWNED" Tag on Store Main Page
+          <button class="btn btn-sm toggle-btn" data-setting="StoreOwnTagOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly see if you own the item at a glance with a little tag in the top left corner of item cards on the main store page!</span>
+      </p>
+      <p class="setting-container" id="theme-creator">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Theme Creator
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ThemeCreator">Toggle</button>
+          <button id="ThemeCreator-Options" class="btn btn-primary btn-sm" data-modal="ThemeCreator">Options</button>
+        </span>
+        <br>
+        <span class="desc">Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</span>
+      </p>
+      <p class="setting-container" id="more-search-filters">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          More Search Filters
+          <button class="btn btn-sm toggle-btn" data-setting="MoreSearchFiltersOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
+      </p>
+      <p class="setting-container" id="apply-membership-theme">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Apply Membership Theme for <b>Free</b>
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ApplyMembershipTheme">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Ever want the fancy membership themes for completely <b>free</b>? Well now you can get apply them site-wide!</span>
+        <select id="ApplyMembershipThemeTheme" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Theme" data-parent="ApplyMembershipTheme">
+          <option value="Plus" selected>Plus</option>
+          <option value="PlusDX">Plus Deluxe</option>
+        </select>
+      </p>
+      <p class="setting-container" id="multi-cancel-outbound-trades">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Multi-Cancel Outbound Trades
+          <button class="btn btn-sm toggle-btn" data-setting="MultiCancelOutTradesOns">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">
+          Quickly cancel several out-bound trades (trades that you have sent) all at once
+          <br>
+          <span style="font-size: 0.8rem; color: orange;">* You can only cancel up to 10 trades at once.</span>
+        </span>
+      </p>
+      <p class="setting-container" id="modify-navbar">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Modify Navbar
+          <button class="btn btn-sm toggle-btn" data-setting="ModifyNavOn">Toggle</button>
+          <button id="ModifyNav-Options" class="btn btn-primary btn-sm" data-modal="ModifyNav">Options</button>
+        </span>
+        <br>
+        <span class="desc">
+          Customize the navbar to your liking!
+        </span>
+      </p>
+      <p class="setting-container" id="item-wishlist">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Item Wishlist
+          <button class="btn btn-sm toggle-btn" data-setting="ItemWishlistOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">
+          Wishlist that item that you REALLY want!
+        </span>
+      </p>
+      <!--
       <p class="setting-container" id="hide-upgrade-button">
         <span class="indicator">&nbsp;</span>
         <span class="title">
@@ -495,197 +497,196 @@
         <span class="desc">Hide the ugly blue "Upgrade" button on the sidebar!</span>
       </p>
       -->
-			<p class="setting-container" id="try-on-items">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Try-On Items
-					<button class="btn btn-sm toggle-btn" data-setting="TryOnItemsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">See how that new item looks on your avatar before spending your bricks!</span>
-			</p>
-			<p class="setting-container" id="outfit-cost">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show Outfit Cost on Profiles
-					<button class="btn btn-sm toggle-btn" data-setting="OutfitCostOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Quickly see how many bricks a user spent on their avatar!</span>
-			</p>
-			<p class="setting-container" id="outfit-cost">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show Approximate Place Revenue
-					<button class="btn btn-sm toggle-btn" data-setting="ShowPlaceRevenueOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Quickly see how many bricks a user has gained from one of their places!</span>
-				<br />
-				<span style="font-size: 0.8rem; color: orange;"
-					>* Gamepass revenue is calculated assuming the price hasn't changed and all users that bought the gamepass, bought it at the same price that it is at the time of calculating.</span
-				>
-			</p>
-			<p class="setting-container" id="item-replace-sales">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show "Owners" instead of "Sales"
-					<button class="btn btn-sm toggle-btn" data-setting="ReplaceItemSalesOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Replace the "Sales" statistic with the "Owners" statistic if the item has 0 sales (most likely meaning it is an item awarded by staff).</span>
-			</p>
-			<p class="setting-container" id="hoarders-list">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Collectibles' Hoarders List
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HoardersList">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">List all the users that have more than 1 copy of a collectible!</span>
-				<span class="form-check form-switch">
-					<input class="form-check-input" type="checkbox" role="switch" id="hoarders-list-avatars" data-setting="AvatarsEnabled" data-parent="HoardersList" />
-					<label class="form-check-label" for="hoarders-list-avatars">
-						Show Avatar Icons
-						<br />
-						<span style="font-size: 0.6rem; color: orange;">* Avatar icons will result in more requests, potentially leading to more ratelimiting and slower hoarder list loading.</span>
-					</label>
-				</span>
-				<select class="form-select form-select-sm mb-2" style="width:350px;" data-setting="MinCopies" data-parent="HoardersList" data-useValue="true">
-					<option value="2">Min. 2+ Copies</option>
-					<option value="3">Min. 3+ Copies</option>
-					<option value="5">Min. 5+ Copies</option>
-					<option value="10">Min. 10+ Copies</option>
-					<option value="15">Min. 15+ Copies</option>
-					<option value="35">Min. 35+ Copies</option>
-				</select>
-			</p>
-			<p class="setting-container" id="hoarders-list">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Quick Library Downloads
-					<button class="btn btn-sm toggle-btn" data-setting="LibraryDownloadsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Quickly download a model (as a <code>.ptmd</code> file), mesh, decal, or sound right from the page showing you details about the asset!</span>
-			</p>
-			<p class="setting-container" id="event-items-store">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					"Event Items" Store Category
-					<button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">List all the on-going and past event items separated by their event with a store category!</span>
-			</p>
-			<p class="setting-container" id="event-items-store">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Show Friend Count on Homepage
-					<button class="btn btn-sm toggle-btn" data-setting="HomeFriendCountOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">See how many friends you have on your homepage/dashboard, just scroll to the "friends" section and you'll see it next to the heading!</span>
-			</p>
-			<p class="setting-container" id="timed-item-owner-check">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Timed-Item Owner Check
-					<button class="btn btn-sm toggle-btn" data-setting="ItemOwnerCheckOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc"
-					>Click the shopping bags icon in the bottom left-hand corner of the timed item's item thumbnail to toggle an input and a button. Then just enter someone's username and it'll tell you whether
-					they own it or not and if so what serial!</span
-				>
-			</p>
-			<p class="setting-container" id="hide-user-ads">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Hide User Ads
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HideUserAds">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Hide those annoying <s>out of context Discord message</s> user ads!</span>
-				<br />
-				<span style="font-size: 0.8rem; color: orange;">* Ads that are shown to help support Polytoria are not hidden.</span>
-				<span class="form-check form-switch">
-					<input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-banner" data-setting="Banners" data-parent="HideUserAds" />
-					<label class="form-check-label" for="hide-user-ads-banner"> Hide Banner User Ads </label>
-				</span>
-				<span class="form-check form-switch">
-					<input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-rectangle" data-setting="Rectangles" data-parent="HideUserAds" />
-					<label class="form-check-label" for="hide-user-ads-rectangle"> Hide Rectangle User Ads </label>
-				</span>
-			</p>
-			<div class="card">
-				<div class="card-body">
-					<h3>EXPERIMENTAL SETTINGS</h3>
-					<p>These features are a work in progress.</p>
-					<hr />
-					<p class="setting-container" id="game-profiles">
-						<span class="indicator">&nbsp;</span>
-						<span class="title">
-							Game Profiles
-							<button class="btn btn-sm toggle-btn" data-setting="GameProfilesOn">Toggle</button>
-						</span>
-						<br />
-						<span class="desc">Traverse a place view page that matches a place's color palette!</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* Place creators must request a game profile for one to be made.</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature will be expanded upon in the future.</span>
-					</p>
-					<p class="setting-container" id="inline-editing">
-						<span class="indicator">&nbsp;</span>
-						<span class="title">
-							Inline Editing
-							<button class="btn btn-sm toggle-btn" data-setting="InlineEditingOn">Toggle</button>
-						</span>
-						<br />
-						<span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature currently only supports places.</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature is not finished or polished.</span>
-					</p>
-					<p class="setting-container" id="forum-unix-timestamps">
-						<span class="indicator">&nbsp;</span>
-						<span class="title">
-							Forum Unix Timestamps
-							<button class="btn btn-sm toggle-btn" data-setting="ForumUnixStampsOn">Toggle</button>
-						</span>
-						<br />
-						<span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* The styling for this feature is not yet done.</span>
-					</p>
-					<p class="setting-container" id="avatar-sandbox">
-						<span class="indicator">&nbsp;</span>
-						<span class="title">
-							Avatar Sandbox
-							<button class="btn btn-sm toggle-btn" data-setting="AvatarSandboxOn">Toggle</button>
-						</span>
-						<br />
-						<span class="desc">Create an avatar with all the item possibilities available to your heart's content!</span>
-						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
-					</p>
-				</div>
-			</div>
-			<hr />
-			<div class="btn-group w-100">
-				<button id="Save" class="btn btn-primary w-50" disabled="true">Save</button>
-				<button id="ResetDefaults" class="btn btn-warning w-50">Reset to Default Settings</button>
-			</div>
-			<p id="footer-text" class="text-center text-muted mt-2" style="font-size: 0.8rem;">
-				<span></span>
-				|
-				<a id="check-for-updates"><b>Check for Updates</b></a>
-				<br />
-				made by <a href="https://polytoria.com/u/Index" target="_blank">Index</a> with the help of several contributors <3
-			</p>
-		</div>
-		<script src="settings2.js"></script>
-	</body>
+      <p class="setting-container" id="try-on-items">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Try-On Items
+          <button class="btn btn-sm toggle-btn" data-setting="TryOnItemsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">See how that new item looks on your avatar before spending your bricks!</span>
+      </p>
+      <p class="setting-container" id="outfit-cost">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show Outfit Cost on Profiles
+          <button class="btn btn-sm toggle-btn" data-setting="OutfitCostOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly see how many bricks a user spent on their avatar!</span>
+      </p>
+      <p class="setting-container" id="outfit-cost">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show Approximate Place Revenue
+          <button class="btn btn-sm toggle-btn" data-setting="ShowPlaceRevenueOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly see how many bricks a user has gained from one of their places!</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* Gamepass revenue is calculated assuming the price hasn't changed and all users that bought the gamepass, bought it at the same price that it is at the time of calculating.</span>
+      </p>
+      <p class="setting-container" id="item-replace-sales">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show "Owners" instead of "Sales"
+          <button class="btn btn-sm toggle-btn" data-setting="ReplaceItemSalesOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Replace the "Sales" statistic with the "Owners" statistic if the item has 0 sales (most likely meaning it is an item awarded by staff).</span>
+      </p>
+      <p class="setting-container" id="hoarders-list">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Collectibles' Hoarders List
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HoardersList">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">List all the users that have more than 1 copy of a collectible!</span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hoarders-list-avatars" data-setting="AvatarsEnabled" data-parent="HoardersList">
+          <label class="form-check-label" for="hoarders-list-avatars">
+            Show Avatar Icons
+            <br>
+            <span style="font-size: 0.6rem; color: orange;">* Avatar icons will result in more requests, potentially leading to more ratelimiting and slower hoarder list loading.</span>
+          </label>
+        </span>
+        <select class="form-select form-select-sm mb-2" style="width:350px;" data-setting="MinCopies" data-parent="HoardersList" data-useValue="true">
+          <option value="2">Min. 2+ Copies</option>
+          <option value="3">Min. 3+ Copies</option>
+          <option value="5">Min. 5+ Copies</option>
+          <option value="10">Min. 10+ Copies</option>
+          <option value="15">Min. 15+ Copies</option>
+          <option value="35">Min. 35+ Copies</option>
+        </select>
+      </p>
+      <p class="setting-container" id="hoarders-list">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Quick Library Downloads
+          <button class="btn btn-sm toggle-btn" data-setting="LibraryDownloadsOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Quickly download a model (as a <code>.ptmd</code> file), mesh, decal, or sound right from the page showing you details about the asset!</span>
+      </p>
+      <p class="setting-container" id="event-items-store">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          "Event Items" Store Category
+          <button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">List all the on-going and past event items separated by their event with a store category!</span>
+      </p>
+      <p class="setting-container" id="event-items-store">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Show Friend Count on Homepage
+          <button class="btn btn-sm toggle-btn" data-setting="HomeFriendCountOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">See how many friends you have on your homepage/dashboard, just scroll to the "friends" section and you'll see it next to the heading!</span>
+      </p>
+      <p class="setting-container" id="timed-item-owner-check">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Timed-Item Owner Check
+          <button class="btn btn-sm toggle-btn" data-setting="ItemOwnerCheckOn">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Click the shopping bags icon in the bottom left-hand corner of the timed item's item thumbnail to toggle an input and a button. Then just enter someone's username and it'll tell you whether they own it or not and if so what serial!</span>
+      </p>
+      <p class="setting-container" id="hide-user-ads">
+        <span class="indicator">&nbsp;</span>
+        <span class="title">
+          Hide User Ads
+          <button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HideUserAds">Toggle</button>
+        </span>
+        <br>
+        <span class="desc">Hide those annoying <s>out of context Discord message</s> user ads!</span>
+        <br>
+        <span style="font-size: 0.8rem; color: orange;">* Ads that are shown to help support Polytoria are not hidden.</span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-banner" data-setting="Banners" data-parent="HideUserAds">
+          <label class="form-check-label" for="hide-user-ads-banner">
+            Hide Banner User Ads
+          </label>
+        </span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-rectangle" data-setting="Rectangles" data-parent="HideUserAds">
+          <label class="form-check-label" for="hide-user-ads-rectangle">
+            Hide Rectangle User Ads
+          </label>
+        </span>
+      </p>
+      <div class="card">
+        <div class="card-body">
+          <h3>EXPERIMENTAL SETTINGS</h3>
+          <p>These features are a work in progress.</p>
+          <hr>
+          <p class="setting-container" id="game-profiles">
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Game Profiles
+              <button class="btn btn-sm toggle-btn" data-setting="GameProfilesOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">Traverse a place view page that matches a place's color palette!</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* Place creators must request a game profile for one to be made.</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature will be expanded upon in the future.</span>
+          </p>
+          <p class="setting-container" id="inline-editing">
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Inline Editing
+              <button class="btn btn-sm toggle-btn" data-setting="InlineEditingOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature currently only supports places.</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature is not finished or polished.</span>
+          </p>
+          <p class="setting-container" id="forum-unix-timestamps">
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Forum Unix Timestamps
+              <button class="btn btn-sm toggle-btn" data-setting="ForumUnixStampsOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* The styling for this feature is not yet done.</span>
+          </p>
+          <p class="setting-container" id="avatar-sandbox">
+            <span class="indicator">&nbsp;</span>
+            <span class="title">
+              Avatar Sandbox
+              <button class="btn btn-sm toggle-btn" data-setting="AvatarSandboxOn">Toggle</button>
+            </span>
+            <br>
+            <span class="desc">Create an avatar with all the item possibilities available to your heart's content!</span>
+            <br>
+            <span style="font-size: 0.8rem; color: orange;">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
+          </p>
+        </div>
+      </div>
+      <hr>
+      <div class="btn-group w-100">
+        <button id="Save" class="btn btn-primary w-50" disabled="true">Save</button>
+        <button id="ResetDefaults" class="btn btn-warning w-50">Reset to Default Settings</button>
+      </div>
+      <p id="footer-text" class="text-center text-muted mt-2" style="font-size: 0.8rem;">
+        <span></span>
+        |
+        <a id="check-for-updates"><b>Check for Updates</b></a>
+        <br>
+        made by <a href="https://polytoria.com/u/Index" target="_blank">Index</a> with the help of several contributors <3
+      </p>
+    </div>
+    <script src="settings2.js"></script>
+  </body>
 </html>

@@ -1,137 +1,134 @@
 <style>
-	#options {
-		position: absolute;
-		bottom: 0;
-		margin: 20px;
-		margin-bottom: 40px;
-		font-size: 1.25rem;
-	}
+    #options {
+        position: absolute;
+        bottom: 0;
+        margin: 20px;
+        margin-bottom: 40px;
+        font-size: 1.25rem;
+    }
 
-	#options *:not(input) {
-		background: transparent;
-		border: none;
-		color: #fff;
-		font-size: 1.25rem;
-	}
+    #options *:not(input) {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.25rem;
+    }
 
-	#options *:not(input):not(:nth-child(2)) {
-		margin-bottom: 3.5px;
-	}
+    #options *:not(input):not(:nth-child(2)) {
+        margin-bottom: 3.5px;
+    }
 </style>
 <div class="row">
-	<div class="col-12 col-lg-3">
-		<div class="card mcard mb-3">
-			<h6 class="card-header">
-				<i class="fad fa-user-crown"></i>
-				Avatar Sandbox
-			</h6>
-			<div class="card-body">
-				<iframe id="viewFrame" style="width: 100%; height: 314px; border-radius: 0.65rem;"></iframe>
-				<div id="options">
-					<input name="JSONUpload" type="file" accept="application/json" multiple="false" id="jsonUpload" aria-label="Upload JSON!" style="display: none;" />
+    <div class="col-12 col-lg-3">
+        <div class="card mcard mb-3">
+            <h6 class="card-header">
+                <i class="fad fa-user-crown"></i>
+                Avatar Sandbox
+            </h6>
+            <div class="card-body">
+                <iframe id="viewFrame" style="width: 100%; height: 314px; border-radius: 0.65rem;"></iframe>
+                <div id="options">
+                    <input name="JSONUpload" type="file" accept="application/json" multiple="false" id="jsonUpload" aria-label="Upload JSON!" style="display: none;">
 
-					<label for="JSONUpload" style="display: block;">
-						<button aria-label="Upload JSON!" onclick="this.parentElement.previousElementSibling.click()">
-							<i class="fa-duotone fa-download"></i>
-						</button>
-					</label>
+                    <label for="JSONUpload" style="display: block;">
+                        <button aria-label="Upload JSON!" onclick="this.parentElement.previousElementSibling.click()">
+                            <i class="fa-duotone fa-download"></i>
+                        </button>
+                    </label>
 
-					<button id="jsonSave" aria-label="Save as JSON!" style="display: block;">
-						<i class="fa-duotone fa-upload"></i>
-					</button>
+                    <button id="jsonSave" aria-label="Save as JSON!" style="display: block;">
+                        <i class="fa-duotone fa-upload"></i>
+                    </button>
 
-					<button id="openNewTab" aria-label="View in a new tab!" style="display: block;">
-						<i class="fa-duotone fa-up-right-from-square"></i>
-					</button>
+                    <button id="openNewTab" aria-label="View in a new tab!" style="display: block;">
+                        <i class="fa-duotone fa-up-right-from-square"></i>
+                    </button>
 
-					<button aria-label="View in full screen!" style="display: block;" onclick="document.getElementById('viewFrame').requestFullscreen()">
-						<i class="fa-duotone fa-minimize"></i>
-					</button>
-				</div>
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col">
-				<button id="myself" class="btn btn-outline-primary w-100">
-					<i class="fa-duotone fa-shirt"></i>
-					Myself
-				</button>
-			</div>
-			<div class="col">
-				<button id="clear" class="btn btn-outline-warning w-100">
-					<i class="fa-duotone fa-trash"></i>
-					Clear
-				</button>
-			</div>
-		</div>
-		<div class="input-group mb-3">
-			<input type="text" class="form-control bg-dark" placeholder="Asset ID.." />
-			<button class="btn btn-primary" id="load-asset">Load Asset</button>
-		</div>
-		<div class="card mcard mb-3">
-			<h6 class="card-header">
-				<i class="fad fa-palette"></i>
-				Body Colors
-			</h6>
-			<div class="card-body">
-				<div class="card-body text-center" id="body-parts">
+                    <button aria-label="View in full screen!" style="display: block;" onclick="document.getElementById('viewFrame').requestFullscreen()">
+                        <i class="fa-duotone fa-minimize"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <button id="myself" class="btn btn-outline-primary w-100">
+                    <i class="fa-duotone fa-shirt"></i>
+                    Myself
+                </button>
+            </div>
+            <div class="col">
+                <button id="clear" class="btn btn-outline-warning w-100">
+                    <i class="fa-duotone fa-trash"></i>
+                    Clear
+                </button>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control bg-dark" placeholder="Asset ID..">
+            <button class="btn btn-primary" id="load-asset">Load Asset</button>
+        </div>
+        <div class="card mcard mb-3">
+            <h6 class="card-header">
+                <i class="fad fa-palette"></i>
+                Body Colors
+            </h6>
+            <div class="card-body">
+                <div class="card-body text-center" id="body-parts">
 					<div style="margin-bottom: 5px">
-						<button id="head" class="avatarAction bodypart bp1x1" style="background-color: #e0e0e0;"></button>
-					</div>
+                        <button id="head" class="avatarAction bodypart bp1x1" style="background-color: #e0e0e0;"></button>
+                    </div>
 					<div style="margin-bottom: 5px">
-						<button id="rightArm" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; margin-right: 5px;"></button
-						><button id="torso" class="avatarAction bodypart bp2x2" style="background-color: #e0e0e0;"></button
-						><button class="avatarAction bodypart bp1x2" id="leftArm" style="background-color: #e0e0e0; margin-left: 5px;"></button>
-					</div>
+                        <button id="rightArm" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; margin-right: 5px;"></button><button id="torso" class="avatarAction bodypart bp2x2" style="background-color: #e0e0e0;"></button><button class="avatarAction bodypart bp1x2" id="leftArm" style="background-color: #e0e0e0; margin-left: 5px;"></button>
+                    </div>
 					<div>
-						<button class="avatarAction bodypart bp1x2" id="rightLeg" style="background-color: #e0e0e0; margin-right: 5px; padding-right: 18px;"></button
-						><button id="leftLeg" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; padding-right: 18px;"></button>
+                        <button class="avatarAction bodypart bp1x2" id="rightLeg" style="background-color: #e0e0e0; margin-right: 5px; padding-right: 18px;"></button><button id="leftLeg" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; padding-right: 18px;"></button>
 					</div>
 				</div>
-			</div>
-		</div>
-		<small class="text-muted text-center" style="font-size: 0.7rem;">feature of Poly+</small>
-	</div>
-	<div class="col-12 col-lg-9">
-		<ul class="nav nav-pills nav-justified mb-3" id="tabs">
-			<li class="nav-item">
-				<a class="nav-link active" data-tab="hat">
-					<i class="fas fa-hat-cowboy me-1"></i>
-					Hats
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="tool">
-					<i class="fas fa-hammer me-1"></i>
-					Tools
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="face">
-					<i class="fas fa-face-smile me-1"></i>
-					Faces
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="shirt">
-					<i class="fas fa-tshirt me-1"></i>
-					Shirts
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="pants">
-					<i class="fas fa-socks me-1"></i>
-					Pants
-				</a>
-			</li>
-		</ul>
-		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
-			<input id="item-search" type="text" class="form-control mb-2" placeholder="Search for an item..." />
-			<div class="row alignleft itemgrid" id="inventory"></div>
-		</div>
-		<h6 class="card-header mb-2"><i class="fad fa-hat-wizard me-1"></i> Wearing</h6>
-		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
-			<div class="row alignleft itemgrid" id="wearing"></div>
-		</div>
-	</div>
+            </div>
+        </div>
+        <small class="text-muted text-center" style="font-size: 0.7rem;">feature of Poly+</small>
+    </div>
+    <div class="col-12 col-lg-9">
+        <ul class="nav nav-pills nav-justified mb-3" id="tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-tab="hat">
+                    <i class="fas fa-hat-cowboy me-1"></i>
+                    Hats
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="tool">
+                    <i class="fas fa-hammer me-1"></i>
+                    Tools
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="face">
+                    <i class="fas fa-face-smile me-1"></i>
+                    Faces
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="shirt">
+                    <i class="fas fa-tshirt me-1"></i>
+                    Shirts
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="pants">
+                    <i class="fas fa-socks me-1"></i>
+                    Pants
+                </a>
+            </li>
+        </ul>
+        <div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
+            <input id="item-search" type="text" class="form-control mb-2" placeholder="Search for an item...">
+            <div class="row alignleft itemgrid" id="inventory"></div>
+        </div>
+        <h6 class="card-header mb-2"><i class="fad fa-hat-wizard me-1"></i> Wearing</h6>
+        <div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
+            <div class="row alignleft itemgrid" id="wearing"></div>
+        </div>
+    </div>
 </div>
