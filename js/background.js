@@ -69,10 +69,12 @@ function RunUpdateNotifier() {
                                 }
                             })
                         })
+                        /*
                         chrome.action.setBadgeBackgroundColor(
                             {color: 'red'},
-                            () => { /* ... */ },
+                            () => {  },
                         );
+                        */
                     }
                 })
                 .catch(error => {console.log(error)})
@@ -86,7 +88,7 @@ chrome.contextMenus.removeAll(function() {
         id: 'PolyPlus-RunUpdateNotifier',
         contexts: ['all'],
         documentUrlPatterns: [
-            "https://polytoria.com/my/settings/polyplus-debug",
+            "https://polytoria.com/my/settings/polyplus#dev",
         ]
     });
     
@@ -102,7 +104,9 @@ chrome.contextMenus.removeAll(function() {
         targetUrlPatterns: [
             "https://polytoria.com/places/**",
             "https://polytoria.com/users/**",
-            "https://polytoria.com/store/**"
+            "https://polytoria.com/u/**",
+            "https://polytoria.com/store/**",
+            "https://polytoria.com/guilds/**",
         ]
     });
     
@@ -123,9 +127,14 @@ chrome.contextMenus.removeAll(function() {
 })
 
 // HANDLE CONTEXT MENU ITEMS
-chrome.contextMenus.onClicked.addListener(function (info, tab){
+chrome.contextMenus.onClicked.addListener(async function (info, tab){
     if (info.menuItemId === 'PolyPlus-CopyID') {
-        let ID = parseInt(info.linkUrl.split('/')[4])
+        console.log(info.linkUrl.split('/')[3])
+        let ID = info.linkUrl.split('/')[4]
+        if (info.linkUrl.split('/')[3] === "u") {
+            ID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + info.linkUrl.split('/')[4])).json()).id
+        }
+        console.log(ID)
         chrome.scripting
             .executeScript({
                 target: {tabId: tab.id},
@@ -148,20 +157,6 @@ chrome.contextMenus.onClicked.addListener(function (info, tab){
 
     if (info.menuItemId === 'PolyPlus-RunUpdateNotifier') {
         RunUpdateNotifier()
-    }
-});
-
-chrome.runtime.onMessage.addListener(function (message, sender) {
-    console.log('hi')
-    message = message.message || ''
-    console.log(message)
-    if (message === 'tooltip') {
-        console.log('is about tooltip')
-        chrome.scripting
-            .executeScript({
-                target: {tabId: sender.tab.id},
-                func: UpdateTooltips
-            })
     }
 });
 
@@ -218,13 +213,4 @@ function CopyAvatarHash(hash) {
         .catch(() => {
             alert('Failure to copy avatar hash.')
         });
-}
-
-function UpdateTooltips() {
-    const Script = document.createElement('script')
-    Script.innerHTML = `
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    `
-    document.body.appendChild(Script)
 }

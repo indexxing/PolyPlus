@@ -43,8 +43,8 @@
         },
 
         {
-            "matches": ["https://polytoria.com/u/**"],
-            "js": ["/js/account/profile.js"]
+            "matches": ["https://polytoria.com/u/**", "https://polytoria.com/users/**"],
+            "js": ["/js/account/profile.js", "/js/account/inventory.js"]
         },
 
         {

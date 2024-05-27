@@ -114,9 +114,7 @@ let Theme = ``;
   });
 
   if (Settings.HideUserAds.Enabled === true) {
-    console.log('enabled')
     if (Settings.HideUserAds.Banners === true) {
-      console.log('banner')
       Theme += `
       div[style^="max-width: 728px;"]:has(a[href^="/ads"]) {
         display: none;
@@ -125,7 +123,6 @@ let Theme = ``;
     }
 
     if (Settings.HideUserAds.Rectangles === true) {
-      console.log('rect')
       Theme += `
       div[style^="max-width: 300px;"]:has(a[href^="/ads"]) {
         display: none;
