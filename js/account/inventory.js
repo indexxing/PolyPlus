@@ -1,6 +1,6 @@
 if (window.location.pathname.split('/')[3] === "inventory") {
     const UserID = window.location.pathname.split('/')[2]
-    if (UserID === JSON.parse(window.localStorage.getItem('account_info')).ID) {
+    if (UserID === JSON.parse(window.localStorage.getItem('p+account_info')).ID) {
         let Nav = document.getElementsByClassName('nav-pills')[0]
         let WishlistNav = document.createElement('li')
         WishlistNav.classList.add('nav-item')
@@ -155,7 +155,7 @@ if (window.location.pathname.split('/')[3] === "inventory") {
 
 function Update(type, query, isLimited, isAvailable) {
     let ItemGrid = document.getElementsByClassName('itemgrid')[0]
-    let BrickBalance = parseInt(JSON.parse(window.localStorage.getItem('account_info')).Bricks)
+    let BrickBalance = parseInt(JSON.parse(window.localStorage.getItem('p+account_info')).Bricks)
     query = query.toLowerCase();
     let Results = Array.from(ItemGrid.children)
     for (let i = 0; i < Results.length; i++) {

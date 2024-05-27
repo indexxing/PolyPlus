@@ -1,5 +1,6 @@
 const ItemID = window.location.pathname.split('/')[2]
 const ItemType = document.querySelector('.row .badge').innerHTML
+console.log(ItemType)
 
 var Settings;
 var ItemWishlist;
@@ -7,6 +8,7 @@ var PurchaseBtn;
 var WishlistBtn;
 var ItemOwned;
 var InitialOwners;
+var OwnerPagesFetched = 0;
 
 var Utilities;
 
@@ -23,7 +25,13 @@ var Utilities;
     }
     ItemOwned = (PurchaseBtn.innerText === ' Item owned' || document.querySelector('.btn[onclick="sellItem()"]') !== null)
 
-    if (Settings.IRLPriceWithCurrencyOn === true && ItemOwned === false) {
+    if (PurchaseBtn.getAttribute('data-seller-name')) {
+      PurchaseBtn.setAttribute('data-bs-toggle', 'tooltip')
+      PurchaseBtn.setAttribute('data-bs-title', 'Sold by ' + PurchaseBtn.getAttribute('data-seller-name'))
+      Utilities.InjectResource('registerTooltips')
+    }
+
+    if (Settings.IRLPriceWithCurrency.Enabled === true && ItemOwned === false) {
       IRLPrice()
     }
 
@@ -44,9 +52,14 @@ var Utilities;
         Sales.children[1].innerText = Owners.total.toLocaleString()
       }
     }
-    
-    if ((Settings.HoardersListOn === true && document.getElementById('resellers') !== null)) {
-      HoardersList(2)
+
+    if (document.getElementById('resellers') !== null) {
+      if (Settings.HoardersList.Enabled === true) {
+        console.log(parseInt(Settings.HoardersList.MinCopies))
+        HoardersList(parseInt(Settings.HoardersList.MinCopies), Settings.HoardersList.AvatarsEnabled)
+      }
+    } else if (document.getElementById('timer') && /\d/.test(document.getElementById('timer').innerText)) {
+      CheckOwner()
     }
   })
 })();
@@ -87,7 +100,7 @@ async function IRLPrice() {
   Span.classList = 'text-muted polyplus-own-tag'
   Span.style.fontSize = '0.7rem'
   Span.style.fontWeight = 'normal'
-  const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrencyCurrency)
+  const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrency.Currency)
   Span.innerText = "($" + IRLResult.result + " " + IRLResult.display + ")"
   PurchaseBtn.appendChild(Span)
 }
@@ -158,7 +171,6 @@ function HandleItemWishlist() {
 }
 
 function TryOnItems() {
-  console.log(Utilities, Utilities.MeshTypes, Utilities.TextureTypes)
   const Avatar = {
     "useCharacter": true,
     "items": [],
@@ -175,47 +187,47 @@ function TryOnItems() {
   let AssetType = document.querySelector('.px-4.px-lg-0.text-muted.text-uppercase.mb-3 .badge').innerHTML
   
   const ItemThumbnail = document.getElementsByClassName('store-thumbnail')[0]
-  const IFrame = document.getElementsByClassName('store-thumbnail-3d')[0]
+  //const IFrame = document.getElementsByClassName('store-thumbnail-3d')[0]
   const TryIFrame = document.createElement('iframe')
   TryIFrame.style = 'width: 100%; height: auto; aspect-ratio: 1; border-radius: 20px;'
   
   const TryOnBtn = document.createElement('button')
-  TryOnBtn.classList = 'btn btn-outline-warning'
+  TryOnBtn.classList = 'btn btn-warning'
   TryOnBtn.style = 'position: absolute; bottom: 60px; right: 10px;'
   if (document.getElementsByClassName('3dviewtoggler')[0] === undefined) {
-    TryOnBtn.style.bottom = '15px;'
+    TryOnBtn.style.bottom = '15px'
   }
-  TryOnBtn.setAttribute('data-bs-toggle', 'tooltip')
-  TryOnBtn.setAttribute('data-bs-title', 'Try this item on your avatar')
+  //TryOnBtn.setAttribute('data-bs-toggle', 'tooltip')
+  //TryOnBtn.setAttribute('data-bs-title', 'Try this item on your avatar')
   TryOnBtn.innerHTML = '<i class="fa-duotone fa-vial"></i>'
   TryOnBtn.addEventListener('click', function (){
-    fetch("https://api.polytoria.com/v1/users/" + JSON.parse(window.localStorage.getItem('account_info')).ID + "/avatar")
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      data.assets.forEach(item => {
-        switch (item.type) {
-          case 'hat':
-            Avatar.items[Avatar.items.length] = item.path || ''
-            break
-          case 'face':
-            Avatar.face = item.path || ''
-            break
-          case 'tool':
-            Avatar.tool = item.path || ''
-            break
-          case 'shirt':
-            Avatar.shirt = item.path || ''
-            break
-          case 'pants':
-            Avatar.pants = item.path || ''
-            break
+    fetch("https://api.polytoria.com/v1/users/" + JSON.parse(window.localStorage.getItem('p+account_info')).ID + "/avatar")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-      });
+        return response.json();
+      })
+      .then(data => {
+        data.assets.forEach(item => {
+          switch (item.type) {
+            case 'hat':
+              Avatar.items[Avatar.items.length] = item.path || ''
+              break
+            case 'face':
+              Avatar.face = item.path || ''
+              break
+            case 'tool':
+              Avatar.tool = item.path || ''
+              break
+            case 'shirt':
+              Avatar.shirt = item.path || ''
+              break
+            case 'pants':
+              Avatar.pants = item.path || ''
+              break
+          }
+        });
 
       Avatar.headColor = "#" + data.colors.head
       Avatar.torsoColor = "#" + data.colors.torso
@@ -233,7 +245,7 @@ function TryOnItems() {
             return response.json();
           })
           .then(data => {
-            if (AssetType === 'tool') {
+            if (ItemType === 'tool') {
               Avatar.tool = data.url
             } else {
               Avatar.items.push(data.url)
@@ -303,10 +315,10 @@ function TryOnItems() {
   ItemThumbnail.parentElement.appendChild(TryOnBtn)
   TryOnModal.children[1].prepend(TryIFrame)
 
-  Utilities.InjectResource('registerTooltips')
+  //Utilities.InjectResource('registerTooltips')
 }
 
-async function HoardersList(min) {
+async function HoardersList(min, avatars) {
   let Page = 0
   let Tabs = document.getElementById('store-tabs')
 
@@ -342,7 +354,11 @@ async function HoardersList(min) {
     })
   })
 
+  let Fetched = false
   Tab.addEventListener('click', async function(){
+    if (Fetched === true) { return }
+    Fetched = true
+
     const Owners = []
     if (InitialOwners === undefined) {
       InitialOwners = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100')).json())
@@ -350,8 +366,10 @@ async function HoardersList(min) {
     Owners.push(...InitialOwners.inventories)
 
     // Get owners (up to 300, if needed)
-    if (InitialOwners.pages > 1) {
-      if (InitialOwners.pages > 3) {InitialOwners.pages = 3}
+    if (InitialOwners.pages > 3) {
+      InitialOwners.pages = 3
+    }
+    if (InitialOwners.pages > 1 && OwnerPagesFetched < InitialOwners.pages) {
       for (let i = 1; i < InitialOwners.pages; i++) {
         const PageResult = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100&page=' + (i+1))).json()).inventories
         console.log(PageResult)
@@ -374,7 +392,16 @@ async function HoardersList(min) {
       }
     }
 
-    let Hoarders = Object.values(Formatted).filter((x, index) => x.copies >= min).sort((a, b) => b.copies - a.copies)
+    let Hoarders = await new Promise(async (resolve, reject) => {
+      const Sorted = Object.values(Formatted).filter((x, index) => x.copies >= min).sort((a, b) => b.copies - a.copies)
+      if (avatars === true) {
+        for (let hoarder of Sorted) {
+          const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json()).thumbnail.icon;
+          hoarder.user.avatar = Avatar;
+        }
+      }
+      resolve(Sorted)
+    })
     let AmountOfHoarders = Hoarders.length
 
     // Break hoarders into groups of 4
@@ -385,10 +412,15 @@ async function HoardersList(min) {
 
     TabContent.innerHTML = `
     <div id="p+hoarders-container">
-      ${ Groups[Page].map((x) => `
+      ${ (Groups[Page] !== undefined) ? Groups[Page].map((x) => `
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">
+            ${ (avatars === true) ? `
+            <div class="col-auto">
+              <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+            </div>
+            ` : '' }
             <div class="col d-flex align-items-center">
               <div>
                 <h6 class="mb-1">
@@ -412,7 +444,15 @@ async function HoardersList(min) {
         </div>
       </div>
       `).join('')
-      }
+      : `
+      <div class="card mb-3">
+        <div class="card-body text-center py-5 text-muted">
+          <h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
+          <h5> No hoarders </h5>
+          <p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
+        </div>
+      </div>
+      `}
     </div>
     <nav aria-label="Hoarders">
       <ul class="pagination justify-content-center">
@@ -422,7 +462,8 @@ async function HoardersList(min) {
             <option value="3">Min. 3+ Copies</option>
             <option value="5">Min. 5+ Copies</option>
             <option value="10">Min. 10+ Copies</option>
-            <option value="10">Min. 15+ Copies</option>
+            <option value="15">Min. 15+ Copies</option>
+            <option value="35">Min. 35+ Copies</option>
           </select>
         </li>
         <li class="page-item disabled">
@@ -458,6 +499,7 @@ async function HoardersList(min) {
     const Last = document.getElementById('p+hoarders-last-pg')
 
     const MinCopies = document.getElementById('p+hoarders-min-copies')
+    MinCopies.selectedIndex = Array.from(MinCopies.children).indexOf(MinCopies.querySelector(`option[value="${min}"]`))
 
     if (Page > 0) {
       Prev.parentElement.classList.remove('disabled')
@@ -505,7 +547,6 @@ async function HoardersList(min) {
     MinCopies.addEventListener('change', function(){
       Page = 0
       min = parseInt(MinCopies.options[MinCopies.selectedIndex].value)
-      console.log(min)
       Hoarders = Object.values(Formatted).filter((x, index) => x.copies >= min).sort((a, b) => b.copies - a.copies)
       AmountOfHoarders = Hoarders.length
       Groups = []
@@ -518,30 +559,50 @@ async function HoardersList(min) {
     const UpdateHoardersList = function() {
       console.log(Hoarders, AmountOfHoarders, Groups)
       Current.innerText = Page+1
-      Container.innerHTML = Groups[Page].map((x) => `
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="row">
-            <div class="col d-flex align-items-center">
-              <div>
-                <h6 class="mb-1">
-                  <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
-                </h6>
-                <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+      
+      if (Groups[Page] !== undefined) {
+        Container.innerHTML = Groups[Page].map((x) => `
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              ${ (avatars === true) ? `
+              <div class="col-auto">
+                <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
               </div>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-              <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
-                <i class="fad fa-exchange-alt me-1"></i>
-                <span class="d-none d-sm-inline">Trade</span>
-              </a>
+              ` : '' }
+              <div class="col d-flex align-items-center">
+                <div>
+                  <h6 class="mb-1">
+                    <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
+                  </h6>
+                  <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+                </div>
+              </div>
+              <div class="col-auto d-flex align-items-center">
+                <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+                  <i class="fad fa-exchange-alt me-1"></i>
+                  <span class="d-none d-sm-inline">Trade</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      `).join('')
+        `).join('')
 
-      Utilities.InjectResource('registerTooltips')
+        Utilities.InjectResource('registerTooltips')
+      } else {
+        Container.innerHTML = `
+        <div class="card mb-3">
+          <div class="card-body text-center py-5 text-muted">
+            <h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
+            <h5> No hoarders </h5>
+            <p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
+          </div>
+        </div>
+        `
+
+        MinCopies.disabled = true
+      }
 
       if (Page > 0) {
         Prev.parentElement.classList.remove('disabled')
@@ -557,6 +618,77 @@ async function HoardersList(min) {
         Next.parentElement.classList.add('disabled')
         Last.parentElement.classList.add('disabled')
       }
+    }
+  })
+}
+
+function CheckOwner() {
+  const ImageCard = document.querySelector('.card-body:has(.store-thumbnail)')
+
+  const CheckOwnerDiv = document.createElement('div')
+  CheckOwnerDiv.classList = 'mt-3 d-none'
+  CheckOwnerDiv.innerHTML = `
+  <div class="input-group mb-2">
+    <input type="text" class="form-control bg-dark" placeholder="Username..">
+    <button class="btn btn-success">Check</button>
+  </div>
+
+  <b class="text-muted" style="font-size: 0.85rem;"><i class="fa-duotone fa-square-question mr-1"></i> ...</b>
+  `
+
+  ImageCard.appendChild(CheckOwnerDiv)
+
+  const ToggleButton = document.createElement('button')
+  ToggleButton.classList = 'btn btn-dark'
+  ToggleButton.style = 'position: absolute; bottom: 15px; left: 10px;'
+  //ToggleButton.setAttribute('data-bs-toggle', 'tooltip')
+  //ToggleButton.setAttribute('data-bs-title', 'Quickly check if someone owns this item')
+  ToggleButton.innerHTML = '<i class="fa-duotone fa-bags-shopping"></i>'
+  
+  ImageCard.children[0].prepend(ToggleButton)
+
+  const UsernameInput = CheckOwnerDiv.getElementsByTagName('input')[0]
+  const CheckButton = CheckOwnerDiv.getElementsByTagName('button')[0]
+  const ResultText = CheckOwnerDiv.getElementsByTagName('b')[0]
+
+  ToggleButton.addEventListener('click', function(){
+    if (CheckOwnerDiv.classList.contains('d-none')) {
+      ResultText.classList = ''
+      ResultText.innerHTML = '<i class="fa-duotone fa-square-question mr-1"></i> ...'
+      CheckOwnerDiv.classList.remove('d-none')
+    } else {
+      CheckOwnerDiv.classList.add('d-none')
+    }
+  })
+
+  UsernameInput.addEventListener('update', function(){
+    ResultText.classList = ''
+    ResultText.innerHTML = '<i class="fa-duotone fa-square-question mr-1"></i> ...'
+  })
+
+  CheckButton.addEventListener('click', async function(){
+    const Username = UsernameInput.value
+    if (Username.trim() === "") {
+      ResultText.classList = ''
+      ResultText.innerHTML = '<i class="fa-duotone fa-square-question mr-1"></i> ...'
+      return
+    }
+
+    const UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username)).json()).id
+    
+    if (UserID !== undefined) {
+      const Owns = (await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owner?userID=' + UserID)).json())
+    
+      if (Owns.owned === true) {
+        ResultText.classList = 'text-success'
+        ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' owns #' + Owns.inventory.serial + ' of ' + document.getElementsByTagName('h1')[0].innerText + '".'
+      } else {
+        ResultText.classList = 'text-danger'
+        ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' does not own "' + document.getElementsByTagName('h1')[0].innerText + '".'
+      }
+    } else {
+      ResultText.classList = 'text-warning'
+      ResultText.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> No user found under the username "' + Username + '".'
     }
   })
 }

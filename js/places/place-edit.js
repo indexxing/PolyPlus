@@ -95,13 +95,13 @@ function RequestGameProfile() {
 async function CopyOwnedPlace() {
     console.log('ran function')
     if (PlaceData === null) {
-        PlaceData = await fetch('https://api.polytoria.com/v1/places/' + PlaceID)
+        PlaceData = await fetch('https://api.polytoria.com/v1/places/' + 2640)
         PlaceData = await PlaceData.json()
     }
 
-    if (PlaceData.creator.id !== parseInt(JSON.parse(window.localStorage.getItem('account_info')).ID)) {
+    if (PlaceData.creator.id !== parseInt(JSON.parse(window.localStorage.getItem('p+account_info')).ID)) {
         console.log('returned')
-        return
+        //return
     }
 
     const DIV = document.createElement('div')
