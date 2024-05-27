@@ -1,0 +1,9 @@
+{
+	"scripts": {
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"prettier": "^3.2.5",
+		"prettier-plugin-jinja-template": "^1.4.0"
+	}
+}
