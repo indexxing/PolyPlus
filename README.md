@@ -17,8 +17,6 @@ Poly+ is an upcoming quality-of-life browser extension for the Polytoria website
 ![image](https://img.shields.io/badge/Brave-FF1B2D?style=for-the-badge&logo=Brave&logoColor=white)
 ![image](https://img.shields.io/badge/Vivaldi-EF3939?style=for-the-badge&logo=Vivaldi&logoColor=white)
 
-^ shields.io for the badges ❤️
-
 # Features
 
 - Pinned Games
