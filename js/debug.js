@@ -3,12 +3,12 @@
     Accessable at /my/settings/polyplus#dev
 */
 
-if (window.location.pathname.split('/')[3] === "polyplus" && window.location.hash === '#dev') {
-    document.title = 'Poly+ Debug - Polytoria'
-    const Version = chrome.runtime.getManifest().version
+if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#dev') {
+	document.title = 'Poly+ Debug - Polytoria';
+	const Version = chrome.runtime.getManifest().version;
 
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('#main-content .container').innerHTML = `
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelector('#main-content .container').innerHTML = `
         <style>
             #main-content .container label {
                 font-size: 0.8rem;
@@ -101,133 +101,141 @@ if (window.location.pathname.split('/')[3] === "polyplus" && window.location.has
                 </div>
             </div>
         </div>
-        `
+        `;
 
-        const CheckForUpdatesButton = document.getElementById('check-for-updates')
-        function CheckForUpdates() {
-            CheckForUpdatesButton.removeEventListener('click', CheckForUpdates)
-            CheckForUpdatesButton.disabled = true
-            fetch('https://polyplus.vercel.app/data/version.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network not ok')
-                    }
-                    return response.json()
-                })
-                .then(data => {
-                    if (data.version === Version || Math.floor((data.version - Version) * 10) === 0) {
-                        CheckForUpdatesButton.innerText = 'No updates available'
-                    } else {
-                        CheckForUpdatesButton.innerText = Math.floor((data.version - Version) * 10) + ' updates available'
-                    }
-                })
-                .catch(error => {console.log(error)});
-        }
-        CheckForUpdatesButton.addEventListener('click', CheckForUpdates);
+		const CheckForUpdatesButton = document.getElementById('check-for-updates');
+		function CheckForUpdates() {
+			CheckForUpdatesButton.removeEventListener('click', CheckForUpdates);
+			CheckForUpdatesButton.disabled = true;
+			fetch('https://polyplus.vercel.app/data/version.json')
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error('Network not ok');
+					}
+					return response.json();
+				})
+				.then((data) => {
+					if (data.version === Version || Math.floor((data.version - Version) * 10) === 0) {
+						CheckForUpdatesButton.innerText = 'No updates available';
+					} else {
+						CheckForUpdatesButton.innerText = Math.floor((data.version - Version) * 10) + ' updates available';
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+		CheckForUpdatesButton.addEventListener('click', CheckForUpdates);
 
-        document.getElementById('edit-setting').addEventListener('click', function(){
-            const EditSettingName = document.getElementById('edit-setting-name')
-            const EditSettingValue = document.getElementById('edit-setting-value')
+		document.getElementById('edit-setting').addEventListener('click', function () {
+			const EditSettingName = document.getElementById('edit-setting-name');
+			const EditSettingValue = document.getElementById('edit-setting-value');
 
-            chrome.storage.sync.get(['PolyPlus_Settings'], function(result) {
-                result = result.PolyPlus_Settings
+			chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
+				result = result.PolyPlus_Settings;
 
-                let NewValue = EditSettingValue.value
-                switch (NewValue) {
-                    case 'true':
-                        NewValue = true
-                        break
-                    case 'false':
-                        NewValue = false
-                        break
-                    case 'null':
-                        NewValue = null
-                        break
-                    case 'undefined':
-                        NewValue = undefined
-                        break
-                    case parseInt(NewValue):
-                        NewValue = parseInt(NewValue)
-                        break
-                }
-                result[EditSettingName.value] = NewValue
+				let NewValue = EditSettingValue.value;
+				switch (NewValue) {
+					case 'true':
+						NewValue = true;
+						break;
+					case 'false':
+						NewValue = false;
+						break;
+					case 'null':
+						NewValue = null;
+						break;
+					case 'undefined':
+						NewValue = undefined;
+						break;
+					case parseInt(NewValue):
+						NewValue = parseInt(NewValue);
+						break;
+				}
+				result[EditSettingName.value] = NewValue;
 
-                chrome.storage.sync.set({ 'PolyPlus_Settings': result }, function() {
-                    alert('Successfully set: "' + EditSettingName.value + '" to ' + NewValue)
-                });
-            });
-        });
+				chrome.storage.sync.set({PolyPlus_Settings: result}, function () {
+					alert('Successfully set: "' + EditSettingName.value + '" to ' + NewValue);
+				});
+			});
+		});
 
-        document.getElementById('reset-settings').addEventListener('click', async function(){
-            let Utilities = await import(chrome.runtime.getURL('resources/utils.js'))
-            Utilities = Utilities.default
-            chrome.storage.sync.set({ 'PolyPlus_Settings': Utilities.DefaultSettings }, function() {
-                alert('Successfully reset settings to their defaults!')
-            });
-        });
+		document.getElementById('reset-settings').addEventListener('click', async function () {
+			let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
+			Utilities = Utilities.default;
+			chrome.storage.sync.set({PolyPlus_Settings: Utilities.DefaultSettings}, function () {
+				alert('Successfully reset settings to their defaults!');
+			});
+		});
 
-        document.getElementById('example-pinnedgames').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_PinnedGames': [6012, 3857, 2537] }, function() {
-                alert('Successfully loaded example for Pinned Games!')
-            });
-        });
+		document.getElementById('example-pinnedgames').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_PinnedGames: [6012, 3857, 2537]}, function () {
+				alert('Successfully loaded example for Pinned Games!');
+			});
+		});
 
-        document.getElementById('example-bestfriends').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_BestFriends': [1, 2, 3] }, function() {
-                alert('Successfully loaded example for Best Friends!')
-            });
-        });
+		document.getElementById('example-bestfriends').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_BestFriends: [1, 2, 3]}, function () {
+				alert('Successfully loaded example for Best Friends!');
+			});
+		});
 
-        document.getElementById('example-itemwishlist').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_ItemWishlist': [31495, 31493, 31492] }, function() {
-                alert('Successfully loaded example for Item Wishlist!')
-            });
-        });
+		document.getElementById('example-itemwishlist').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_ItemWishlist: [31495, 31493, 31492]}, function () {
+				alert('Successfully loaded example for Item Wishlist!');
+			});
+		});
 
-        document.getElementById('clear-pinnedgames').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_PinnedGames': [] }, function() {
-                alert('Successfully cleared Pinned Games!')
-            });
-        });
+		document.getElementById('clear-pinnedgames').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_PinnedGames: []}, function () {
+				alert('Successfully cleared Pinned Games!');
+			});
+		});
 
-        document.getElementById('clear-bestfriends').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_BestFriends': [] }, function() {
-                alert('Successfully cleared Best Friends!')
-            });
-        });
+		document.getElementById('clear-bestfriends').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_BestFriends: []}, function () {
+				alert('Successfully cleared Best Friends!');
+			});
+		});
 
-        document.getElementById('clear-itemwishlist').addEventListener('click', function(){
-            chrome.storage.sync.set({ 'PolyPlus_ItemWishlist': [] }, function() {
-                alert('Successfully cleared Item Wishlist!')
-            });
-        });
+		document.getElementById('clear-itemwishlist').addEventListener('click', function () {
+			chrome.storage.sync.set({PolyPlus_ItemWishlist: []}, function () {
+				alert('Successfully cleared Item Wishlist!');
+			});
+		});
 
-        document.getElementById('delete-sync').addEventListener('click', function(){
-            if (confirm("Are you sure you'd like to delete all sync data associated with the extension?") === false) { return }
-            chrome.storage.sync.clear(function() {
-                alert('Successfully deleted all sync data associated with the extension!')
-            });
-        });
+		document.getElementById('delete-sync').addEventListener('click', function () {
+			if (confirm("Are you sure you'd like to delete all sync data associated with the extension?") === false) {
+				return;
+			}
+			chrome.storage.sync.clear(function () {
+				alert('Successfully deleted all sync data associated with the extension!');
+			});
+		});
 
-        document.getElementById('delete-local').addEventListener('click', function(){
-            if (confirm("Are you sure you'd like to delete all local data associated with the extension?") === false) { return }
-            chrome.storage.local.clear(function() {
-                alert('Successfully deleted all local data associated with the extension!')
-            });
-        });
+		document.getElementById('delete-local').addEventListener('click', function () {
+			if (confirm("Are you sure you'd like to delete all local data associated with the extension?") === false) {
+				return;
+			}
+			chrome.storage.local.clear(function () {
+				alert('Successfully deleted all local data associated with the extension!');
+			});
+		});
 
-        document.getElementById('delete-all-data').addEventListener('click', function(){
-            if (confirm("Are you sure you'd like to delete all sync and local data associated with the extension?") === false) { return }
-            chrome.storage.sync.clear(function() {
-                alert('Successfully deleted all sync data associated with the extension!')
-            });
-            chrome.storage.local.clear(function() {
-                alert('Successfully deleted all local data associated with the extension!')
-            });
-        });
+		document.getElementById('delete-all-data').addEventListener('click', function () {
+			if (confirm("Are you sure you'd like to delete all sync and local data associated with the extension?") === false) {
+				return;
+			}
+			chrome.storage.sync.clear(function () {
+				alert('Successfully deleted all sync data associated with the extension!');
+			});
+			chrome.storage.local.clear(function () {
+				alert('Successfully deleted all local data associated with the extension!');
+			});
+		});
 
-        chrome.storage.sync.getBytesInUse(["PolyPlus_Settings", "PolyPlus_PinnedGames", "PolyPlus_BestFriends", "PolyPlus_ItemWishlist"], function(bytes){
-            document.getElementById('data-size').innerText = bytes.toLocaleString()
-        });
-    })
+		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist'], function (bytes) {
+			document.getElementById('data-size').innerText = bytes.toLocaleString();
+		});
+	});
 }
