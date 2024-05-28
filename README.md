@@ -2,10 +2,10 @@
 > Poly+ is in no way affiliated with the Polytoria team. This is a project I started for the community - and I hope some community members are willing to help with development so the extension is better for everyone ❤️.
 
 > [!IMPORTANT]
-> This extension is currently in BETA. If you find any bugs, please report them in this repository's issues section as it'd be a great help towards development of the extension.
+> This extension is currently in BETA. If you find any bugs, please report them in this repository's issues section as it'd be a great help towards the development of the extension.
 
 > [!TIP]
-> Want to learn what's in store for Poly+? Check out the roadmap [here](https://github.com/users/indexxing/projects/2)!
+> Would you like to learn what's in store for Poly+? Check out the roadmap [here](https://github.com/users/indexxing/projects/2)!
 
 # Poly+
 
@@ -40,7 +40,7 @@ And there is more to come!
 
 # Supported Browsers
 
-As of right now, Poly+ only works on Chromium-based browsers. Currently, there are no plans to bring it to other browsers in the future.
+As of right now, Poly+ only works on Chromium-based browsers. Currently, there are no plans to bring it to other browsers.
 
 > TL;DR Chromium-based browsers
 
@@ -67,14 +67,14 @@ As of right now, Poly+ only works on Chromium-based browsers. Currently, there a
 
 ## How to Download - Pre-Release Build?
 
-> Pre-Release builds may have work in progress features or bugs!
+> Pre-release builds may have work-in-progress features or bugs!
 
 1. Go to the top of this GitHub repository
 2. Click on the "Code" button
 3. Click on the "Download ZIP" button in the dropdown menu
 4. Extract the .ZIP
 5. Enable developer mode on your browser (developer mode allows you to load unpacked extensions)
-6. Go to your browsers extensions page (usually `browserName://extensions`)
+6. Go to your browser extensions page (usually `browserName://extensions`)
 7. Click the "Load Unpacked" button
 8. When the file selector comes up, open the unzipped folder of this repository's source code
 9. Go to Polytoria and you should see some changes!
