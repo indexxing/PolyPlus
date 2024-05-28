@@ -1,11 +1,15 @@
+console.log('path', window.location.pathname.split('/')[3])
+
 if (window.location.pathname.split('/')[3] === "inventory") {
-    const UserID = window.location.pathname.split('/')[2]
-    if (UserID === JSON.parse(window.localStorage.getItem('p+account_info')).ID) {
+    const Username = window.location.pathname.split('/')[2]
+    console.log(JSON.parse(window.localStorage.getItem('p+account_info')).Username)
+    if (Username === JSON.parse(window.localStorage.getItem('p+account_info')).Username) {
+        console.log('is user')
         let Nav = document.getElementsByClassName('nav-pills')[0]
         let WishlistNav = document.createElement('li')
         WishlistNav.classList.add('nav-item')
         WishlistNav.innerHTML = `
-        <a href="/users/${UserID}/inventory/wishlist/" class="nav-link">
+        <a href="wishlist/" class="nav-link">
             <i class="fa-regular fa-sparkles me-1"></i>
             <span class="pilltitle">Item Wishlist</span>
         </a>
@@ -13,6 +17,7 @@ if (window.location.pathname.split('/')[3] === "inventory") {
         Nav.appendChild(WishlistNav)
 
         if (window.location.pathname.split('/')[4] === "wishlist") {
+            console.log('aaa')
             const ItemGrid = document.getElementsByClassName('itemgrid')[0]
             const ItemCardContents = `
             <a href="/store/:ItemID" class="text-reset">

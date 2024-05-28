@@ -113,18 +113,18 @@ let Theme = ``;
     }
   });
 
-  if (Settings.HideUserAdsOn === true) {
-    if (Settings.HideUserAdsOn.Banners === true) {
+  if (Settings.HideUserAds.Enabled === true) {
+    if (Settings.HideUserAds.Banners === true) {
       Theme += `
-      div[style^="max-width: 728px;"]:has(.text-center a[href^="/ads/"]) {
+      div[style^="max-width: 728px;"]:has(a[href^="/ads"]) {
         display: none;
       }
       `
     }
 
-    if (Settings.HideUserAdsOn.Rectangles === true) {
+    if (Settings.HideUserAds.Rectangles === true) {
       Theme += `
-      div[style^="max-width: 300px;"]:has(.text-center a[href^="/ads/"]) {
+      div[style^="max-width: 300px;"]:has(a[href^="/ads"]) {
         display: none;
       }
       `
