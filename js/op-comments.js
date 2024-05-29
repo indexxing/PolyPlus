@@ -1,3 +1,7 @@
+/*
+	this script will need to be updated when the new profile URLs are fully rolled out
+*/
+
 !(() => {
 	let Comments = document.getElementById('comments');
 	const Type = window.location.pathname.split('/')[1];
@@ -21,7 +25,7 @@
 	const Observer = new MutationObserver(function (list) {
 		for (let record of list) {
 			for (let element of record.addedNodes) {
-				if (element.classList === 'card mb-3') {
+				if (element.classList.contains('card')) {
 					LoadCreatorTag(element);
 				}
 			}

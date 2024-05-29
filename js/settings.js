@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	PolyPlusItem.classList = 'nav-link';
 	PolyPlusItem.href = SettingsURL;
 	PolyPlusItem.innerHTML = `
-  <i class="fa-regular fa-sparkles me-1"></i> <span class="pilltitle">Poly+</span>
-  `;
+	<i class="fa-regular fa-sparkles me-1"></i> <span class="pilltitle">Poly+</span>
+	`;
 
 	Nav.insertBefore(PolyPlusItem, Nav.getElementsByTagName('hr')[0]);
 });

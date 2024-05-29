@@ -1,14 +1,6 @@
 const Manifest = chrome.runtime.getManifest();
 const SettingsURL = chrome.runtime.getURL('settings.html');
 
-/*
-ON INSTALL:
-
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.tabs.create({url: 'https://polyplus.vercel.app/app/welcome.html'})
-});
-*/
-
 // WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
 chrome.action.onClicked.addListener((tab) => {
 	chrome.tabs.create({active: true, url: SettingsURL});
@@ -73,12 +65,6 @@ function RunUpdateNotifier() {
 								});
 							}
 						);
-						/*
-                        chrome.action.setBadgeBackgroundColor(
-                            {color: 'red'},
-                            () => {  },
-                        );
-                        */
 					}
 				})
 				.catch((error) => {
@@ -93,7 +79,7 @@ chrome.contextMenus.removeAll(function () {
 		title: 'Run Update Notifier',
 		id: 'PolyPlus-RunUpdateNotifier',
 		contexts: ['all'],
-		documentUrlPatterns: ['https://polytoria.com/my/settings/polyplus#dev']
+		documentUrlPatterns: ['https://polytoria.com/my/settings/polyplus*']
 	});
 
 	// COPY ASSET ID CONTEXT MENU ITEM REGISTRATION

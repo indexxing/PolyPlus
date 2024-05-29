@@ -6,7 +6,7 @@
 	"version_name": "Pre-Release Build (v1.1.1)",
 	"description": "Power-up your Polytoria experience with Poly+! Created by Index.",
 	"homepage_url": "https://polyplus.vercel.app/",
-	"permissions": ["storage", "contextMenus", "tabs", "scripting", "alarms", "notifications"],
+	"permissions": ["storage", "contextMenus", "scripting", "alarms", "notifications"],
 	"content_scripts": [
 		{
 			"matches": ["https://polytoria.com/*"],

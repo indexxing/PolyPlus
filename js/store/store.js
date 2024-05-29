@@ -22,13 +22,18 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 	}
 
 	if (Settings.StoreOwnTagOn === true) {
-		Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=hat&limit=100')).json()).inventory;
-		Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory;
-		Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory;
-		console.log(Inventory);
-		Array.from(ItemGrid.children).forEach((element) => {
-			LoadOwnedTags(element);
-		});
+		Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=hat&limit=100')).json());
+		if (Inventory.errors === undefined) {
+			Inventory = Inventory.inventory
+			Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory;
+			Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory;
+			console.log(Inventory);
+			Array.from(ItemGrid.children).forEach((element) => {
+				LoadOwnedTags(element);
+			});
+		} else {
+			console.log(Inventory)
+		}
 	}
 
 	if (Settings.EventItemsCatOn === true) {
@@ -153,52 +158,44 @@ function EventItems() {
 		ItemGrid.classList.remove('itemgrid');
 		ItemGrid.innerHTML = `
         <div id="p+ei">
-            ${Groups[Page].map(
-							(x, index) => `
-                <div class="row px-2 px-lg-0" style="animation-delay: 0.24s;">
-                    <div class="col">
-                        <h6 class="dash-ctitle2">${x.date}</h6>
-                        <h5 class="dash-ctitle">${x.name}</h5>
-                    </div>
-                    ${
-											x.link !== undefined
-												? `
-                    <div class="col-auto d-flex align-items-center">
-						<a class="text-muted" href="${x.link}">
-							<span class="d-none d-lg-inline">${x.link.startsWith('https://polytoria.com/places/') ? 'Event Place' : 'Blog Post'}</span>
-							<i class="fas fa-angle-right ms-2"></i>
+            ${Groups[Page].map((x, index) => `
+			<div class="row px-2 px-lg-0" style="animation-delay: 0.24s;">
+				<div class="col">
+					<h6 class="dash-ctitle2">${x.date}</h6>
+					<h5 class="dash-ctitle">${x.name}</h5>
+				</div>
+				${x.link !== undefined ? `
+				<div class="col-auto d-flex align-items-center">
+					<a class="text-muted" href="${x.link}">
+						<span class="d-none d-lg-inline">${x.link.startsWith('https://polytoria.com/places/') ? 'Event Place' : 'Blog Post'}</span>
+						<i class="fas fa-angle-right ms-2"></i>
+					</a>
+				</div>
+				`
+				: ''
+				}
+			</div>
+			<div class="card card-dash mcard mb-3" style="animation-delay: 0.27s;">
+				<div class="card-body p-0 m-1 scrollFadeContainer">
+					<div class="d-flex">
+						${x.items.map((x) => `
+						<a href="/store/${x.id}">
+							<div class="scrollFade card me-2 place-card force-desktop text-center mb-2" style="opacity: 1;">
+								<div class="card-body">
+									<img src="${x.thumbnail}" class="place-card-image">
+									<div>
+										<div class="mt-2 mb-1 place-card-title">
+											${x.name}
+										</div>
+									</div>
+								</div>
+							</div>
 						</a>
+						`).join('')}
 					</div>
-                    `
-												: ''
-										}
-                </div>
-                <div class="card card-dash mcard mb-3" style="animation-delay: 0.27s;">
-                    <div class="card-body p-0 m-1 scrollFadeContainer">
-                        <div class="d-flex">
-                            ${x.items
-															.map(
-																(x) => `
-                            <a href="/store/${x.id}">
-                                <div class="scrollFade card me-2 place-card force-desktop text-center mb-2" style="opacity: 1;">
-                                    <div class="card-body">
-                                        <img src="${x.thumbnail}" class="place-card-image">
-                                        <div>
-                                            <div class="mt-2 mb-1 place-card-title">
-                                                ${x.name}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            `
-															)
-															.join('')}
-                        </div>
-                    </div>
-                </div>
-                `
-						).join('')}
+				</div>
+			</div>
+			`).join('')}
         </div>
 
         <div class="d-flex justify-content-center mt-3">
@@ -280,20 +277,27 @@ function EventItems() {
 
 		const UpdateEventItems = function () {
 			Current.innerText = Page + 1;
-			Container.innerHTML = Groups[Page].map(
-				(x, index) => `
-            <div class="row px-2 px-lg-0" style="animation-delay: 0.24s;">
-                    <div class="col">
-                        <h6 class="dash-ctitle2">${x.date}</h6>
-                        <h5 class="dash-ctitle">${x.name}</h5>
-                    </div>
-                </div>
+			Container.innerHTML = Groups[Page].map((x, index) => `
+				<div class="row px-2 px-lg-0" style="animation-delay: 0.24s;">
+					<div class="col">
+						<h6 class="dash-ctitle2">${x.date}</h6>
+						<h5 class="dash-ctitle">${x.name}</h5>
+					</div>
+					${x.link !== undefined ? `
+					<div class="col-auto d-flex align-items-center">
+						<a class="text-muted" href="${x.link}">
+							<span class="d-none d-lg-inline">${x.link.startsWith('https://polytoria.com/places/') ? 'Event Place' : 'Blog Post'}</span>
+							<i class="fas fa-angle-right ms-2"></i>
+						</a>
+					</div>
+					`
+					: ''
+					}
+				</div>
                 <div class="card card-dash mcard mb-3" style="animation-delay: 0.27s;">
                     <div class="card-body p-0 m-1 scrollFadeContainer">
                         <div class="d-flex">
-                            ${x.items
-															.map(
-																(x) => `
+                            ${x.items.map((x) => `
                             <a href="/store/${x.id}">
                                 <div class="scrollFade card me-2 place-card force-desktop text-center mb-2" style="opacity: 1;">
                                     <div class="card-body">
@@ -306,9 +310,7 @@ function EventItems() {
                                     </div>
                                 </div>
                             </a>
-                            `
-															)
-															.join('')}
+                            `).join('')}
                         </div>
                     </div>
                 </div>
