@@ -1,12 +1,12 @@
 /*
-    Debug page for Development
-    Accessable at /my/settings/polyplus#dev
+    Developer & Debug Page
+    Accessable at /my/settings/polyplus#dev and /my/settings/polyplus#debug
 */
 
-if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#dev') {
-	document.title = 'Poly+ Debug - Polytoria';
-	const Version = chrome.runtime.getManifest().version;
+document.title = 'Poly+ Debug - Polytoria';
+const Version = chrome.runtime.getManifest().version;
 
+if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#dev') {
 	document.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#main-content .container').innerHTML = `
         <style>
@@ -22,7 +22,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
             }
         </style>
         <div class="text-center mb-3">
-            <h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
+            <h1 class="text-center" style="font-size: 4.6rem;">Poly+ Developer</h1>
             <p class="w-75 d-block mx-auto">This page is used by developers for debugging most data related things. It is unrecommended you modify any data on this page, but if you ever want to go ahead.</p>
         </div>
         <div class="row">
@@ -235,7 +235,95 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 		});
 
 		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist'], function (bytes) {
+			console.log(bytes)
 			document.getElementById('data-size').innerText = bytes.toLocaleString();
 		});
+	});
+} else if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#debug') {
+	document.addEventListener('DOMContentLoaded', function () {
+		chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist'], function(result) {
+			document.querySelector('#main-content .container').innerHTML = `
+			<style>
+				#main-content .container label {
+					font-size: 0.8rem;
+					color: darkgray;
+				}
+
+				#main-content .container label + p {
+					margin-bottom: 4px;
+					font-size: 0.9rem;
+					margin-top: -4px;
+				}
+			</style>
+			<div class="text-center mb-3">
+				<h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
+				<p class="w-75 d-block mx-auto">This page is used by developers for debugging most data related things. It is unrecommended you modify any data on this page, but if you ever want to go ahead.</p>
+			</div>
+			<div class="row">
+				<div class="col-md-5" style="padding-left: 0px;">
+					<div class="card mb-3">
+						<div class="card-body">
+							<h2>Settings</h2>
+							<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+								${JSON.stringify((result.PolyPlus_Settings || {}), null, 2)
+									.replaceAll('\n','<br>')
+									.replaceAll(' ', '&nbsp;')
+									.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								<!--<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((result.PolyPlus_Settings || [])).replaceAll('"', "\'")}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>-->
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<p class="text-muted mb-1">Version: v${Version}</p>
+							<p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
+							<button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
+							<a href="https://github.com/IndexingGitHub/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
+						</div>
+					</div>
+					<hr>
+					Created by <a href="/u/Index" target="_blank">Index</a>
+				</div>
+				<div class="col">
+					<div class="card mb-3">
+						<div class="card-body">
+							<h3>Pinned Games (${(result.PolyPlus_PinnedGames || []).length})</h3>
+							<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+								${JSON.stringify((result.PolyPlus_PinnedGames || []), null, 2)
+									.replaceAll('\n','<br>')
+									.replaceAll(' ', '&nbsp;')
+									.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((result.PolyPlus_PinnedGames || []))}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="card mb-3">
+						<div class="card-body">
+							<h3>Best Friends (${(result.PolyPlus_BestFriends || []).length})</h3>
+							<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+								${JSON.stringify((result.PolyPlus_BestFriends || []), null, 2)
+									.replaceAll('\n','<br>')
+									.replaceAll(' ', '&nbsp;')
+									.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((result.PolyPlus_BestFriends || []))}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<h3>Item Wishlist (${(result.PolyPlus_ItemWishlist || []).length})</h3>
+							<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+								${JSON.stringify((result.PolyPlus_ItemWishlist || []), null, 2)
+									.replaceAll('\n','<br>')
+									.replaceAll(' ', '&nbsp;')
+									.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((result.PolyPlus_ItemWishlist || []))}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			`;
+		})
 	});
 }

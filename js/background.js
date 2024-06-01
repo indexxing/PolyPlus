@@ -1,6 +1,94 @@
 const Manifest = chrome.runtime.getManifest();
 const SettingsURL = chrome.runtime.getURL('settings.html');
 
+const DefaultSettings = {
+	PinnedGamesOn: true,
+	ForumMentsOn: true,
+	BestFriendsOn: false,
+	ImprovedFrListsOn: false,
+	IRLPriceWithCurrency: {
+		Enabled: true,
+		Currency: 0,
+		Package: 0
+	},
+	IRLPriceWithCurrencyOn: true,
+	IRLPriceWithCurrencyCurrency: 0,
+	IRLPriceWithCurrencyPackage: 0,
+	HideNotifBadgesOn: false,
+	StoreOwnTagOn: true,
+	ThemeCreatorOn: false,
+	ThemeCreator: {
+		Enabled: false,
+		BGColor: null,
+		BGImage: null,
+		BGImageSize: 'fit',
+		PrimaryTextColor: null,
+		SecondaryTextColor: null,
+		LinkTextColor: null,
+		WebsiteLogo: null
+	},
+	ModifyNavOn: false,
+	ModifyNav: [
+		{
+			Label: 'Places',
+			Link: 'https://polytoria.com/places'
+		},
+		{
+			Label: 'Store',
+			Link: 'https://polytoria.com/store'
+		},
+		{
+			Label: 'Guilds',
+			Link: 'https://polytoria.com/guilds'
+		},
+		{
+			Label: 'People',
+			Link: 'https://polytoria.com/users'
+		},
+		{
+			Label: 'Forum',
+			Link: 'https://polytoria.com/forum'
+		}
+	],
+	MoreSearchFiltersOn: true,
+	ApplyMembershipTheme: {
+		Enabled: false,
+		Theme: 0
+	},
+	ApplyMembershipThemeOn: false,
+	ApplyMembershipThemeTheme: 0,
+	MultiCancelOutTradesOn: true,
+	ItemWishlistOn: true,
+	HideUpgradeBtnOn: false,
+	TryOnItemsOn: true,
+	OutfitCostOn: true,
+	ShowPlaceRevenueOn: true,
+	ReplaceItemSalesOn: false,
+	HoardersListOn: true,
+	HoardersList: {
+		Enabled: true,
+		AvatarsEnabled: false,
+		MinCopies: 2
+	},
+	LibraryDownloadsOn: true,
+	EventItemsCatOn: true,
+	HomeFriendCountOn: true,
+	HideUserAds: {
+		Enabled: false,
+		Banners: true,
+		Rectangles: true
+	}
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+	chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
+		const MergedSettings = MergeObjects((result.PolyPlus_Settings || DefaultSettings), DefaultSettings)
+		chrome.storage.sync.set({'PolyPlus_Settings': MergedSettings}, function(){
+			console.log('Successfully merged settings')
+		})
+	})
+});
+
 // WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
 chrome.action.onClicked.addListener((tab) => {
 	chrome.tabs.create({active: true, url: SettingsURL});
@@ -188,4 +276,23 @@ function CopyAvatarHash(hash) {
 		.catch(() => {
 			alert('Failure to copy avatar hash.');
 		});
+}
+
+// MergeObjects function was written by ChatGPT cause I was lazy and it was awhile ago
+function MergeObjects(obj1, obj2) {
+	var mergedObj = {};
+
+	// Copy the values from obj1 to the mergedObj
+	for (var key in obj1) {
+		mergedObj[key] = obj1[key];
+	}
+
+	// Merge the values from obj2 into the mergedObj, favoring obj2 for non-existing keys in obj1
+	for (var key in obj2) {
+		if (!obj1.hasOwnProperty(key)) {
+			mergedObj[key] = obj2[key];
+		}
+	}
+
+	return mergedObj;
 }

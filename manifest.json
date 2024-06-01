@@ -17,7 +17,7 @@
 
 		{
 			"matches": ["https://polytoria.com/my/settings/*"],
-			"js": ["/js/settings.js", "/js/debug.js"],
+			"js": ["/js/settings.js", "/js/extra-pages.js"],
 			"run_at": "document_start"
 		},
 
