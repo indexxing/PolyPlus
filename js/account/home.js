@@ -8,21 +8,26 @@ var BestFriendsData;
 
 let Utilities;
 
-chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
-	Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
+(async () => {
+	Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
+	Utilities = Utilities.default;
 
-	if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
-		IRLPrice();
-	}
-
-	if (Settings.HomeFriendCountOn === true) {
-		ShowFriendCount();
-	}
-
-	if (Settings.PinnedGamesOn === true || Settings.BestFriendsOn === true) {
-		Update();
-	}
-});
+	chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
+		Settings = Utilities.MergeObjects(result.PolyPlus_Settings || Utilities.DefaultSettings);
+	
+		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
+			IRLPrice();
+		}
+	
+		if (Settings.HomeFriendCountOn === true) {
+			ShowFriendCount();
+		}
+	
+		if (Settings.PinnedGamesOn === true || Settings.BestFriendsOn === true) {
+			Update();
+		}
+	});
+})();
 
 let ContainerElement = `
 <div class="card-body p-0 m-1 scrollFadeContainer d-flex"></div>`;

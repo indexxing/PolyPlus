@@ -374,8 +374,8 @@ async function HoardersList(min, avatars) {
 		Owners.push(...InitialOwners.inventories);
 
 		// Get owners (up to 300, if needed)
-		if (InitialOwners.pages > 3) {
-			InitialOwners.pages = 3;
+		if (InitialOwners.pages > Utilities.Limits.HoardersListPages) {
+			InitialOwners.pages = Utilities.Limits.HoardersListPages;
 		}
 		if (InitialOwners.pages > 1 && OwnerPagesFetched < InitialOwners.pages) {
 			for (let i = 1; i < InitialOwners.pages; i++) {

@@ -50,7 +50,7 @@ Elements.forEach((element) => {
 
 	if (Select) {
 		Select.addEventListener('change', function () {
-			if (Select.getAttribute('data-useValue') !== undefined) {
+			if (Select.getAttribute('data-useValue') !== null) {
 				let Value = Select.options[Select.selectedIndex].value;
 				if (!isNaN(Value)) {
 					Value = parseInt(Value);
@@ -150,7 +150,7 @@ Elements.forEach((element) => {
 
 function LoadCurrent() {
 	chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
-		Settings = MergeObjects(result.PolyPlus_Settings || Utilities.DefaultSettings, Utilities.DefaultSettings);
+		Settings = Utilities.MergeObjects(result.PolyPlus_Settings || Utilities.DefaultSettings, Utilities.DefaultSettings);
 		RecentSave = structuredClone(Settings)
 
 		console.log('Current Settings: ', Settings);
@@ -313,7 +313,7 @@ function LoadThemeJSON(string) {
 						JSONTable[i] = '';
 					}
 				}
-				Settings.ThemeCreator = MergeObjects(JSONTable, Utilities.DefaultSettings.ThemeCreator);
+				Settings.ThemeCreator = Utilities.MergeObjects(JSONTable, Utilities.DefaultSettings.ThemeCreator);
 				Save();
 				console.log(JSONTable.length, JSONTable, 'applied');
 				document.getElementById('ThemeCreator').getElementsByTagName('button')[1].click();
@@ -324,25 +324,6 @@ function LoadThemeJSON(string) {
 	} catch (error) {
 		alert('JSON is invalid!');
 	}
-}
-
-// MergeObjects function was written by ChatGPT cause I was lazy and it was awhile ago
-function MergeObjects(obj1, obj2) {
-	var mergedObj = {};
-
-	// Copy the values from obj1 to the mergedObj
-	for (var key in obj1) {
-		mergedObj[key] = obj1[key];
-	}
-
-	// Merge the values from obj2 into the mergedObj, favoring obj2 for non-existing keys in obj1
-	for (var key in obj2) {
-		if (!obj1.hasOwnProperty(key)) {
-			mergedObj[key] = obj2[key];
-		}
-	}
-
-	return mergedObj;
 }
 
 function AreIdentical(obj1, obj2) {

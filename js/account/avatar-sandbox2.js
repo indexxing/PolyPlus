@@ -293,10 +293,13 @@ async function FormatAvatar() {
 		FormattedAvatar.tool = await FetchMesh(FormattedAvatar.tool);
 	}
 
-	if (FormattedAvatar.face && typeof FormattedAvatar.face === 'number') {
-		FormattedAvatar.face = await FetchAsset(FormattedAvatar.face);
-	} else {
-		FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png';
+	if (FormattedAvatar.face === undefined) { FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png'; }
+	if (!FormattedAvatar.face.startsWith('data:') && !FormattedAvatar.face.startsWith('http')) {
+		if (FormattedAvatar.face && typeof FormattedAvatar.face === 'number') {
+			FormattedAvatar.face = await FetchAsset(FormattedAvatar.face);
+		} else {
+			FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png';
+		}
 	}
 
 	if (typeof FormattedAvatar.shirt === 'number') {
