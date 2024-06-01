@@ -18,7 +18,7 @@ if (UserID) {
 		chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 			Settings = result.PolyPlus_Settings || {};
 
-			if (Settings.IRLPriceWithCurrency.Enabled === true) {
+			if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 				IRLPrice();
 			}
 

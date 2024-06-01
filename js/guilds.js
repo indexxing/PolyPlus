@@ -6,7 +6,7 @@ let Utilities;
 chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 	Settings = result.PolyPlus_Settings;
 
-	if (Settings.IRLPriceWithCurrency.Enabled === true) {
+	if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 		(async () => {
 			Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 			Utilities = Utilities.default;
@@ -40,7 +40,7 @@ const observer = new MutationObserver(async function (list) {
 	for (const record of list) {
 		for (const element of record.addedNodes) {
 			if (element.tagName === 'DIV' && element.classList.value === 'col-auto mb-3') {
-				if (Settings.IRLPriceWithCurrency.Enabled === true) {
+				if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 					IRLPrice(element);
 				}
 			}

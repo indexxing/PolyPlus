@@ -109,15 +109,15 @@ export default {
 	TextureTypes: ['shirt', 'pants', 'face'],
 	CalculateIRL: async function (bricks, to, brickPackage) {
 		/*
-    Disabled for now: currency retrieval from currencies.json
+		Disabled for now: currency retrieval from currencies.json
 
-    const response = await fetch(chrome.runtime.getURL('resources/currencies.json'))
-    if (!response.ok) {
-      throw new Error('Getting currency data failure')
-    }
-    const data = await response.json()
-    const UnitPrice = data.Data[brickPackage][to]
-    */
+		const response = await fetch(chrome.runtime.getURL('resources/currencies.json'))
+		if (!response.ok) {
+			throw new Error('Getting currency data failure')
+		}
+		const data = await response.json()
+		const UnitPrice = data.Data[brickPackage][to]
+		*/
 
 		let Icon = '$';
 		let Result = 'N/A';
@@ -212,10 +212,17 @@ export default {
 		};
 	},
 	InjectResource: function (path, element) {
-		// Function by devjin0617 on GitHub
-		// Gist: https://gist.github.com/devjin0617/3e8d72d94c1b9e69690717a219644c7a
-		// Slightly modified to use constants and fit the rest of the code style more
-		// Function only used for registering bootstrap tooltips currently
+		/*
+			Function by devjin0617 on GitHub
+			Gist: https://gist.github.com/devjin0617/3e8d72d94c1b9e69690717a219644c7a
+			Slightly modified to use constants and fit the rest of the code style more
+			Function only used for registering bootstrap tooltips and getting the signed-in user's username, user ID, and brick count currently
+		*/
+
+		/*
+			Potentially make this use chrome.runtime.sendMessage in the background.js script soon
+		*/
+		
 
 		if (element === undefined) {
 			element = 'body';

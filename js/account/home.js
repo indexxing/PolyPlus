@@ -11,7 +11,7 @@ let Utilities;
 chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 	Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
 
-	if (Settings.IRLPriceWithCurrency.Enabled === true) {
+	if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 		IRLPrice();
 	}
 

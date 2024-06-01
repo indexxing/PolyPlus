@@ -67,7 +67,7 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 			}
 		}
 
-		if (Settings.IRLPriceWithCurrency.Enabled === true) {
+		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 			IRLPrice();
 		}
 

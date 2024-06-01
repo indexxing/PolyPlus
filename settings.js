@@ -1,6 +1,7 @@
 const SaveBtn = document.getElementById('Save');
 const Elements = Array.from(document.getElementsByClassName('setting-container'));
 
+var RecentSave;
 var Settings;
 
 var Utilities;
@@ -12,16 +13,14 @@ var Utilities;
 	document.getElementById('PinnedGames-limit').innerText = Utilities.Limits.PinnedGames;
 	document.getElementById('BestFriends-limit').innerText = Utilities.Limits.BestFriends;
 	document.getElementById('ImprovedFrLists-limit').innerText = Utilities.Limits.ImprovedFrLists;
-	document.getElementById('ItemWishlist-limit').innerText = Utilities.Limits.ItemWishlist;
+	//document.getElementById('ItemWishlist-limit').innerText = Utilities.Limits.ItemWishlist;
 })();
 
 // Handle buttons at the bottom of the page
 document.getElementById('ResetDefaults').addEventListener('click', function () {
 	document.getElementById('ResetDefaults-Modal').showModal();
 });
-SaveBtn.addEventListener('click', function () {
-	Save();
-});
+SaveBtn.addEventListener('click', Save);
 
 // Handle modal buttons for Reset Defaults modal
 document.getElementById('ResetDefaults-Modal-Yes').addEventListener('click', function () {
@@ -36,16 +35,8 @@ document.getElementById('ResetDefaults-Modal-No').addEventListener('click', func
 	document.getElementById('ResetDefaults-Modal').close();
 });
 
-// Handle leaving the settings page before saving
-window.onbeforeunload = function () {
-	if (SaveBtn.getAttribute('disabled') !== undefined) {
-		return "Are you sure you'd like to leave? Your Poly+ settings haven't been saved.";
-	}
-};
-
 // Loop thru each setting container and handle toggling, selecting, opening modal, etc
 Elements.forEach((element) => {
-	console.log('Handle Element', element);
 	let Button = element.getElementsByTagName('button')[0];
 	let Options = element.getElementsByTagName('button')[1];
 	let Select = element.getElementsByTagName('select')[0];
@@ -93,16 +84,20 @@ Elements.forEach((element) => {
 						if (Setting === '[save]') {
 							// Save Modal Button
 
+							// Save Modal Inputs
 							Array.from(ModalInputs)
 								.filter((x) => !x.classList.contains('ignore'))
 								.forEach((input) => {
 									SetSetting(input, input.value, false, Modal.getAttribute('data-setting'));
 								});
+
+							// Save Modal Select Menus
 							Array.from(ModalSelect)
 								.filter((x) => !x.classList.contains('ignore'))
 								.forEach((select) => {
 									SetSetting(select, select.selectedIndex, false, Modal.getAttribute('data-setting'));
 								});
+
 							Save();
 							setTimeout(function () {
 								LoadCurrent();
@@ -156,17 +151,18 @@ Elements.forEach((element) => {
 function LoadCurrent() {
 	chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 		Settings = MergeObjects(result.PolyPlus_Settings || Utilities.DefaultSettings, Utilities.DefaultSettings);
+		RecentSave = structuredClone(Settings)
 
 		console.log('Current Settings: ', Settings);
 
 		Elements.forEach((element) => {
-			console.log('For Each Update');
 			UpdateElementState(element);
 		});
 	});
 }
 
 function SetSetting(element, value, update, modalParent) {
+	document.title = '*unsaved | Poly+ Settings'
 	const name = element.getAttribute('data-setting');
 	let parent = element.getAttribute('data-parent');
 
@@ -181,7 +177,6 @@ function SetSetting(element, value, update, modalParent) {
 	if (parent !== null) {
 		let Parent = Object.values(Settings)[Object.keys(Settings).indexOf(parent)];
 		if (!isNaN(element.getAttribute('data-parent')) && element.getAttribute('data-parent') !== null) {
-			console.log('is numbere!!!!');
 			Parent = Parent[parseInt(element.getAttribute('data-parent'))];
 		}
 		Parent[name] = value;
@@ -193,11 +188,16 @@ function SetSetting(element, value, update, modalParent) {
 	}
 	if (SaveBtn.getAttribute('disabled')) {
 		SaveBtn.removeAttribute('disabled');
-	}
 
-	const getInObject = function (a, b) {
-		return Object.values(a)[Object.keys(a).indexOf(b)];
-	};
+		// Handle leaving the settings page before saving
+		window.onbeforeunload = function (e) {
+			return "Are you sure you'd like to leave? Your Poly+ settings haven't been saved."
+		};
+	}
+	if (AreIdentical(Settings, RecentSave) === true) {
+		document.title = 'Poly+ Settings'
+		SaveBtn.disabled = true
+	}
 }
 
 function GetSettingValue(element, modalParent) {
@@ -217,40 +217,31 @@ function GetSettingValue(element, modalParent) {
 		} else {
 			Status = Object.values(Parent)[Object.keys(Parent).indexOf(name)];
 		}
-
-		/*
-    if (!isNaN(element.getAttribute('data-parent'))) {
-      Parent = Parent[parseInt(element.getAttribute('data-parent'))]
-    }
-    Status = Object.values(Parent)[Object.keys(Parent).indexOf(Status)]
-    */
 	} else {
 		Status = Settings[Status];
 	}
-	console.log('Get Value Result', Status);
+
+	if (element.tagName === 'SELECT' && element.getAttribute('data-useValue') === 'true') {
+		Status = Array.from(element.children).indexOf(element.querySelector('option[value="' + Status + '"]'))
+	}
 
 	return Status;
 }
 
 function UpdateElementState(element, status) {
-	console.log('Update Element State', element, status);
-
 	const Button = element.getElementsByClassName('toggle-btn')[0];
 
 	if (status === undefined) {
-		console.log('Update Element State, no status provided');
 		status = GetSettingValue(Button);
 	}
 
 	if (status === true) {
-		console.log('Is Enabled so Set False');
 		element.classList.add('enabled');
 		element.classList.remove('disabled');
 		Button.innerText = 'Disable';
 		Button.classList.add('btn-danger');
 		Button.classList.remove('btn-success');
 	} else {
-		console.log('Is Disabled so Set True');
 		element.classList.add('disabled');
 		element.classList.remove('enabled');
 		Button.innerText = 'Enable';
@@ -260,15 +251,12 @@ function UpdateElementState(element, status) {
 
 	let SelectInput = element.getElementsByTagName('select')[0];
 	if (SelectInput) {
-		console.log('Select Found');
 		SelectInput.selectedIndex = GetSettingValue(SelectInput);
 	}
 
 	let Checkbox = Array.from(element.getElementsByTagName('input'));
 	if (Checkbox.length > 0) {
-		console.log('Checkbox/Input(s) Found', Checkbox);
 		Checkbox.forEach((check) => {
-			console.log('check', GetSettingValue(check));
 			check.checked = GetSettingValue(check);
 		});
 	}
@@ -277,9 +265,13 @@ function UpdateElementState(element, status) {
 function Save() {
 	document.title = 'Poly+ Settings';
 	SaveBtn.setAttribute('disabled', 'true');
-	chrome.storage.sync.set({PolyPlus_Settings: Settings, arrayOrder: true}, function () {
+	chrome.storage.sync.set({PolyPlus_Settings: Settings}, function () {
 		console.log('Saved successfully!');
+		RecentSave = Settings
 	});
+
+	// Handle leaving the settings page after saving
+	window.onbeforeunload = null
 
 	console.log('Save:', Settings);
 }
@@ -353,6 +345,11 @@ function MergeObjects(obj1, obj2) {
 	return mergedObj;
 }
 
+function AreIdentical(obj1, obj2) {
+	if (obj1.length !== obj2.length) { return false }
+	return JSON.stringify(obj1) === JSON.stringify(obj2)
+}
+
 function FormatBool(bool) {
 	if (bool === true) {
 		return 'enabled';
@@ -397,6 +394,7 @@ function CheckForUpdates() {
 }
 CheckForUpdatesButton.addEventListener('click', CheckForUpdates);
 
+/*
 fetch(chrome.runtime.getURL('resources/currencies.json'))
 	.then((response) => {
 		if (!response.ok) {
@@ -411,6 +409,7 @@ fetch(chrome.runtime.getURL('resources/currencies.json'))
 	.catch((error) => {
 		console.log(error);
 	});
+*/
 
 chrome.storage.local.get(['PolyPlus_OutOfDate', 'PolyPlus_LiveVersion', 'PolyPlus_ReleaseNotes', 'PolyPlus_SkipUpdate'], function (result) {
 	const OutOfDate = result.PolyPlus_OutOfDate || false;

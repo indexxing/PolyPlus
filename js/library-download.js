@@ -1,8 +1,8 @@
 const AssetID = window.location.pathname.split('/')[2];
-const LibraryType = document.querySelectorAll('ol a')[1].innerText;
-const LibraryTypes = ['Models', 'Audio', 'Decal', 'Mesh'];
+const LibraryType = document.querySelectorAll('ol a')[1].innerText.toLowerCase();
+const LibraryTypes = ['model', 'audio', 'decal', 'mesh'];
 
-if (LibraryTypes.indexOf(LibraryType) !== -1) {
+if (LibraryTypes.filter((x) => !LibraryTypes.some(element => element.startsWith(LibraryType))).length > 0) {
 	chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 		Settings = result.PolyPlus_Settings || {};
 
@@ -19,21 +19,21 @@ if (LibraryTypes.indexOf(LibraryType) !== -1) {
 		Dropdown.insertBefore(DownloadLink, Dropdown.children[Dropdown.children.length - 1]);
 
 		switch (LibraryType) {
-			case 'Models':
+			case LibraryType.startsWith('model'):
 				DownloadLink.href = 'https://api.polytoria.com/v1/models/get-model?id=' + AssetID;
 				break;
-			case 'Audio':
+			case LibraryType.startsWith('audio'):
 				const AudioBlob = new Blob([document.getElementsByTagName('audio')[0]], {type: 'octet-steam'});
 				DownloadLink.href = URL.createObjectURL(AudioBlob);
 				DownloadLink.download = document.getElementsByTagName('h1')[0].innerText + '.mp3';
-			case 'Decal':
+			case LibraryType.startsWith('decal'):
 				const DecalBlob = new Blob([document.getElementsByClassName('store-thumbnail')[0]], {type: 'image/png'});
 				DownloadLink.href = URL.createObjectURL(DecalBlob);
 				DownloadLink.download = document.getElementsByTagName('h1')[0].innerText + '.png';
 				break;
 		}
 
-		if (LibraryType === 'Mesh') {
+		if (LibraryType.startsWith('mesh')) {
 			let MeshURL = null;
 			DownloadLink.addEventListener('click', async function () {
 				if (MeshURL !== null) {

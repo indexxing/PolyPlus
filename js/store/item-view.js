@@ -31,7 +31,7 @@ var Utilities;
 			Utilities.InjectResource('registerTooltips');
 		}
 
-		if (Settings.IRLPriceWithCurrency.Enabled === true && ItemOwned === false) {
+		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true && ItemOwned === false) {
 			IRLPrice();
 		}
 
@@ -54,11 +54,10 @@ var Utilities;
 		}
 
 		if (document.getElementById('resellers') !== null) {
-			if (Settings.HoardersList.Enabled === true) {
-				console.log(parseInt(Settings.HoardersList.MinCopies));
+			if (Settings.HoardersList && Settings.HoardersList.Enabled === true) {
 				HoardersList(parseInt(Settings.HoardersList.MinCopies), Settings.HoardersList.AvatarsEnabled);
 			}
-		} else if (document.getElementById('timer') && /\d/.test(document.getElementById('timer').innerText)) {
+		} else if (Settings.ItemOwnerCheckOn === true && document.getElementById('timer') && /\d/.test(document.getElementById('timer').innerText)) {
 			CheckOwner();
 		}
 	});
@@ -301,16 +300,17 @@ function TryOnItems() {
 	TryOnModal.classList = 'polyplus-modal';
 	TryOnModal.setAttribute('style', 'width: 450px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;');
 	TryOnModal.innerHTML = `
-  <div class="row text-muted mb-2" style="font-size: 0.8rem;">
-    <div class="col">
-      <h5 class="mb-0" style="color: #fff;">Preview</h5>
-      Try this avatar on your avatar before purchasing it!
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-info w-100 mx-auto" onclick="this.parentElement.parentElement.parentElement.close();">X</button>
-    </div>
-  </div>
-  <div class="modal-body"></div>
+	<div class="row text-muted mb-2" style="font-size: 0.8rem;">
+		<div class="col">
+			<h5 class="mb-0" style="color: #fff;">Preview</h5>
+				Try this avatar on your avatar before purchasing it!
+			</div>
+			<div class="col-md-2">
+				<button class="btn btn-info w-100 mx-auto" onclick="this.parentElement.parentElement.parentElement.close();">X</button>
+			</div>
+		</div>
+	</div>
+	<div class="modal-body"></div>
   `;
 
 	document.body.prepend(TryOnModal);
@@ -400,16 +400,27 @@ async function HoardersList(min, avatars) {
 			}
 		}
 
+		let AvatarsFetched = 0;
 		let Hoarders = await new Promise(async (resolve, reject) => {
-			const Sorted = Object.values(Formatted)
-				.filter((x, index) => x.copies >= min)
-				.sort((a, b) => b.copies - a.copies);
+			const FormattedValues = Object.values(Formatted).filter((x, index) => x.copies >= 2)
 			if (avatars === true) {
-				for (let hoarder of Sorted) {
-					const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json()).thumbnail.icon;
-					hoarder.user.avatar = Avatar;
+				for (let hoarder of FormattedValues) {
+					if (AvatarsFetched < 15) {
+						try {
+							AvatarsFetched++
+							const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json());
+							console.log(hoarder.user.username, Avatar)
+							hoarder.user.avatar = Avatar.thumbnail.icon;
+						} catch(error) {
+							hoarder.user.avatar = ''
+							console.log(hoarder.user.username + ` (${hoarder.user.id}) - avatar failed`)
+						}
+					}
 				}
 			}
+			const Sorted = FormattedValues
+				.filter((x, index) => x.copies >= min)
+				.sort((a, b) => b.copies - a.copies);
 			resolve(Sorted);
 		});
 		let AmountOfHoarders = Hoarders.length;
@@ -421,91 +432,79 @@ async function HoardersList(min, avatars) {
 		}
 
 		TabContent.innerHTML = `
-    <div id="p+hoarders-container">
-      ${
-				Groups[Page] !== undefined
-					? Groups[Page].map(
-							(x) => `
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="row">
-            ${
-							avatars === true
-								? `
-            <div class="col-auto">
-              <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
-            </div>
-            `
-								: ''
+    	<div id="p+hoarders-container">
+			${ Groups[Page] !== undefined ? Groups[Page].map((x) => `
+			<div class="card mb-3">
+				<div class="card-body">
+					<div class="row">
+						${ avatars === true ? `
+						<div class="col-auto">
+							<img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+						</div>
+						` : ''
 						}
-            <div class="col d-flex align-items-center">
-              <div>
-                <h6 class="mb-1">
-                  <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
-                </h6>
-                <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
-              </div>
-            </div>
-            <div class="col-auto d-flex align-items-center">
-              <!--
-              <div>
-                <h5 style="margin: 0px;margin-right: 10px;">${((x.copies / InitialOwners.total) * 100).toFixed(2)}%</h5>
-              </div>
-              -->
-              <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
-                <i class="fad fa-exchange-alt me-1"></i>
-                <span class="d-none d-sm-inline">Trade</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      `
-						).join('')
-					: `
-      <div class="card mb-3">
-        <div class="card-body text-center py-5 text-muted">
-          <h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
-          <h5> No hoarders </h5>
-          <p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
-        </div>
-      </div>
-      `
-			}
-    </div>
-    <nav aria-label="Hoarders">
-      <ul class="pagination justify-content-center">
-        <li style="margin-top: auto; margin-bottom: auto;">
-          <select class="form-select form-select-sm" style="height: 37px !important;" id="p+hoarders-min-copies">
-            <option value="2">Min. 2+ Copies</option>
-            <option value="3">Min. 3+ Copies</option>
-            <option value="5">Min. 5+ Copies</option>
-            <option value="10">Min. 10+ Copies</option>
-            <option value="15">Min. 15+ Copies</option>
-            <option value="35">Min. 35+ Copies</option>
-          </select>
-        </li>
-        <li class="page-item disabled">
-          <a class="page-link" href="#!" id="p+hoarders-first-pg">«</a>
-        </li>
-        <li class="page-item disabled">
-          <a class="page-link" href="#!" tabindex="-1" id="p+hoarders-prev-pg">‹</a>
-        </li>
-        <li class="page-item active">
-          <a class="page-link">
-            <span class="visually-hidden">Page</span>
-            <span id="p+hoarders-current-pg">1</span>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#!" id="p+hoarders-next-pg">›</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#!" id="p+hoarders-last-pg">»</a>
-        </li>
-      </ul>
-    </nav>
-    `;
+						<div class="col d-flex align-items-center">
+							<div>
+								<h6 class="mb-1">
+									<a class="text-reset" href="/u/${x.user.username}">${x.user.username}</a>
+								</h6>
+								<small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+							</div>
+						</div>
+						<div class="col-auto d-flex align-items-center">
+							<a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+								<i class="fad fa-exchange-alt me-1"></i>
+								<span class="d-none d-sm-inline">Trade</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			`
+			).join('') : `
+			<div class="card mb-3">
+				<div class="card-body text-center py-5 text-muted">
+				<h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
+				<h5> No hoarders </h5>
+				<p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
+				</div>
+			</div>
+			`}
+		</div>
+		<nav aria-label="Hoarders">
+			<ul class="pagination justify-content-center">
+				<li style="margin-top: auto; margin-bottom: auto;">
+					<select class="form-select form-select-sm" style="height: 37px !important;" id="p+hoarders-min-copies">
+						<option value="2">Min. 2+ Copies</option>
+						<option value="3">Min. 3+ Copies</option>
+						<option value="5">Min. 5+ Copies</option>
+						<option value="10">Min. 10+ Copies</option>
+						<option value="15">Min. 15+ Copies</option>
+						<option value="35">Min. 35+ Copies</option>
+					</select>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link" href="#!" id="p+hoarders-first-pg">«</a>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link" href="#!" tabindex="-1" id="p+hoarders-prev-pg">‹</a>
+				</li>
+				<li class="page-item active">
+					<a class="page-link">
+						<span class="visually-hidden">Page</span>
+						<span id="p+hoarders-current-pg">1</span>
+					</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="#!" id="p+hoarders-next-pg">›</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="#!" id="p+hoarders-last-pg">»</a>
+				</li>
+			</ul>
+		</nav>
+		<small class="text-muted text-center mt-1 mb-3 d-block" style="font-size: 0.7rem;">feature of Poly+</small>
+		`;
 		Utilities.InjectResource('registerTooltips');
 
 		const Container = document.getElementById('p+hoarders-container');
@@ -582,53 +581,47 @@ async function HoardersList(min, avatars) {
 			Current.innerText = Page + 1;
 
 			if (Groups[Page] !== undefined) {
-				Container.innerHTML = Groups[Page].map(
-					(x) => `
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="row">
-              ${
-								avatars === true
-									? `
-              <div class="col-auto">
-                <img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
-              </div>
-              `
-									: ''
+				Container.innerHTML = Groups[Page].map((x) => `
+				<div class="card mb-3">
+					<div class="card-body">
+						<div class="row">
+							${ avatars === true ? `
+							<div class="col-auto">
+								<img src="${x.user.avatar}" alt="${x.user.username}" width="72" class="rounded-circle border border-2 border-secondary bg-dark">
+							</div>
+							` : ''
 							}
-              <div class="col d-flex align-items-center">
-                <div>
-                  <h6 class="mb-1">
-                    <a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
-                  </h6>
-                  <small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
-                </div>
-              </div>
-              <div class="col-auto d-flex align-items-center">
-                <a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
-                  <i class="fad fa-exchange-alt me-1"></i>
-                  <span class="d-none d-sm-inline">Trade</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        `
+							<div class="col d-flex align-items-center">
+								<div>
+									<h6 class="mb-1">
+										<a class="text-reset" href="/users/${x.user.id}">${x.user.username}</a>
+									</h6>
+									<small class="text-muted">${x.copies} Copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${x.serials.sort((a, b) => a - b).join(', #')}"></i></small>
+								</div>
+							</div>
+							<div class="col-auto d-flex align-items-center">
+								<a class="btn btn-warning" type="button" href="/trade/new/${x.user.id}">
+									<i class="fad fa-exchange-alt me-1"></i>
+									<span class="d-none d-sm-inline">Trade</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				`
 				).join('');
 
 				Utilities.InjectResource('registerTooltips');
 			} else {
 				Container.innerHTML = `
-        <div class="card mb-3">
-          <div class="card-body text-center py-5 text-muted">
-            <h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
-            <h5> No hoarders </h5>
-            <p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
-          </div>
-        </div>
-        `;
-
-				MinCopies.disabled = true;
+				<div class="card mb-3">
+					<div class="card-body text-center py-5 text-muted">
+						<h1 class="display-3"><i class="fa-solid fa-rectangle-history-circle-user"></i></h1>
+						<h5> No hoarders </h5>
+						<p class="mb-0">This item is fresh and doesn't have any hoarders yet! Come back later!</p>
+					</div>
+				</div>
+				`;
 			}
 
 			if (Page > 0) {

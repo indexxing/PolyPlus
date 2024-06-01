@@ -15,7 +15,7 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 	Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 	Utilities = Utilities.default;
 
-	if (Settings.IRLPriceWithCurrency.Enabled === true) {
+	if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 		Array.from(ItemGrid.children).forEach((element) => {
 			LoadIRLPrices(element);
 		});
@@ -59,7 +59,7 @@ const observer = new MutationObserver(async function (list) {
 	for (const record of list) {
 		for (const element of record.addedNodes) {
 			if (element.tagName === 'DIV' && element.classList.value === 'mb-3 itemCardCont') {
-				if (Settings.IRLPriceWithCurrency.Enabled === true) {
+				if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 					LoadIRLPrices(element);
 				}
 

@@ -11,7 +11,7 @@ let Theme = ``;
 		Settings = MergeObjects(RawSettings || Utilities.DefaultSettings, Utilities.DefaultSettings);
 
 		// If theme exists, create a style element to represent it
-		if (Settings.ThemeCreator.Enabled && Settings.ThemeCreator.Enabled === true) {
+		if (Settings.ThemeCreator && Settings.ThemeCreator.Enabled === true) {
 			switch (Settings.ThemeCreator.BGImageSize) {
 				case 0:
 					Settings.ThemeCreator.BGImageSize = 'fit';
@@ -113,8 +113,8 @@ let Theme = ``;
 		}
 	});
 
-	if (Settings.HideUserAds.Enabled === true) {
-		if (Settings.HideUserAds.Banners === true) {
+	if (Settings.HideUserAds && Settings.HideUserAds.Enabled === true) {
+		if (Settings.HideUserAds.Banners && Settings.HideUserAds.Banners === true) {
 			Theme += `
       div[style^="max-width: 728px;"]:has(a[href^="/ads"]) {
         display: none;
@@ -122,7 +122,7 @@ let Theme = ``;
       `;
 		}
 
-		if (Settings.HideUserAds.Rectangles === true) {
+		if (Settings.HideUserAds.Rectangles && Settings.HideUserAds.Rectangles === true) {
 			Theme += `
       div[style^="max-width: 300px;"]:has(a[href^="/ads"]) {
         display: none;
@@ -154,7 +154,7 @@ let Theme = ``;
 
 		const UserData = JSON.parse(window.localStorage.getItem('p+account_info'));
 
-		if (Settings.IRLPriceWithCurrency.Enabled === true) {
+		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 			const IRLResult = await Utilities.CalculateIRL(document.querySelector('.brickBalanceCont').innerText.replace(/\s+/g, ''), Settings.IRLPriceWithCurrency.Currency);
 			// Desktop
 			document.querySelector('.text-success .brickBalanceCount').innerHTML += ` (${IRLResult.icon}${IRLResult.result} ${IRLResult.display})`;
