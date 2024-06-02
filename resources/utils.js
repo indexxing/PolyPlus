@@ -205,6 +205,10 @@ export default {
 			Result = Result.toFixed(2);
 		}
 
+		if (IsIconAbbr) {
+			Icon = "$"
+		}
+
 		return {
 			result: Result,
 			display: Display,
