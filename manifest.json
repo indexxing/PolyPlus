@@ -38,6 +38,11 @@
 		},
 
 		{
+			"matches": ["https://polytoria.com/create/image", "https://polytoria.com/create/image/"],
+			"js": ["/js/create/image.js"]
+		},
+
+		{
 			"matches": ["https://polytoria.com/forum/post/**"],
 			"js": ["/js/forum/forum-view.js"]
 		},
