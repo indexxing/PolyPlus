@@ -97,7 +97,8 @@ export default {
 			Enabled: false,
 			Banners: true,
 			Rectangles: true
-		}
+		},
+		UploadMultipleDecals: true,
 	},
 	Limits: {
 		PinnedGames: 10,
@@ -258,5 +259,16 @@ export default {
 		}
 
 		return mergedObj;
+	},
+	RatelimitRepeatingFetch: async function (...args) {
+		const req = await fetch(...args);
+	
+		if (req.status === 429) {
+			const retryAfter = req.headers.get('Retry-After') || 1; // Retry after 1 second if no header is present, else use the header value
+			await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
+			return RatelimitRepeatingFetch(...args);
+		}
+	
+		return req;
 	}
 };

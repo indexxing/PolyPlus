@@ -1,6 +1,5 @@
 var Settings;
 let Theme = ``;
-
 (async () => {
 	let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 	Utilities = Utilities.default;
@@ -112,6 +111,20 @@ let Theme = ``;
       `;
 		}
 	});
+
+
+  const combination = "reload";
+  let currentCombination = "";
+  document.addEventListener("keypress", function(e) {
+    currentCombination += e.key;
+    if (currentCombination === combination && document.activeElement.tagName !== "INPUT") {
+      console.log("Reloading Poly+...");
+      chrome.runtime.sendMessage({ action: "reload" });
+      window.location.reload();
+    } else if (!combination.startsWith(currentCombination)) {
+      currentCombination = "";
+    }
+  });
 
 	if (Settings.HideUserAds && Settings.HideUserAds.Enabled === true) {
 		if (Settings.HideUserAds.Banners && Settings.HideUserAds.Banners === true) {

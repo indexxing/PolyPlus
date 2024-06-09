@@ -77,7 +77,8 @@ const DefaultSettings = {
 		Enabled: false,
 		Banners: true,
 		Rectangles: true
-	}
+	},
+	UploadMultipleDecals: true
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -296,3 +297,9 @@ function MergeObjects(obj1, obj2) {
 
 	return mergedObj;
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	if (request.action === 'reload') {
+		chrome.runtime.reload();
+	}
+});
