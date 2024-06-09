@@ -152,6 +152,7 @@ function PinnedGames() {
 }
 
 function BestFriends() {
+	return
 	Array.from(document.querySelectorAll('[bestFriend]')).forEach((element) => {
 		element.removeAttribute('bestFriend');
 		element.getElementsByClassName('friend-name')[0].style.color = 'initial';

@@ -194,10 +194,12 @@ function SetSetting(element, value, update, modalParent) {
 			return "Are you sure you'd like to leave? Your Poly+ settings haven't been saved."
 		};
 	}
+	/*
 	if (AreIdentical(Settings, RecentSave) === true) {
 		document.title = 'Poly+ Settings'
 		SaveBtn.disabled = true
 	}
+	*/
 }
 
 function GetSettingValue(element, modalParent) {

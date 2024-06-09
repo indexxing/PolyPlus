@@ -175,8 +175,6 @@ function TryOnItems() {
 	const Avatar = {
 		useCharacter: true,
 		items: [],
-		shirt: 'https://c0.ptacdn.com/assets/uWrrnFGwgNN5W171vqYTWY7E639rKiXK.png',
-		pants: 'https://c0.ptacdn.com/assets/HD6TFdXD8CaflRNmd84VCNyNsmTB0SH3.png',
 		headColor: '#e0e0e0',
 		torsoColor: '#e0e0e0',
 		leftArmColor: '#e0e0e0',

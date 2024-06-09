@@ -95,13 +95,12 @@ function RequestGameProfile() {
 async function CopyOwnedPlace() {
 	console.log('ran function');
 	if (PlaceData === null) {
-		PlaceData = await fetch('https://api.polytoria.com/v1/places/' + 2640);
+		PlaceData = await fetch('https://api.polytoria.com/v1/places/' + PlaceID);
 		PlaceData = await PlaceData.json();
 	}
 
 	if (PlaceData.creator.id !== parseInt(JSON.parse(window.localStorage.getItem('p+account_info')).ID)) {
-		console.log('returned');
-		//return
+		return
 	}
 
 	const DIV = document.createElement('div');
@@ -123,9 +122,11 @@ async function CopyOwnedPlace() {
 
 		let CreatorToken = await fetch('https://polytoria.com/api/places/edit', {
 			method: 'POST',
+			/*
 			headers: {
 				'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value
 			},
+			*/
 			body: JSON.stringify({placeID: PlaceID})
 		});
 		CreatorToken = await CreatorToken.json();

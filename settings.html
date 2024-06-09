@@ -321,6 +321,63 @@
 				</div>
 			</div>
 		</dialog>
+		<dialog class="w-75" id="AutoAdBidding-Modal" data-setting="AutoAdBidding">
+			<div class="modal-header">
+				<p>Automatic Ad Bidding</p>
+			</div>
+			<div class="modal-body">
+				<p>description (max 10 ads)</p>
+				<hr class="mt-2 mb-3" />
+				<div class="input-group mb-2">
+					<input type="text" class="form-control ignore" placeholder="Ad ID..">
+					<button class="btn btn-primary" id="auto-ad-bidding-add">Add</button>
+				</div>
+				<table class="table">
+					<thead>
+					  <tr>
+						<th scope="col">#</th>
+						<th scope="col">Ad Name</th>
+						<th scope="col">Bid</th>
+						<th scope="col">Automation</th>
+						<th scope="col">Actions</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  <tr>
+						<th scope="row">1</th>
+						<td><a href="https://polytoria.com/create/ad/632">"everdayi m shuffling"</a></td>
+						<td class="text-success"><span class="pi">$</span> 150</td>
+						<td>
+							<select class="form-select ignore">
+								<option value="daily" selected>Daily</option>
+								<option value="weekly">Weekly</option>
+								<option value="monthly">Monthly</option>
+							</select>
+						</td>
+						<td>
+							<div role="group" class="btn-group w-100">
+								<button class="btn btn-success w-25">
+									BID
+								</button>
+								<button class="btn btn-orange w-25">
+									EDIT
+								</button>
+								<button class="btn btn-danger w-25">
+									DELETE
+								</button>
+							</div>
+						</td>
+					  </tr>
+					</tbody>
+				</table>
+
+				<div role="group" class="btn-group w-100">
+					<button class="btn btn-success w-25" data-setting="[save]">Save</button>
+					<button class="btn btn-warning w-25" data-setting="[reset-default]">Reset to Defaults</button>
+					<button class="btn btn-secondary w-25" data-setting="[cancel]">Cancel</button>
+				</div>
+			</div>
+		</dialog>
 		<div id="page">
 			<h1 class="text-center" style="text-shadow: 0px 0px 5px orange; padding-bottom: 5px; margin-bottom: 10px;">Poly+ Settings</h1>
 			<p class="setting-container" id="pinned-games">
@@ -343,6 +400,7 @@
 				<br />
 				<span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
 			</p>
+			<!--
 			<p class="setting-container" id="best-friends">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
@@ -352,6 +410,7 @@
 				<br />
 				<span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: <span id="BestFriends-limit"></span> best friends)</span>
 			</p>
+			-->
 			<p class="setting-container" id="improved-friend-lists">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
@@ -607,6 +666,18 @@
 					<label class="form-check-label" for="hide-user-ads-rectangle"> Hide Rectangle User Ads </label>
 				</span>
 			</p>
+			<!---
+			<p class="setting-container" id="auto-ad-bidding">
+				<span class="indicator">&nbsp;</span>
+				<span class="title">
+					Automatic Ad Bidding
+					<button class="btn btn-sm toggle-btn" data-setting="AutoAdBiddingOn">Toggle</button>
+					<button class="btn btn-primary btn-sm" data-modal="AutoAdBidding">Options</button>
+				</span>
+				<br />
+				<span class="desc">description</span>
+			</p>
+			-->
 			<div class="card">
 				<div class="card-body">
 					<h3>EXPERIMENTAL SETTINGS</h3>

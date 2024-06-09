@@ -174,10 +174,21 @@ if (new URLSearchParams(window.location.search).has('sandbox')) {
 		});
 
 		let LoadAsset = document.getElementById('load-asset');
+		const LoadAssetType = document.getElementById('load-asset-type')
 		LoadAsset.addEventListener('click', async function () {
-			console.log('clickk');
-			const MeshURL = (await (await fetch('https://api.polytoria.com/v1/assets/serve-mesh/' + LoadAsset.previousElementSibling.value)).json()).url;
-			Avatar.items.push(MeshURL);
+			if (!LoadAsset.previousElementSibling.value.startsWith('http') && !LoadAsset.previousElementSibling.value.startsWith('data:')) {
+				if (LoadAssetType.options[LoadAssetType.selectedIndex].value === 'hat') {
+					Avatar.items.push((await (await fetch('https://api.polytoria.com/v1/assets/serve-mesh/' + LoadAsset.previousElementSibling.value)).json()).url);
+				} else {
+					Avatar[LoadAssetType.options[LoadAssetType.selectedIndex].value] = (await (await fetch('https://api.polytoria.com/v1/assets/serve/' + LoadAsset.previousElementSibling.value + '/Asset')).json()).url;
+				}
+			} else {
+				if (LoadAssetType.options[LoadAssetType.selectedIndex].value === 'hat') {
+					Avatar.items.push(LoadAsset.previousElementSibling.value);
+				} else {
+					Avatar[LoadAssetType.options[LoadAssetType.selectedIndex].value] = LoadAsset.previousElementSibling.value
+				}
+			}
 			UpdateAvatar();
 		});
 	});
@@ -190,7 +201,7 @@ if (new URLSearchParams(window.location.search).has('sandbox')) {
 }
 
 function UpdateAvatar() {
-	GenerateHash().then((hash) => {
+	FormatAvatar().then((hash) => {
 		IFrame.addEventListener('load', function () {
 			IFrame.src = 'https://polytoria.com/ptstatic/itemview/#' + hash;
 		});
@@ -272,10 +283,19 @@ async function FormatAvatar() {
 	// Hats, Tools: https://api.polytoria.com/v1/assets/serve-mesh/:id
 	// or: https://api.polytoria.com/v1/assets/serve/:id/Asset
 
+	const meshPromises = Avatar.items.map(async (item, index) => {
+		if (typeof item === 'number') {
+			console.log(item);
+			FormattedAvatar.items[index] = await FetchMesh(item)
+			console.log('after url');
+			//Avatar.items[index] = URL
+		}
+	});
+
 	Avatar.items.forEach(async (item, index) => {
 		if (typeof item === 'number') {
 			console.log(item);
-			await FetchMesh(item)
+			FetchMesh(item)
 				.then((URL) => {
 					console.log('URL: ' + URL);
 					FormattedAvatar.items[index] = URL;
@@ -294,12 +314,10 @@ async function FormatAvatar() {
 	}
 
 	if (FormattedAvatar.face === undefined) { FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png'; }
-	if (!FormattedAvatar.face.startsWith('data:') && !FormattedAvatar.face.startsWith('http')) {
-		if (FormattedAvatar.face && typeof FormattedAvatar.face === 'number') {
-			FormattedAvatar.face = await FetchAsset(FormattedAvatar.face);
-		} else {
-			FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png';
-		}
+	if (FormattedAvatar.face && typeof FormattedAvatar.face === 'number') {
+		FormattedAvatar.face = await FetchAsset(FormattedAvatar.face);
+	} else if (FormattedAvatar.face === undefined) {
+		FormattedAvatar.face = 'https://c0.ptacdn.com/static/3dview/DefaultFace.png';
 	}
 
 	if (typeof FormattedAvatar.shirt === 'number') {
@@ -308,9 +326,14 @@ async function FormatAvatar() {
 	if (typeof FormattedAvatar.pants === 'number') {
 		FormattedAvatar.pants = await FetchAsset(FormattedAvatar.pants);
 	}
+	
+	await Promise.all(meshPromises)
 
-	console.log('Real Avatar: ', Avatar, 'Formatted: ', FormattedAvatar);
-	return FormattedAvatar;
+	console.log('Real Avatar: ', Avatar)
+	console.log('Formatted: ', FormattedAvatar)
+	console.log('URI: ', btoa(encodeURIComponent(JSON.stringify(FormattedAvatar))))
+	console.log('Fix: ', JSON.stringify(decodeURIComponent(atob(btoa(encodeURIComponent(JSON.stringify(FormattedAvatar)))))));
+	return btoa(encodeURIComponent(JSON.stringify(FormattedAvatar)));
 }
 
 function LoadMyself() {
@@ -399,6 +422,23 @@ async function FetchMesh(id) {
 		return null;
 	}
 	console.log('https://api.polytoria.com/v1/assets/serve-mesh/:id'.replace(':id', id));
+
+	return new Promise((resolve, reject) => {
+		fetch('https://api.polytoria.com/v1/assets/serve-mesh/:id'.replace(':id', id))
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network not ok');
+				}
+				return response.json();
+			})
+			.then((data) => {
+				console.log(data, 'finished', data.url);
+				resolve(data.url);
+			})
+			.catch((error) => {
+				console.log('Fetch error: ' + error);
+			});
+	})
 	return fetch('https://api.polytoria.com/v1/assets/serve-mesh/:id'.replace(':id', id))
 		.then((response) => {
 			if (!response.ok) {

@@ -1,4 +1,4 @@
-let UserID = window.location.pathname.split('/')[2];
+let Username = window.location.pathname.split('/')[2];
 const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0];
 const AvatarHeading = document.querySelector('.section-title:has(i.fa-user-crown)');
 
@@ -9,9 +9,9 @@ let CalculateButton;
 
 let Utilities;
 
-if (UserID) {
+if (Username) {
 	(async () => {
-		UserID = (await (await fetch('https://api.polytoria.com/v1/users/')).json()).id;
+		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json()).id;
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
 
