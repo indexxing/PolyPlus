@@ -1,5 +1,6 @@
 const SettingsURL = chrome.runtime.getURL('settings.html');
 const InExtensionSettings = window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash !== '#dev' && window.location.hash !== '#debug';
+
 if (InExtensionSettings === true) {
 	window.location.href = SettingsURL + window.location.hash;
 }
