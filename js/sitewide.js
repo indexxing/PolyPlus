@@ -112,12 +112,11 @@ let Theme = ``;
 		}
 	});
 
-
   const combination = "reload";
   let currentCombination = "";
   document.addEventListener("keypress", function(e) {
     currentCombination += e.key;
-    if (currentCombination === combination && document.activeElement.tagName !== "INPUT") {
+    if (currentCombination === combination && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
       console.log("Reloading Poly+...");
       chrome.runtime.sendMessage({ action: "reload" });
       window.location.reload();

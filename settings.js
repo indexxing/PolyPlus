@@ -328,6 +328,48 @@ function LoadThemeJSON(string) {
 	}
 }
 
+chrome.storage.sync.get(['PolyPlus_AutoAds'], function(result){
+	let AutoAds = result.PolyPlus_AutoAds || [];
+
+	const Modal = document.getElementById("AutoAdBidding-Modal")
+	const AddButton = document.getElementById('auto-ad-bidding-add')
+
+	AddButton.addEventListener('click', async function() {
+		const Page = new DOMParser().parseFromString((await (await fetch('https://polytoria.com/create/ad/' + AddButton.previousElementSibling.value)).text()), 'text/html')
+
+
+	})
+
+	const AddRow = function(index, info) {
+		const Row = document.createElement('tr')
+		Row.innerHTML = `
+		<th scope="row">${index+1}</th>
+		<td><a href="https://polytoria.com/create/ad/${info.id}">"${info.name}"</a></td>
+		<td class="text-success"><span class="pi">$</span> 150</td>
+		<td>
+			<select class="form-select ignore">
+				<option value="daily" selected>Daily</option>
+				<option value="weekly">Weekly</option>
+				<option value="monthly">Monthly</option>
+			</select>
+		</td>
+		<td>
+			<div role="group" class="btn-group w-100">
+				<button class="btn btn-success w-25">
+					BID
+				</button>
+				<button class="btn btn-orange w-25">
+					EDIT
+				</button>
+				<button class="btn btn-danger w-25">
+					DELETE
+				</button>
+			</div>
+		</td>
+		`
+	}
+})
+
 function AreIdentical(obj1, obj2) {
 	if (obj1.length !== obj2.length) { return false }
 	return JSON.stringify(obj1) === JSON.stringify(obj2)

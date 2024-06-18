@@ -78,9 +78,12 @@ const DefaultSettings = {
 		Banners: true,
 		Rectangles: true
 	},
-	UploadMultipleDecals: true
+	UploadMultipleDecals: true,
+	GD_ServerBalanceOn: true,
+	AvatarDimensionToggleOn: true
 }
 
+// ON EXTENSION INSTALL / RELOAD
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
 		const MergedSettings = MergeObjects((result.PolyPlus_Settings || DefaultSettings), DefaultSettings)
@@ -88,6 +91,23 @@ chrome.runtime.onInstalled.addListener(() => {
 			console.log('Successfully merged settings')
 		})
 	})
+});
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+	if (request.action === 'reload') {
+		chrome.runtime.reload();
+	} else if (request.action === 'sweetalert2') {
+		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+			console.log([request.icon, request.title, request.text])
+			chrome.scripting
+				.executeScript({
+					target: {tabId: tabs[0].id},
+					func: OpenSweetAlert2Modal,
+					// would have just let it pass thru the object for sweetalert2 - but probably not a good idea lol
+					args: [request.icon, request.title, request.text]
+				})
+		})
+	}
 });
 
 // WHEN CLICKING ON EXTENSION ICON OPEN THE SETTINGS PAGE
@@ -168,7 +188,9 @@ chrome.contextMenus.removeAll(function () {
 		title: 'Run Update Notifier',
 		id: 'PolyPlus-RunUpdateNotifier',
 		contexts: ['all'],
-		documentUrlPatterns: ['https://polytoria.com/my/settings/polyplus*']
+		documentUrlPatterns: [
+			'https://polytoria.com/my/settings/polyplus*'
+		]
 	});
 
 	// COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
@@ -177,7 +199,13 @@ chrome.contextMenus.removeAll(function () {
 		id: 'PolyPlus-CopyID',
 		contexts: ['link'],
 		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
-		targetUrlPatterns: ['https://polytoria.com/places/**', 'https://polytoria.com/users/**', 'https://polytoria.com/u/**', 'https://polytoria.com/store/**', 'https://polytoria.com/guilds/**']
+		targetUrlPatterns: [
+			'https://polytoria.com/places/**',
+			'https://polytoria.com/users/**',
+			'https://polytoria.com/u/**',
+			'https://polytoria.com/store/**',
+			'https://polytoria.com/guilds/**'
+		]
 	});
 
 	// COPY AVATAR HASH CONTEXT MENU ITEM REGISTRATION
@@ -186,7 +214,9 @@ chrome.contextMenus.removeAll(function () {
 		id: 'PolyPlus-CopyAvatarHash',
 		contexts: ['image'],
 		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
-		targetUrlPatterns: ['https://c0.ptacdn.com/thumbnails/avatars/**', 'https://c0.ptacdn.com/thumbnails/avatars/**']
+		targetUrlPatterns: [
+			'https://c0.ptacdn.com/thumbnails/avatars/**'
+		]
 	});
 });
 
@@ -236,18 +266,18 @@ chrome.tabs.onActivated.addListener(function (info){
 });
 
 function CheckIfScriptApplies(url) {
-    return Manifest.content_scripts.forEach(script => {
-        COMMENT
-        if (matchesUrl(script.matches, url)) {
-            return true
-        }
-
+	const matches = Manifest.content_scripts.map(script => {
         script.matches.forEach(match => {
-            if (url.startsWith(match.replaceAll('*', ''))) {
+			console.log(url, match, url.startsWith(match))
+            if (url.startsWith(match)) {
                 return true
-            }
+            } else {
+				return false
+			}
         })
     })
+
+	return matches
 }
 
 function matchesUrl(patterns, url) {
@@ -260,11 +290,8 @@ function matchesUrl(patterns, url) {
 function CopyAssetID(id) {
 	navigator.clipboard
 		.writeText(id)
-		.then(() => {
-			alert('Successfully copied ID!');
-		})
-		.catch(() => {
-			alert('Failure to copy ID.');
+		.catch((err) => {
+			alert('Failure to copy ID.', err);
 		});
 }
 
@@ -277,6 +304,15 @@ function CopyAvatarHash(hash) {
 		.catch(() => {
 			alert('Failure to copy avatar hash.');
 		});
+}
+
+function OpenSweetAlert2Modal(icon, title, text) {
+	console.log(window, window.Swal, window.bootstrap)
+	window.Swal.fire({
+		icon: icon,
+		title: title,
+		text: text
+	})
 }
 
 // MergeObjects function was written by ChatGPT cause I was lazy and it was awhile ago
@@ -297,9 +333,3 @@ function MergeObjects(obj1, obj2) {
 
 	return mergedObj;
 }
-
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-	if (request.action === 'reload') {
-		chrome.runtime.reload();
-	}
-});

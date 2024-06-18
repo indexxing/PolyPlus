@@ -2,7 +2,7 @@ const AssetID = window.location.pathname.split('/')[2];
 const LibraryType = document.querySelectorAll('ol a')[1].innerText.toLowerCase();
 const LibraryTypes = ['model', 'audio', 'decal', 'mesh', 'shirt', 'pant'];
 
-if (LibraryTypes.filter((x) => !LibraryTypes.some(element => element.startsWith(LibraryType))).length > 0) {
+if (LibraryTypes.some(element => element.startsWith(LibraryType))) {
 	chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 		Settings = result.PolyPlus_Settings || {};
 

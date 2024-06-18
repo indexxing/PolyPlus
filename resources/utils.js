@@ -99,6 +99,8 @@ export default {
 			Rectangles: true
 		},
 		UploadMultipleDecals: true,
+		GD_ServerBalanceOn: true,
+		AvatarDimensionToggleOn: true
 	},
 	Limits: {
 		PinnedGames: 10,

@@ -44,12 +44,14 @@ var Utilities;
 		}
 
 		if (Settings.ReplaceItemSalesOn === true) {
-			const Sales = document.querySelectorAll('.col:has(h6):has(h3.small)')[2];
+			const Sales = document.querySelectorAll('.col:has(h6):has(h3.small)')[3];
 			if (Sales.children[1].innerText === '0') {
 				InitialOwners = await (await fetch('https://api.polytoria.com/v1/store/' + ItemID + '/owners?limit=100')).json();
 
-				Sales.children[0].innerText = 'Owners';
-				Sales.children[1].innerText = Owners.total.toLocaleString();
+				Sales.children[0].innerHTML = `Owners <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="${ (InitialOwners.total <= 15) ? InitialOwners.inventories.map((x) => x.user.username).join(', ') : InitialOwners.inventories.slice(0, 14).map((x) => x.user.username).join(', ') + ' ...' }"></i>`;
+				Sales.children[1].innerText = InitialOwners.total.toLocaleString();
+
+				Utilities.InjectResource("registerTooltips")
 			}
 		}
 
@@ -267,15 +269,12 @@ function TryOnItems() {
 						.then((data) => {
 							switch (AssetType) {
 								case 'Shirt':
-									console.log('IS SHIRT');
 									Avatar.shirt = data.url;
 									break;
 								case 'Pants':
-									console.log('IS PANTS');
 									Avatar.pants = data.url;
 									break;
 								case 'Face':
-									console.log('IS FACE');
 									Avatar.face = data.url;
 									break;
 							}
@@ -301,7 +300,7 @@ function TryOnItems() {
 	<div class="row text-muted mb-2" style="font-size: 0.8rem;">
 		<div class="col">
 			<h5 class="mb-0" style="color: #fff;">Preview</h5>
-				Try this avatar on your avatar before purchasing it!
+				Try this item on your avatar before purchasing it!
 			</div>
 			<div class="col-md-2">
 				<button class="btn btn-info w-100 mx-auto" onclick="this.parentElement.parentElement.parentElement.close();">X</button>

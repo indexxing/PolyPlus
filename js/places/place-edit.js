@@ -35,28 +35,16 @@ async function ActivityToggle() {
 	ActivityBtn.innerText = Status === true ? 'Deactivate' : 'Activate';
 	DIV.appendChild(ActivityBtn);
 
-	ActivityBtn.addEventListener('click', function () {
-		fetch(`https://polytoria.com/api/places/${PlaceID}/toggle-active`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value
-			}
-		})
-			.then((response) => {
-				if (!response.ok) {
-					throw new Error('Network not ok ' + response.status);
-				}
-				return response.json();
-			})
-			.then((data) => {
-				Status = data.isActive;
-				ActivityBtn.innerText = Status === true ? 'Deactivate' : 'Activate';
-				ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+	ActivityBtn.addEventListener('click', async function () {
+		const Toggle = (await (await fetch(`https://polytoria.com/api/places/${PlaceID}/toggle-active`,{ method: 'POST' })).json())
+		console.log(Toggle)
+		if (Toggle.success) {
+			Status = data.isActive;
+			ActivityBtn.innerText = Status === true ? 'Deactivate' : 'Activate';
+			ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
+		} else {
+			chrome.runtime.sendMessage({ action: "sweetalert2", icon: "error", title: "Error", text: Toggle.message });
+		}
 	});
 }
 
@@ -93,7 +81,6 @@ function RequestGameProfile() {
 }
 
 async function CopyOwnedPlace() {
-	console.log('ran function');
 	if (PlaceData === null) {
 		PlaceData = await fetch('https://api.polytoria.com/v1/places/' + PlaceID);
 		PlaceData = await PlaceData.json();
@@ -122,11 +109,6 @@ async function CopyOwnedPlace() {
 
 		let CreatorToken = await fetch('https://polytoria.com/api/places/edit', {
 			method: 'POST',
-			/*
-			headers: {
-				'X-CSRF-Token': document.querySelector('input[name="_csrf"]').value
-			},
-			*/
 			body: JSON.stringify({placeID: PlaceID})
 		});
 		CreatorToken = await CreatorToken.json();
@@ -144,7 +126,6 @@ async function CopyOwnedPlace() {
 				return response.blob();
 			})
 			.then((data) => {
-				//const JSONBlob = new Blob([data], {type: "application/xml"})
 				const DownloadURL = URL.createObjectURL(data);
 
 				const Link = document.createElement('a');

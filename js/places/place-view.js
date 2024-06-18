@@ -50,6 +50,10 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
 
+		if (Settings.GD_ServerBalanceOn && PlaceID === '9656') {
+			TheGreatDivide()
+		}
+
 		if (Settings.PinnedGamesOn === true) {
 			PinnedGames();
 		}
@@ -426,7 +430,7 @@ async function PlaceRevenue() {
 	const ResultText = document.createElement('li');
 	ResultText.classList = 'fw-normal text-success';
 	ResultText.style.letterSpacing = '0px';
-	ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString();
+	ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString() + ' <i class="fa fa-question"></i>';
 
 	CalculateRevenueButton.remove();
 	InfoColumns[1].appendChild(ResultText);
@@ -511,5 +515,38 @@ function GetAchievementDifficulty(percent) {
 		return 'Insane';
 	} else if (percent >= 0 && percent <= 0.9) {
 		return 'Impossible';
+	}
+}
+
+// Temp Feature for The Great Divide event
+async function TheGreatDivide() {
+	const Team = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/greatdivide')).json()).team
+	if (Team !== undefined) {
+		const Servers = Array.from(document.getElementById('servers-tabpane').children)
+
+		Servers.forEach(server => {
+			const TeamCounts = {
+				phantoms: server.getElementsByClassName('border-phantoms').length,
+			 	cobras: server.getElementsByClassName('border-cobras').length
+			}
+
+			let Enemy = "cobras"
+			if (Team === "cobras") { Enemy = "phantoms" }
+
+			if (TeamCounts[Team] < TeamCounts[Enemy]) {
+				console.log(server.getElementsByTagName('button')[0])
+				const UnbalancedText = document.createElement('p')
+				UnbalancedText.classList = 'mb-2'
+				UnbalancedText.style.fontSize = '0.7rem'
+				UnbalancedText.style.color = 'orange'
+				UnbalancedText.innerHTML = `*Potentially Unbalanced <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="${TeamCounts.cobras} Cobras and ${TeamCounts.phantoms} Phantoms"></i>`
+				
+				const ServerInfoColumn = server.getElementsByClassName('col-3')[0]
+				ServerInfoColumn.children[0].style.marginBottom = '0px'
+				ServerInfoColumn.insertBefore(UnbalancedText, ServerInfoColumn.children[1])
+
+				Utilities.InjectResource("registerTooltips")
+			}
+		})
 	}
 }

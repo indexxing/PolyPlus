@@ -65,7 +65,7 @@ var FriendContainer = document.querySelector('.card:has(.friendsPopup) .card-bod
 
 let NewContainer = document.createElement('div');
 NewContainer.style.display = 'none';
-NewContainer.classList = 'card card-dash mcard';
+NewContainer.classList = 'card card-dash mcard mb-3';
 NewContainer.style.animationDelay = '0.18s';
 NewContainer.innerHTML = ContainerElement;
 
@@ -87,7 +87,7 @@ FriendContainer.prepend(BestFriendsContainer);
 
 async function Update() {
 	chrome.storage.sync.get(['PolyPlus_PinnedGames'], function (result) {
-		PinnedGamesData = result.PolyPlus_PinnedGames || [];
+		PinnedGamesData = result.PolyPlus_PinnedGames.toSorted((a, b) => b - a) || [];
 
 		if (Settings.PinnedGamesOn === true) {
 			PinnedGames();
@@ -123,7 +123,7 @@ function PinnedGames() {
 		NewTitle.style.display = '';
 	}
 
-	PinnedGamesData.forEach((element) => {
+	for (let element of PinnedGamesData) {
 		fetch('https://api.polytoria.com/v1/places/' + element)
 			.then((response) => response.json())
 			.then((data) => {
@@ -148,7 +148,7 @@ function PinnedGames() {
 			.catch((error) => {
 				console.error('Error:', error);
 			});
-	});
+	}
 }
 
 function BestFriends() {
@@ -180,8 +180,13 @@ function BestFriends() {
 }
 
 var SecondaryColumn = document.getElementsByClassName('col-lg-8')[0];
-SecondaryColumn.insertBefore(NewContainer, SecondaryColumn.children[0]);
-SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[0]);
+if (document.getElementsByClassName('home-event-container')[0] === undefined) {
+	SecondaryColumn.insertBefore(NewContainer, SecondaryColumn.children[0]);
+	SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[0]);
+} else {
+	SecondaryColumn.insertBefore(NewContainer, SecondaryColumn.children[1]);
+	SecondaryColumn.insertBefore(NewTitle, SecondaryColumn.children[1]);
+}
 
 async function IRLPrice() {
 	(async () => {

@@ -20,6 +20,10 @@ body[data-URL^='/create/'] .col.d-flex.align-content-between.flex-wrap {
 	text-overflow: ellipsis !important;
 }
 
+#servers-tabpane .card {
+    margin-bottom: 10px;
+}
+
 /* ------------------------------------------ */
 
 /*
@@ -56,3 +60,35 @@ body:has(.polyplus-modal[open]) {
 }
 
 /* ------------------------------------------ */
+
+
+/*
+	EVENT PLACE CARD HIGHLIGHT ANIMATION
+	CSS BY @Dragonism ON POLYTORIA
+*/
+
+.event-card {
+    background-size: 200% 200% !important;
+
+    -webkit-animation: EventPlace 5s ease infinite;
+    -moz-animation: EventPlace 5s ease infinite;
+    animation: EventPlace 5s ease infinite;
+}
+
+@-webkit-keyframes EventPlace {
+    0%{background-position:10% 0%}
+    50%{background-position:91% 100%}
+    100%{background-position:10% 0%}
+}
+
+@-moz-keyframes EventPlace {
+    0%{background-position:10% 0%}
+    50%{background-position:91% 100%}
+    100%{background-position:10% 0%}
+}
+
+@keyframes EventPlace { 
+    0%{background-position:10% 0%}
+    50%{background-position:91% 100%}
+    100%{background-position:10% 0%}
+}

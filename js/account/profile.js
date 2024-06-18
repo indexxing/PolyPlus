@@ -6,6 +6,7 @@ var Settings;
 var BestFriends;
 let FavoriteBtn;
 let CalculateButton;
+let AvatarIFrame;
 
 let Utilities;
 
@@ -17,6 +18,34 @@ if (Username) {
 
 		chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 			Settings = result.PolyPlus_Settings || {};
+
+			const InfoColumns = document.getElementById('user-stats-card');
+			const UserIDRow = document.createElement('div')
+			UserIDRow.classList = 'mb-1'
+			UserIDRow.innerHTML = `
+			<b><i class="fa fa-hashtag text-center d-inline-block" style="width:1.2em"></i> Player ID</b>
+			<span class="float-end">
+				${UserID} <a id="copy" href="#copy"><i class="fad fa-copy" style="margin-left: 5px;"></i></a>
+			</span>
+			`
+			InfoColumns.children[0].insertBefore(UserIDRow, InfoColumns.children[0].children[1]);
+
+			const CopyButton = UserIDRow.getElementsByTagName('a')[0]
+			CopyButton.addEventListener('click', function(){
+				navigator.clipboard
+					.writeText(UserID)
+					.then(() => {
+						CopyButton.classList.add('text-success')
+						CopyButton.children[0].classList = 'fa-duotone fa-circle-check'
+						CopyButton.children[0].style.marginLeft = '3px'
+
+						setTimeout(() => {
+							CopyButton.classList.remove('text-success')
+							CopyButton.children[0].classList = 'fad fa-copy'
+							CopyButton.children[0].style.marginLeft = '5px'
+						}, 1500);
+					})
+			})
 
 			if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 				IRLPrice();
@@ -49,10 +78,55 @@ if (Username) {
 					}
 				});
 			}
+
+			/*
+			<button class="btn btn-outline-primary 3dviewtoggler isactive" style="position:absolute;bottom:15px;right:10px;width:60px"><i class="toggleIcn fad fa-image"></i></button>
+
+			<button class="btn btn-outline-primary 3dviewtoggler" style="position:absolute;bottom:15px;right:10px;width:60px"><i class="toggleIcn fad fa-360-degrees"></i></button>
+			*/
+
+			AvatarIFrame = document.getElementById('user-avatar-card').getElementsByTagName('iframe')[0]
+			if (Settings.AvatarDimensionToggleOn === true || 1 === 1) {
+				const AvatarCard = document.getElementById('user-avatar-card')
+				const ToggleButton = document.createElement('button')
+				ToggleButton.classList = 'btn btn-primary btn-sm 3dviewtoggler isactive'
+				ToggleButton.style = 'position: absolute; right: 15px; margin: 10px;'
+				ToggleButton.innerHTML = '<i class="toggleIcn fad fa-image"></i>'
+				AvatarCard.children[0].insertBefore(ToggleButton, AvatarIFrame)
+
+				ToggleButton.addEventListener('click', async function(){
+					if (ToggleButton.children[0].classList.contains('fa-image')) {
+						if (document.getElementById('polyplus-2davatar')) {
+							AvatarIFrame.style.display = 'none'
+							document.getElementById('polyplus-2davatar').style.display = 'block'
+							ToggleButton.children[0].classList = 'toggleIcn fad fa-360-degrees'
+						} else {
+							const AvatarImage = document.createElement('img')
+							AvatarImage.id = 'polyplus-2davatar'
+							AvatarImage.width = AvatarIFrame.offsetWidth
+							AvatarImage.height = AvatarIFrame.offsetHeight
+
+							const UserDetails = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID)).json())
+							AvatarImage.src = UserDetails.thumbnail.avatar
+
+							AvatarIFrame.style.display = 'none'
+							AvatarCard.children[0].insertBefore(AvatarImage, AvatarCard.getElementsByClassName('user-badges')[0])
+
+							ToggleButton.children[0].classList = 'toggleIcn fad fa-360-degrees'
+						}
+					} else {
+						document.getElementById('polyplus-2davatar').style.display = 'none'
+						AvatarIFrame.style.display = 'block'
+						ToggleButton.children[0].classList = 'toggleIcn fad fa-image'
+					}
+				})
+			}
 		});
 	})();
 
-	const AvatarIFrame = document.querySelector('[src^="/ptstatic"]');
+	if (AvatarIFrame === null) {
+		AvatarIFrame = document.getElementById('user-avatar-card').getElementsByTagName('iframe')[0]
+	}
 	const DropdownMenu = document.getElementsByClassName('dropdown-menu dropdown-menu-right')[0];
 
 	const CopyItem = document.createElement('a');
