@@ -116,6 +116,11 @@
 		{
 			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/models/**"],
 			"js": ["/js/library-download.js"]
+		},
+
+		{
+			"matches": ["https://polytoria.com/places/**", "https://polytoria.com/u/**"],
+			"js": ["the-great-divide.js"]
 		}
 	],
 	"background": {
@@ -138,16 +143,16 @@
 	"action": {
 		"default_title": "Poly+",
 		"default_icon": {
-			"16": "/icons/icon.png",
-			"32": "/icons/icon.png",
-			"48": "/icons/icon.png",
-			"128": "/icons/icon.png"
+			"16": "/images/icon.png",
+			"32": "/images/icon.png",
+			"48": "/images/icon.png",
+			"128": "/images/icon.png"
 		}
 	},
 	"icons": {
-		"16": "/icons/icon.png",
-		"32": "/icons/icon.png",
-		"48": "/icons/icon.png",
-		"128": "/icons/icon.png"
+		"16": "/images/icon.png",
+		"32": "/images/icon.png",
+		"48": "/images/icon.png",
+		"128": "/images/icon.png"
 	}
 }
