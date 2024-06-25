@@ -100,11 +100,20 @@ export default {
 		},
 		UploadMultipleDecals: true,
 		GD_ServerBalanceOn: true,
-		AvatarDimensionToggleOn: true
+		AvatarDimensionToggleOn: true,
+		TheGreatDivide: {
+			Enabled: true,
+			UnbalancedIndicatorOn: true,
+			MVPUserIndicatorOn: true,
+			UserStatsOn: true,
+			LeaderboardsOn: true
+		},
+		CollectibleInventoryCatOn: true
 	},
 	Limits: {
 		PinnedGames: 10,
 		BestFriends: 15,
+		// Item Wishlist and ImprovedFrLists limit here is not implemented in the code
 		ImprovedFrLists: 20,
 		ItemWishlist: 20,
 		HoardersListPages: 4
@@ -202,6 +211,16 @@ export default {
 				Display = 'BRL';
 
 				break;
+
+			// Zimbabwean Dollar
+			case 8:
+				Icon = 'Z$'
+				IsIconAbbr = true
+
+				Result = (bricks * 0.13739106).toFixed(2)
+				Display = 'ZWL'
+
+				break;
 		}
 
 		if (typeof Result === 'number') {
@@ -244,7 +263,7 @@ export default {
 		});
 		Node.appendChild(Script);
 	},
-	// MergeObjects function was written by ChatGPT cause I was lazy and it was awhile ago
+	// MergeObjects function was written by ChatGPT cause I was lazy and it was a while ago
 	MergeObjects: function(obj1, obj2) {
 		var mergedObj = {};
 

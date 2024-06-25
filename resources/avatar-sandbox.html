@@ -2,9 +2,26 @@
 	#options {
 		position: absolute;
 		bottom: 0;
-		margin: 20px;
-		margin-bottom: 40px;
+		margin-bottom: 15px;
 		font-size: 1.25rem;
+		background: #1a1a1a;
+		border-radius: 10px;
+		padding: 2.5px;
+		font-size: 1.25rem;
+
+		/*
+		button iteration #2
+
+		font-size: 1.25rem;
+		background: #333333;
+		border-radius: var(--bs-card-border-radius);
+		padding: 2.5px;
+		font-size: 1.25rem;
+		left: -1px;
+		bottom: -1px;
+		border-top-left-radius: 0px;
+		border-bottom-right-radius: 0px;
+		*/
 	}
 
 	#options *:not(input) {
@@ -18,12 +35,15 @@
 		margin-bottom: 3.5px;
 	}
 </style>
+<div class="alert bg-danger" role="banner">
+	The Avatar Sandbox is currently being rewritten to have better caching and better, more reliable code. It should be included in v1.2.3
+</div>
 <div class="row">
 	<div class="col-12 col-lg-3">
 		<div class="card mcard mb-3">
 			<h6 class="card-header">
 				<i class="fad fa-user-crown"></i>
-				Avatar Sandbox
+				Poly+ Avatar Sandbox
 			</h6>
 			<div class="card-body">
 				<iframe id="viewFrame" style="width: 100%; height: 314px; border-radius: 0.65rem;"></iframe>
@@ -31,43 +51,49 @@
 					<input name="JSONUpload" type="file" accept="application/json" multiple="false" id="jsonUpload" aria-label="Upload JSON!" style="display: none;" />
 
 					<label for="JSONUpload" style="display: block;">
-						<button aria-label="Upload JSON!" onclick="this.parentElement.previousElementSibling.click()">
-							<i class="fa-duotone fa-download"></i>
+						<button aria-label="Upload JSON!" onclick="this.parentElement.previousElementSibling.click()" data-bs-toggle="tooltip" data-bs-title="Upload" data-bs-placement="right">
+							<i class="fa-duotone fa-upload"></i>
 						</button>
 					</label>
 
-					<button id="jsonSave" aria-label="Save as JSON!" style="display: block;">
-						<i class="fa-duotone fa-upload"></i>
+					<button id="jsonSave" aria-label="Save as JSON!" style="display: block;" data-bs-toggle="tooltip" data-bs-title="Download" data-bs-placement="right">
+						<i class="fa-duotone fa-download"></i>
 					</button>
 
-					<button id="openNewTab" aria-label="View in a new tab!" style="display: block;">
+					<button id="openNewTab" aria-label="View in a new tab!" style="display: block;" data-bs-toggle="tooltip" data-bs-title="New Tab" data-bs-placement="right">
 						<i class="fa-duotone fa-up-right-from-square"></i>
 					</button>
 
-					<button aria-label="View in full screen!" style="display: block;" onclick="document.getElementById('viewFrame').requestFullscreen()">
+					<button aria-label="View in full screen!" style="display: block;" onclick="document.getElementById('viewFrame').requestFullscreen()" data-bs-toggle="tooltip" data-bs-title="Full Screen" data-bs-placement="right">
 						<i class="fa-duotone fa-minimize"></i>
 					</button>
 				</div>
 			</div>
 		</div>
+		<button id="myself" class="btn btn-outline-primary w-100 mb-2">
+			<i class="fa-duotone fa-shirt"></i>
+			Load Myself
+		</button>
 		<div class="row mb-3">
-			<div class="col">
-				<button id="myself" class="btn btn-outline-primary w-100">
-					<i class="fa-duotone fa-shirt"></i>
-					Myself
-				</button>
-			</div>
 			<div class="col">
 				<button id="clear" class="btn btn-outline-warning w-100">
 					<i class="fa-duotone fa-trash"></i>
 					Clear
 				</button>
 			</div>
+			<div class="col">
+				<button id="saveOutfit" class="btn btn-outline-success w-100">
+					<i class="fa-duotone fa-save"></i>
+					Save
+				</button>
+			</div>
 		</div>
 		<hr class="mt-2 mb-3">
 		<select class="form-select mb-2" id="load-asset-type">
 			<option value="hat" selected>Hat</option>
+			<option value="tool">Tool</option>
 			<option value="face">Face</option>
+			<hr>
 			<option value="shirt">Shirt</option>
 			<option value="pants">Pants</option>
 			<hr>
@@ -89,13 +115,13 @@
 						<button id="head" class="avatarAction bodypart bp1x1" style="background-color: #e0e0e0;"></button>
 					</div>
 					<div style="margin-bottom: 5px">
-						<button id="rightArm" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; margin-right: 5px;"></button
-						><button id="torso" class="avatarAction bodypart bp2x2" style="background-color: #e0e0e0;"></button
-						><button class="avatarAction bodypart bp1x2" id="leftArm" style="background-color: #e0e0e0; margin-left: 5px;"></button>
+						<button id="rightArm" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; margin-right: 5px;"></button>
+						<button id="torso" class="avatarAction bodypart bp2x2" style="background-color: #e0e0e0;"></button>
+						<button class="avatarAction bodypart bp1x2" id="leftArm" style="background-color: #e0e0e0; margin-left: 5px;"></button>
 					</div>
 					<div>
-						<button class="avatarAction bodypart bp1x2" id="rightLeg" style="background-color: #e0e0e0; margin-right: 5px; padding-right: 18px;"></button
-						><button id="leftLeg" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; padding-right: 18px;"></button>
+						<button class="avatarAction bodypart bp1x2" id="rightLeg" style="background-color: #e0e0e0; margin-right: 5px; padding-right: 18px;"></button>
+						<button id="leftLeg" class="avatarAction bodypart bp1x2" style="background-color: #e0e0e0; padding-right: 18px;"></button>
 					</div>
 				</div>
 			</div>
@@ -137,7 +163,29 @@
 		</ul>
 		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			<input id="item-search" type="text" class="form-control mb-2" placeholder="Search for an item..." />
-			<div class="row alignleft itemgrid" id="inventory"></div>
+			<div class="row alignleft itemgrid mb-4" id="inventory"></div>
+			<nav id="pagination" style="margin: auto;">
+				<ul class="pagination">
+					<li class="page-item disabled" id="pagination-first">
+						<a class="page-link" href="#!">«</a>
+					</li>
+					<li class="page-item disabled" id="pagination-prev">
+						<a class="page-link" href="#!">‹</a>
+					</li>
+					<li class="page-item active">
+						<a class="page-link">
+							<span class="visually-hidden">Page</span>
+							<span id="pagination-current">1</span>
+						</a>
+					</li>
+					<li class="page-item" id="pagination-next">
+						<a class="page-link" href="#!">›</a>
+					</li>
+					<li class="page-item" id="pagination-last">
+						<a class="page-link" href="#!">»</a>
+					</li>
+				</ul>
+			</nav>
 		</div>
 		<h6 class="card-header mb-2"><i class="fad fa-hat-wizard me-1"></i> Wearing</h6>
 		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
@@ -145,3 +193,8 @@
 		</div>
 	</div>
 </div>
+<script>
+	console.log('YPOFWPJGUWRHGUWHPOH')
+	var tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+	var list = [...tooltips].map((tool) => new bootstrap.Tooltip(tool));
+</script>

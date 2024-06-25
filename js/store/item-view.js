@@ -308,13 +308,11 @@ function TryOnItems() {
 		</div>
 	</div>
 	<div class="modal-body"></div>
-  `;
+  	`;
 
 	document.body.prepend(TryOnModal);
 	ItemThumbnail.parentElement.appendChild(TryOnBtn);
 	TryOnModal.children[1].prepend(TryIFrame);
-
-	//Utilities.InjectResource('registerTooltips')
 }
 
 async function HoardersList(min, avatars) {
@@ -324,21 +322,21 @@ async function HoardersList(min, avatars) {
 	const Tab = document.createElement('li');
 	Tab.classList = 'nav-item';
 	Tab.innerHTML = `
-  <a class="nav-link">
-    <i class="fas fa-calculator me-1"></i>
-    <span class="d-none d-sm-inline"><span class="pilltitle">Hoarders</span>
-  </a>
-  `;
+	<a class="nav-link">
+		<i class="fas fa-calculator me-1"></i>
+		<span class="d-none d-sm-inline"><span class="pilltitle">Hoarders</span>
+	</a>
+	`;
 	Tabs.appendChild(Tab);
 
 	const TabContent = document.createElement('div');
 	TabContent.classList = 'd-none';
 	TabContent.innerHTML = `
-  <small class="d-block text-center text-muted" style="font-size: 0.8rem;">
-    loading... (this may take a few seconds)
-  </small>
-  <lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
-  `;
+	<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
+		loading... (this may take a few seconds)
+	</small>
+	<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
+	`;
 	document.getElementById('owners').parentElement.appendChild(TabContent);
 
 	// Add tab logic
@@ -645,13 +643,13 @@ function CheckOwner() {
 	const CheckOwnerDiv = document.createElement('div');
 	CheckOwnerDiv.classList = 'mt-3 d-none';
 	CheckOwnerDiv.innerHTML = `
-  <div class="input-group mb-2">
-    <input type="text" class="form-control bg-dark" placeholder="Username..">
-    <button class="btn btn-success">Check</button>
-  </div>
+	<div class="input-group mb-2">
+		<input type="text" class="form-control bg-dark" placeholder="Username..">
+		<button class="btn btn-success">Check</button>
+	</div>
 
-  <b class="text-muted" style="font-size: 0.85rem;"><i class="fa-duotone fa-square-question mr-1"></i> ...</b>
-  `;
+	<b class="text-muted" style="font-size: 0.85rem;"><i class="fa-duotone fa-square-question mr-1"></i> ...</b>
+	`;
 
 	ImageCard.appendChild(CheckOwnerDiv);
 
@@ -698,7 +696,7 @@ function CheckOwner() {
 
 			if (Owns.owned === true) {
 				ResultText.classList = 'text-success';
-				ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' owns #' + Owns.inventory.serial + ' of ' + document.getElementsByTagName('h1')[0].innerText + '".';
+				ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' owns #' + Owns.inventory.serial + ' of "' + document.getElementsByTagName('h1')[0].innerText + '".';
 			} else {
 				ResultText.classList = 'text-danger';
 				ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' does not own "' + document.getElementsByTagName('h1')[0].innerText + '".';

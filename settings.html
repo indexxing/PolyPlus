@@ -278,21 +278,54 @@
 			</div>
 		</dialog>
 		<div id="page">
-			<h1 class="text-center" style="text-shadow: 0px 0px 5px orange; padding-bottom: 5px; margin-bottom: 10px;">Poly+ Settings</h1>
-			<div class="card card-body limited-time setting-container mb-3" id="greatdivide-server-unbalance">
+			<h1
+				class="text-center"
+				style="
+					text-shadow: 0px 0px 5px orange;
+					padding-bottom: 5px;
+					margin-bottom: 10px;
+				"
+			>
+				Poly+ Settings
+			</h1>
+			<div class="card card-body limited-time setting-container mb-3" id="greatdivide-server-unbalance" style="background-image: linear-gradient(rgba(0.8, 0.8, 0.8, 0.8), rgba(0.8, 0.8, 0.8, 0.8)), url(/images/greatdivide.png); background-size: cover; background-position: center;">
 				<div class="row">
 					<div class="col-auto">
 						<span class="indicator">&nbsp;</span>
 					</div>
 					<div class="col">
 						<span class="title">
-							"Potentially Unbalanced" Server Tag
-							<button class="btn btn-sm toggle-btn" data-setting="GD_ServerBalanceOn">Toggle</button>
+							The Great Divide
+							<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="TheGreatDivide">Toggle</button>
 						</span>
 					</div>
 				</div>
-				<span class="desc">Quickly check if The Great Divide official event place servers are balanced or not! To be unbalanced, the team opposite of you has to have at least 1 more member in the server than you.</span>
-			
+				<span class="desc">Reinforcements to aid in your quest to bring home the victory to your team, and bring honor to your peers.</span>
+
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="server-unbalanced-greatdivide" data-setting="UnbalancedIndicatorOn" data-parent="TheGreatDivide" />
+					<label class="form-check-label" for="server-unbalanced-greatdivide">"Potentially Unbalanced" indicator in server list </label>
+				</span>
+				<!--
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="mvp-user-greatdivide" data-setting="MVPUserIndicatorOn" data-parent="TheGreatDivide" />
+					<label class="form-check-label" for="mvp-user-greatdivide"> "MVP" User indicator in server list (not implemented yet)</label>
+				</span>
+				-->
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="user-statistics-greatdivide" data-setting="UserStatsOn" data-parent="TheGreatDivide" />
+					<label class="form-check-label" for="user-statistics-greatdivide">User Statistics tab on profiles</label>
+				</span>
+				<!--
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="leaderboards-greatdivide" data-setting="LeaderboardsOn" data-parent="TheGreatDivide" />
+					<label class="form-check-label" for="leaderboards-greatdivide"> Related ranking leaderboards (not implemented yet)</label>
+				</span>
+				-->
+
+				<small class="text-muted mt-1" style="font-size: 0.7rem;">
+					* some features use <a href="https://polytoria.com/u/dargy" target="_blank">@dargy</a>'s public API! thank you!
+				</small>
 				<small class="limited-time-tag mt-1">
 					* available until July 14th
 				</small>
@@ -315,19 +348,8 @@
 				<br />
 				<span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
 				<br />
-				<span style="font-size: 0.8rem; color: orange;">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
+				<span class="warning">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
 			</div>
-			<!--
-			<div class="setting-container" id="best-friends">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Best Friends
-					<button class="btn btn-sm toggle-btn" data-setting="BestFriendsOn">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">Prioritize the bestest of friends on applicable friend lists! (limit: <span id="BestFriends-limit"></span> best friends)</span>
-			</div>
-			-->
 			<div class="setting-container" id="improved-friend-lists">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
@@ -338,18 +360,7 @@
 				<span class="desc">
 					Accept or decline all friend requests with the click of a button or multi-remove existing friends!
 					<br />
-					<span style="font-size: 0.8rem; color: orange;">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
-				</span>
-			</div>
-			<div class="setting-container" id="upload-multiple-decals">
-				<span class="indicator">&nbsp;</span>
-				<span class="title">
-					Upload multiple decals
-					<button class="btn btn-sm toggle-btn" data-setting="UploadMultipleDecals">Toggle</button>
-				</span>
-				<br />
-				<span class="desc">
-					Lets you quickly upload multiple decals at once!
+					<span class="warning">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
 				</span>
 			</div>
 			<div class="setting-container" id="irl-price-with-brick-count">
@@ -362,9 +373,9 @@
 				<span class="desc mb-4">
 					See the real life currency value along with Bricks across the site!
 					<br />
-					<span style="font-size: 0.8rem; color: orange;">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
+					<span class="warning">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
 					<br />
-					<span style="font-size: 0.8rem; color: orange;">* Currencies other than USD are purely approximations.</span>
+					<span class="warning">* Currencies other than USD are purely approximations.</span>
 				</span>
 				<select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Currency" data-parent="IRLPriceWithCurrency">
 					<option value="USD" selected>United States Dollar (USD)</option>
@@ -375,6 +386,7 @@
 					<option value="AUD">Australian Dollar (AUD)</option>
 					<option value="TRY">Turkish Lira (TRY)</option>
 					<option value="BRL">Brazilian Real (BRL)</option>
+					<option value="ZWL">Zimbabwean Dollar (ZWL)</option>
 				</select>
 				<!--
 				<select id="IRLPriceWithCurrencyPackage" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Package" data-parent="IRLPriceWithCurrency">
@@ -424,7 +436,7 @@
 				<br />
 				<span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
 				<br />
-				<span style="font-size: 0.8rem; color: orange;">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
+				<span class="warning">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
 			</div>
 			<div class="setting-container" id="apply-membership-theme">
 				<span class="indicator">&nbsp;</span>
@@ -449,7 +461,7 @@
 				<span class="desc">
 					Quickly cancel several out-bound trades (trades that you have sent) all at once
 					<br />
-					<span style="font-size: 0.8rem; color: orange;">* You can only cancel up to 10 trades at once.</span>
+					<span class="warning">* You can only cancel up to 10 trades at once.</span>
 				</span>
 			</div>
 			<div class="setting-container" id="modify-navbar">
@@ -498,7 +510,7 @@
 				<br />
 				<span class="desc">Quickly see how many bricks a user has gained from one of their places!</span>
 				<br />
-				<span style="font-size: 0.8rem; color: orange;"
+				<span class="warning"
 					>* Gamepass revenue is calculated assuming the price hasn't changed and all users that bought the gamepass, bought it at the same price that it is at the time of calculating.</span
 				>
 			</div>
@@ -584,7 +596,7 @@
 				<br />
 				<span class="desc">Hide those annoying <s>out of context Discord message</s> user ads!</span>
 				<br />
-				<span style="font-size: 0.8rem; color: orange;">* Ads that are shown to help support Polytoria are not hidden.</span>
+				<span class="warning">* Ads that are shown to help support Polytoria are not hidden.</span>
 				<span class="form-check form-switch">
 					<input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-banner" data-setting="Banners" data-parent="HideUserAds" />
 					<label class="form-check-label" for="hide-user-ads-banner"> Hide Banner User Ads </label>
@@ -592,6 +604,17 @@
 				<span class="form-check form-switch">
 					<input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-rectangle" data-setting="Rectangles" data-parent="HideUserAds" />
 					<label class="form-check-label" for="hide-user-ads-rectangle"> Hide Rectangle User Ads </label>
+				</span>
+			</div>
+			<div class="setting-container" id="upload-multiple-decals">
+				<span class="indicator">&nbsp;</span>
+				<span class="title">
+					Multi-Decal Uploading
+					<button class="btn btn-sm toggle-btn" data-setting="UploadMultipleDecals">Toggle</button>
+				</span>
+				<br />
+				<span class="desc">
+					Quickly upload several decals all at once!
 				</span>
 			</div>
 			<div class="setting-container" id="avatar-dimension-toggle">
@@ -603,6 +626,17 @@
 				<br />
 				<span class="desc">
 					Quickly switch between a 3D or 2D rendition of somebody's avatar on their profile page!
+				</span>
+			</div>
+			<div class="setting-container" id="collectibles-inventory-category">
+				<span class="indicator">&nbsp;</span>
+				<span class="title">
+					"Collectibles" Inventory Category
+					<button class="btn btn-sm toggle-btn" data-setting="CollectibleInventoryCatOn">Toggle</button>
+				</span>
+				<br />
+				<span class="desc">
+					Sort a player's inventory by all of their limited-edition collectibles!
 				</span>
 			</div>
 			<!---
@@ -631,9 +665,9 @@
 						<br />
 						<span class="desc">Traverse a place view page that matches a place's color palette!</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* Place creators must request a game profile for one to be made.</span>
+						<span class="warning">* Place creators must request a game profile for one to be made.</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature will be expanded upon in the future.</span>
+						<span class="warning">* This feature will be expanded upon in the future.</span>
 					</div>
 					<div class="setting-container" id="inline-editing">
 						<span class="indicator">&nbsp;</span>
@@ -644,9 +678,9 @@
 						<br />
 						<span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature currently only supports places.</span>
+						<span class="warning">* This feature currently only supports places.</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature is not finished or polished.</span>
+						<span class="warning">* This feature is not finished or polished.</span>
 					</div>
 					<div class="setting-container" id="forum-unix-timestamps">
 						<span class="indicator">&nbsp;</span>
@@ -657,7 +691,7 @@
 						<br />
 						<span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* The styling for this feature is not yet done.</span>
+						<span class="warning">* The styling for this feature is not yet done.</span>
 					</div>
 					<div class="setting-container" id="avatar-sandbox">
 						<span class="indicator">&nbsp;</span>
@@ -668,7 +702,7 @@
 						<br />
 						<span class="desc">Create an avatar with all the item possibilities available to your heart's content!</span>
 						<br />
-						<span style="font-size: 0.8rem; color: orange;">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
+						<span class="warning">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
 					</div>
 				</div>
 			</div>

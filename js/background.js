@@ -80,7 +80,15 @@ const DefaultSettings = {
 	},
 	UploadMultipleDecals: true,
 	GD_ServerBalanceOn: true,
-	AvatarDimensionToggleOn: true
+	AvatarDimensionToggleOn: true,
+	TheGreatDivide: {
+		Enabled: true,
+		UnbalancedIndicatorOn: true,
+		MVPUserIndicatorOn: true,
+		UserStatsOn: true,
+		LeaderboardsOn: true
+	},
+	CollectibleInventoryCatOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD
@@ -93,20 +101,93 @@ chrome.runtime.onInstalled.addListener(() => {
 	})
 });
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
-	} else if (request.action === 'sweetalert2') {
+	} else if (request.action === 'greatdivide_stats') {
+		const Statistics = (await (await fetch('https://stats.silly.mom/player_stats?username=' + request.username)).json()).results
+
 		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
-			console.log([request.icon, request.title, request.text])
 			chrome.scripting
 				.executeScript({
 					target: {tabId: tabs[0].id},
-					func: OpenSweetAlert2Modal,
-					// would have just let it pass thru the object for sweetalert2 - but probably not a good idea lol
-					args: [request.icon, request.title, request.text]
+					func: LoadStats,
+					args: [Statistics]
 				})
 		})
+
+		const LoadStats = function(stats){			
+			if (stats !== null) {
+				stats = stats[0]
+				document.getElementById('p+greatdivide_stats').innerHTML = `
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-swords text-center d-inline-block" style="width:1.2em"></i>
+						Kills
+					</b>
+					<span class="float-end">
+						${stats.Kills.toLocaleString()} (${stats.UniqueKills.toLocaleString()} unique)
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-skull text-center d-inline-block" style="width:1.2em"></i>
+						Deaths
+					</b>
+					<span class="float-end">
+						${stats.Deaths.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-percent text-center d-inline-block" style="width:1.2em"></i>
+						Kill Death Ratio
+					</b>
+					<span class="float-end">
+						${(stats.Kills / stats.Deaths).toFixed(4)}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-hundred-points text-center d-inline-block" style="width:1.2em"></i>
+						Points Scored
+					</b>
+					<span class="float-end">
+						${stats.PointsScored.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-money-bill-wave text-center d-inline-block" style="width:1.2em"></i>
+						Cash Earned
+					</b>
+					<span class="float-end">
+						${stats.CashEarned.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-flag text-center d-inline-block" style="width:1.2em"></i>
+						Flags Captured
+					</b>
+					<span class="float-end">
+						${stats.FlagsCaptured} (${stats.FlagsReturned} returned)
+					</span>
+				</div>
+				<div class="mb-3">
+					<b>
+						<i class="fa-solid fa-box-open text-center d-inline-block" style="width:1.2em"></i>
+						Airdrops Collected
+					</b>
+					<span class="float-end">
+						${stats.AirdropsCollected}
+					</span>
+				</div>
+				`
+			} else {
+				document.getElementById('p+greatdivide_stats').innerHTML = "<div class=\"mb-3\">This user hasn't participated in The Great Divide.</div>"
+			}
+		}
 	}
 });
 
@@ -131,11 +212,13 @@ function GetNext12PM() {
 }
 
 // HANDLE ALARMS FIRING
+/*
 chrome.alarms.onAlarm.addListener(function (alarm) {
 	if (alarm.name === 'PolyPlus-UpdateCheck') {
 		RunUpdateNotifier();
 	}
 });
+*/
 function RunUpdateNotifier() {
 	chrome.storage.local.get(['PolyPlus_LiveVersion', 'PolyPlus_OutOfDate', 'PolyPlus_SkipUpdate'], function (result) {
 		const OutOfDate = result.PolyPlus_OutOfDate || false;
@@ -194,16 +277,54 @@ chrome.contextMenus.removeAll(function () {
 	});
 
 	// COPY ASSET ID CONTEXT MENU ITEM REGISTRATION
+	/*
+	const AssetTypes = ["Place", "User", "Item", "Guild"]
+	AssetTypes.forEach(type => {
+		chrome.contextMenus.create({
+			title: 'Copy ' + type + ' ID',
+			id: 'PolyPlus-Copy' + type + 'ID',
+			contexts: ['link'],
+			documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
+			targetUrlPatterns: [
+				'https://polytoria.com/places/**'
+			]
+		});
+	})
+	*/
 	chrome.contextMenus.create({
-		title: 'Copy Asset ID',
-		id: 'PolyPlus-CopyID',
+		title: 'Copy Place ID',
+		id: 'PolyPlus-CopyPlaceID',
 		contexts: ['link'],
 		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
 		targetUrlPatterns: [
-			'https://polytoria.com/places/**',
+			'https://polytoria.com/places/**'
+		]
+	});
+	chrome.contextMenus.create({
+		title: 'Copy User ID',
+		id: 'PolyPlus-CopyUserID',
+		contexts: ['link'],
+		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
+		targetUrlPatterns: [
 			'https://polytoria.com/users/**',
-			'https://polytoria.com/u/**',
-			'https://polytoria.com/store/**',
+			'https://polytoria.com/u/**'
+		]
+	});
+	chrome.contextMenus.create({
+		title: 'Copy Item ID',
+		id: 'PolyPlus-CopyItemID',
+		contexts: ['link'],
+		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
+		targetUrlPatterns: [
+			'https://polytoria.com/store/**'
+		]
+	});
+	chrome.contextMenus.create({
+		title: 'Copy Guild ID',
+		id: 'PolyPlus-CopyGuildID',
+		contexts: ['link'],
+		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
+		targetUrlPatterns: [
 			'https://polytoria.com/guilds/**'
 		]
 	});
@@ -222,7 +343,7 @@ chrome.contextMenus.removeAll(function () {
 
 // HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(async function (info, tab) {
-	if (info.menuItemId === 'PolyPlus-CopyID') {
+	if (["CopyPlaceID", "CopyUserID", "CopyItemID", "CopyGuildID"].indexOf(info.menuItemId.split('-')[1]) !== -1) {
 		console.log(info.linkUrl.split('/')[3]);
 		let ID = info.linkUrl.split('/')[4];
 		if (info.linkUrl.split('/')[3] === 'u') {

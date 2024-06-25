@@ -12,7 +12,7 @@ let Utilities;
 
 if (Username) {
 	(async () => {
-		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json()).id;
+		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json());
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
 
@@ -25,7 +25,7 @@ if (Username) {
 			UserIDRow.innerHTML = `
 			<b><i class="fa fa-hashtag text-center d-inline-block" style="width:1.2em"></i> Player ID</b>
 			<span class="float-end">
-				${UserID} <a id="copy" href="#copy"><i class="fad fa-copy" style="margin-left: 5px;"></i></a>
+				${UserID.id} <a id="copy" href="#copy"><i class="fad fa-copy" style="margin-left: 5px;"></i></a>
 			</span>
 			`
 			InfoColumns.children[0].insertBefore(UserIDRow, InfoColumns.children[0].children[1]);
@@ -33,7 +33,7 @@ if (Username) {
 			const CopyButton = UserIDRow.getElementsByTagName('a')[0]
 			CopyButton.addEventListener('click', function(){
 				navigator.clipboard
-					.writeText(UserID)
+					.writeText(UserID.id)
 					.then(() => {
 						CopyButton.classList.add('text-success')
 						CopyButton.children[0].classList = 'fa-duotone fa-circle-check'
@@ -79,12 +79,6 @@ if (Username) {
 				});
 			}
 
-			/*
-			<button class="btn btn-outline-primary 3dviewtoggler isactive" style="position:absolute;bottom:15px;right:10px;width:60px"><i class="toggleIcn fad fa-image"></i></button>
-
-			<button class="btn btn-outline-primary 3dviewtoggler" style="position:absolute;bottom:15px;right:10px;width:60px"><i class="toggleIcn fad fa-360-degrees"></i></button>
-			*/
-
 			AvatarIFrame = document.getElementById('user-avatar-card').getElementsByTagName('iframe')[0]
 			if (Settings.AvatarDimensionToggleOn === true || 1 === 1) {
 				const AvatarCard = document.getElementById('user-avatar-card')
@@ -97,20 +91,32 @@ if (Username) {
 				ToggleButton.addEventListener('click', async function(){
 					if (ToggleButton.children[0].classList.contains('fa-image')) {
 						if (document.getElementById('polyplus-2davatar')) {
+							const AvatarImage = document.getElementById('polyplus-2davatar')
+
+							AvatarImage.width = AvatarIFrame.offsetWidth
+							AvatarImage.height = AvatarIFrame.offsetHeight
+							AvatarImage.style.display = 'block'
 							AvatarIFrame.style.display = 'none'
-							document.getElementById('polyplus-2davatar').style.display = 'block'
+
 							ToggleButton.children[0].classList = 'toggleIcn fad fa-360-degrees'
 						} else {
 							const AvatarImage = document.createElement('img')
 							AvatarImage.id = 'polyplus-2davatar'
 							AvatarImage.width = AvatarIFrame.offsetWidth
 							AvatarImage.height = AvatarIFrame.offsetHeight
+							AvatarImage.style.padding = '20px'
 
-							const UserDetails = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID)).json())
+							const UserDetails = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID.id)).json())
 							AvatarImage.src = UserDetails.thumbnail.avatar
 
 							AvatarIFrame.style.display = 'none'
-							AvatarCard.children[0].insertBefore(AvatarImage, AvatarCard.getElementsByClassName('user-badges')[0])
+
+							const CustomBadge = document.querySelector('#user-avatar-card .badge:has(.pi)')
+							if (CustomBadge === null) {
+								AvatarCard.children[0].insertBefore(AvatarImage, AvatarCard.getElementsByClassName('user-badges')[0])
+							} else {
+								AvatarCard.children[0].insertBefore(AvatarImage, CustomBadge.parentElement)
+							}
 
 							ToggleButton.children[0].classList = 'toggleIcn fad fa-360-degrees'
 						}
@@ -122,6 +128,24 @@ if (Username) {
 				})
 			}
 		});
+
+		if (new URLSearchParams(window.location.search).get('birthday') === 'true') {
+			const JoinDateRow = document.querySelector('#user-stats-card .mb-1:has(.fa-calendar)')
+			const BirthdayCard = document.createElement('div')
+			BirthdayCard.classList = 'card card-themed card-player-birthday mb-2'
+			BirthdayCard.innerHTML = `
+			<div class="card-body">
+				<div class="fw-semibold text-birthday-gradient">
+					<i class="fas fa-cake me-1"></i> It's my ${new Date().getFullYear() - new Date(JoinDateRow.children[1].innerText).getFullYear()}rd Polytoria anniversary!
+				</div>
+				<a href="/inbox/messages/${UserID.id}/compose?anniversary=1" class="btn btn-sm btn-outline-light mt-2"><i class="fas fa-hands-clapping me-1"></i> Send ${UserID.username} congrats</a>
+			</div>
+			`
+			document.getElementById('user-avatar-card').parentElement.insertBefore(BirthdayCard, document.getElementById('user-avatar-card'))
+			JoinDateRow.children[1].innerHTML = '<i class="fas fa-cake"></i> ' + JoinDateRow.children[1].innerHTML
+			JoinDateRow.children[1].classList.add('text-birthday-gradient')
+			JoinDateRow.children[1].classList.add('fw-semibold')
+		}
 	})();
 
 	if (AvatarIFrame === null) {
@@ -168,7 +192,7 @@ if (Username) {
 				alert('Failure to copy sharable 3D avatar URL.');
 			});
 	});
-} else if (UserID && UserID[0] === '@') {
+} else if (Username && Username[0] === '@') {
 	const Username = window.location.pathname.split('/')[2].substring(1);
 
 	let Reference = new URLSearchParams(new URL(window.location.href).search);
@@ -205,7 +229,7 @@ function BestFriends() {
 		FavoriteBtn = document.createElement('button');
 		FavoriteBtn.classList = 'btn btn-warning btn-sm ml-2';
 		if (!(BestFriends.length === Utilities.Limits.BestFriends)) {
-			if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
+			if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID.id))) {
 				FavoriteBtn.innerText = 'Remove Best Friend Status';
 			} else {
 				FavoriteBtn.innerText = 'Best Friend';
@@ -213,9 +237,9 @@ function BestFriends() {
 		} else {
 			FavoriteBtn.innerText = 'Remove Best Friend Status (max ' + Utilities.Limits.BestFriends + '/' + Utilities.Limits.BestFriends + ')';
 		}
-		if (UserID !== JSON.parse(window.localStorage.getItem('p+account_info')).ID && document.getElementById('add-friend-button').classList.contains('btn-success') === false) {
+		if (UserID.id !== JSON.parse(window.localStorage.getItem('p+account_info')).ID && document.getElementById('add-friend-button').classList.contains('btn-success') === false) {
 			FavoriteBtn.addEventListener('click', function () {
-				Fav(UserID, FavoriteBtn);
+				Fav(UserID.id, FavoriteBtn);
 			});
 		} else {
 			FavoriteBtn.style.display = 'none';
@@ -223,25 +247,25 @@ function BestFriends() {
 		document.querySelectorAll('.section-title.px-3.px-lg-0.mt-3')[0].appendChild(FavoriteBtn);
 
 		function Fav(UserID, btn) {
-			if (UserID === JSON.parse(window.localStorage.getItem('p+account_info')).ID) {
+			if (UserID.id === JSON.parse(window.localStorage.getItem('p+account_info')).ID) {
 				return;
 			}
 			btn.setAttribute('disabled', 'true');
 
 			chrome.storage.sync.get(['PolyPlus_BestFriends'], function (result) {
 				const BestFriends = result.PolyPlus_BestFriends || [];
-				const index = BestFriends.indexOf(parseInt(UserID));
+				const index = BestFriends.indexOf(parseInt(UserID.id));
 
 				if (index !== -1) {
 					// Number exists, remove it
 					BestFriends.splice(index, 1);
 					btn.innerText = 'Best Friend';
-					console.log('Number', parseInt(UserID), 'removed from BestFriends');
+					console.log('Number', parseInt(UserID.id), 'removed from BestFriends');
 				} else {
 					// Number doesn't exist, add it
-					BestFriends.push(parseInt(UserID));
+					BestFriends.push(parseInt(UserID.id));
 					btn.innerText = 'Remove Best Friend Status';
-					console.log('Number', parseInt(UserID), 'added to BestFriends');
+					console.log('Number', parseInt(UserID.id), 'added to BestFriends');
 				}
 
 				chrome.storage.sync.set({PolyPlus_BestFriends: BestFriends, arrayOrder: true}, function () {
@@ -260,7 +284,7 @@ function BestFriends() {
 				BestFriends = result.PolyPlus_BestFriends || [];
 
 				if (!(BestFriends.length === Utilities.Limits.BestFriends)) {
-					if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID))) {
+					if (Array.isArray(BestFriends) && BestFriends.includes(parseInt(UserID.id))) {
 						FavoriteBtn.innerText = 'Remove Best Friend Status';
 					} else {
 						FavoriteBtn.innerText = 'Best Friend';

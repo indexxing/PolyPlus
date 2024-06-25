@@ -1,8 +1,14 @@
 html,
 body,
 #page {
+    /*
     background: #202020;
     color: #fff;
+    */
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/images/client-loading.png);
+    background-color: #222222;
+    background-size: 400px;
+    background-position: center;
 }
 
 #page {
@@ -42,7 +48,7 @@ h2 span.indent {
 
 .setting-container .title {
     font-size: 1.4rem;
-    font-weight: lighter;
+    font-weight: bold;
 }
 
 .setting-container .desc {
@@ -89,15 +95,13 @@ dialog .modal-body p:first-child {
     border-radius: 5rem;
     display: inline-block;
     cursor: default;
+    margin-right: 4px;
+    height: 20px;
+    vertical-align: text-top;
 }
 
-.setting-container.enabled .indicator {
-    background-color: #007bff;
-}
-
-.setting-container.disabled .indicator {
-    background-color: orangered;
-}
+.setting-container.enabled .indicator { background-color: #007bff;}
+.setting-container.disabled .indicator { background-color: orangered; }
 
 .toggle-btn {
     float: right;
@@ -107,7 +111,12 @@ dialog .modal-body p:first-child {
 .limited-time {
     background: transparent;
     border-color: transparent;
+    /*
+    changed the box shadow to black cause @dargy begged me to
     box-shadow: -3px -3px 15px 0 rgba(255, 116, 16, 0.25) inset, 3px 3px 15px 0 rgba(205, 96, 255, 0.25) inset;
+    */
+    box-shadow: -3px -3px 15px 0 black inset;
+    border: none;
 }
 
 .limited-time * {
@@ -145,8 +154,13 @@ dialog .modal-body p:first-child {
     background: 
         linear-gradient(
             45deg,
+            /*
+            changed the gradient to blue and green cause @ItsLuiggiYahoo begged me to
             rgba(255, 116, 16, 1),
             rgba(205, 96, 255, 1)
+            */
+            blue,
+            green
         );
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
@@ -155,6 +169,17 @@ dialog .modal-body p:first-child {
     mask-composite: exclude;
     display: block;
     border-radius: inherit;
+}
+
+.warning {
+    font-size: 0.8rem;
+    color: orange;
+    font-weight: lighter;
+}
+
+.card {
+    --bs-card-border-color: #1e1e1e;
+    --bs-card-bg: #121212;
 }
 
 @-webkit-keyframes LimitedTimeTag {

@@ -21,23 +21,36 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 		});
 	}
 
-	if (Settings.StoreOwnTagOn === true) {
-		Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=hat&limit=100')).json());
-		if (Inventory.errors === undefined) {
-			Inventory = Inventory.inventory
-			Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory;
-			Inventory.concat(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory;
-			console.log(Inventory);
-			Array.from(ItemGrid.children).forEach((element) => {
-				LoadOwnedTags(element);
-			});
-		} else {
-			console.log(Inventory)
-		}
-	}
-
 	if (Settings.EventItemsCatOn === true) {
 		EventItems();
+	}
+
+	if (Settings.StoreOwnTagOn === true) {
+		chrome.storage.local.get('PolyPlus_InventoryCache', async function(result){
+			console.log(result)
+			if (result.PolyPlus_InventoryCache !== undefined && (new Date().getTime() - result.PolyPlus_InventoryCache[1] < 5000)) {
+				console.log('not undefined')
+				Inventory = result.PolyPlus_InventoryCache[0]
+				Array.from(ItemGrid.children).forEach((element) => {
+					LoadOwnedTags(element);
+				});
+			} else {
+				Inventory = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=hat&limit=100')).json());
+				if (Inventory.errors === undefined) {
+					Inventory = Inventory.inventory
+					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory];
+					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory];
+					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=profileTheme&limit=100')).json()).inventory];
+					console.log(Inventory);
+					chrome.storage.local.set({'PolyPlus_InventoryCache': [Inventory, new Date().getTime()]}, function(){})
+					Array.from(ItemGrid.children).forEach((element) => {
+						LoadOwnedTags(element);
+					});
+				} else {
+					console.log(Inventory)
+				}
+			}
+		})
 	}
 });
 
