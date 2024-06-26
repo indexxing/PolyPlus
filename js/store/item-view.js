@@ -31,7 +31,7 @@ var Utilities;
 			Utilities.InjectResource('registerTooltips');
 		}
 
-		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true && ItemOwned === false) {
+		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 			IRLPrice();
 		}
 
@@ -96,16 +96,37 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
 async function IRLPrice() {
 	const Price = PurchaseBtn.getAttribute('data-price');
-	if (Price === null || Price === '0') {
-		return;
+	if (Price !== null && Price !== '0') {
+		const Span = document.createElement('span');
+		Span.classList = 'text-muted polyplus-own-tag';
+		Span.style.fontSize = '0.7rem';
+		Span.style.fontWeight = 'normal';
+		const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrency.Currency);
+		Span.innerText = '($' + IRLResult.result + ' ' + IRLResult.display + ')';
+		PurchaseBtn.appendChild(Span);
 	}
-	const Span = document.createElement('span');
-	Span.classList = 'text-muted polyplus-own-tag';
-	Span.style.fontSize = '0.7rem';
-	Span.style.fontWeight = 'normal';
-	const IRLResult = await Utilities.CalculateIRL(Price, Settings.IRLPriceWithCurrency.Currency);
-	Span.innerText = '($' + IRLResult.result + ' ' + IRLResult.display + ')';
-	PurchaseBtn.appendChild(Span);
+
+	const Resellers = document.getElementById('resellers-container')
+	if (Resellers !== null) {
+		const observer = new MutationObserver(async function (list) {
+			for (const record of list) {
+				for (const element of record.addedNodes) {
+					if (element.tagName === 'DIV') {
+						const ResellerSpan = document.createElement('span');
+						ResellerSpan.classList = 'text-muted polyplus-own-tag';
+						ResellerSpan.style.fontSize = '0.7rem';
+						ResellerSpan.style.fontWeight = 'normal';
+						const ResellerIRLResult = await Utilities.CalculateIRL(element.getElementsByClassName('text-success')[0].innerText, Settings.IRLPriceWithCurrency.Currency);
+						ResellerSpan.innerText = ' ($' + ResellerIRLResult.result + ' ' + ResellerIRLResult.display + ')';
+						element.getElementsByClassName('text-success')[0].appendChild(ResellerSpan);
+					}
+				}
+				observer.observe(Resellers, {attributes: false, childList: true, subtree: false});
+			}
+		});
+		
+		observer.observe(Resellers, {attributes: false, childList: true, subtree: false});
+	}
 }
 
 function HandleItemWishlist() {

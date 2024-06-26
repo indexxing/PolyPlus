@@ -12,7 +12,7 @@ let Utilities;
 
 if (Username) {
 	(async () => {
-		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json());
+		UserID = (await (await fetch('https://api.'+window.location.hostname+'/v1/users/find?username=' + Username )).json());
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
 

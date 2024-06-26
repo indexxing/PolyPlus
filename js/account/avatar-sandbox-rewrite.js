@@ -222,7 +222,6 @@ async function UpdateAvatar() {
         if (ItemCache[x] === undefined) {
             const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
             ItemCache[x] = {
-                /*
                 type: ItemDetails.type,
                 name: ItemDetails.name,
                 price: ItemDetails.price,
@@ -231,7 +230,6 @@ async function UpdateAvatar() {
                     id: ItemDetails.creator.id
                 },
                 thumbnail: ItemDetails.thumbnail,
-                */
                 asset: undefined
             }
 

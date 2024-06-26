@@ -1,3 +1,7 @@
+/*
+	Proper pagination will be added in v1.2.3
+*/
+
 Username = window.location.pathname.split('/')[2];
 let UserID;
 let ItemGrid;
@@ -7,19 +11,19 @@ if (window.location.pathname.split('/')[3] === 'inventory') {
 		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json()).id;
 		ItemGrid = document.getElementsByClassName('itemgrid')[0];
 
-		chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_ItemWishlist'], function(result){
+		/*
+			Rewritten item wishlist function will take in the data with a parameter instead
+		*/
+		chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
 			Settings = result.PolyPlus_Settings
 
 			const Nav = document.getElementsByClassName('nav-pills')[0];
 
-			if (Settings.ItemWishlistOn
-				&& Username === JSON.parse(window.localStorage.getItem('p+account_info')).Username
-				&& window.location.pathname.split('/')[4] === 'wishlist'
-			) {
+			if (Settings.ItemWishlistOn && Username === JSON.parse(window.localStorage.getItem('p+account_info')).Username) {
 				let WishlistNav = document.createElement('li');
 				WishlistNav.classList.add('nav-item');
 				WishlistNav.innerHTML = `
-				<a href="wishlist/" class="nav-link">
+				<a href="${ (window.location.pathname.split('/')[4] !== '') ? '../wishlist/' : 'wishlist/' }" class="nav-link">
 					<i class="fa-regular fa-list me-1"></i>
 					<span class="pilltitle">Item Wishlist</span>
 				</a>
@@ -45,7 +49,7 @@ if (window.location.pathname.split('/')[3] === 'inventory') {
 				let CollectibleNav = document.createElement('li');
 				CollectibleNav.classList.add('nav-item');
 				CollectibleNav.innerHTML = `
-				<a href="collectibles/" class="nav-link">
+				<a href="${ (window.location.pathname.split('/')[4] !== '') ? '../collectibles/' : 'collectibles/' }" class="nav-link">
 					<i class="fa-regular fa-sparkles me-1"></i>
 					<span class="pilltitle">Collectibles</span>
 				</a>
@@ -70,6 +74,9 @@ if (window.location.pathname.split('/')[3] === 'inventory') {
 	})();
 }
 
+/*
+	Item Wishlist will be rewritten in v1.2.3
+*/
 function ItemWishlist() {
 	const ItemGrid = document.getElementsByClassName('itemgrid')[0];
 	const ItemCardContents = `
@@ -91,6 +98,7 @@ function ItemWishlist() {
 	`;
 
 	ItemGrid.innerHTML = ''
+	document.getElementsByClassName('pagination')[0].remove()
 	const Search = document.createElement('div');
 	Search.classList = 'row';
 	Search.innerHTML = `
@@ -111,8 +119,8 @@ function ItemWishlist() {
 		<div class="form-check">
 		<input class="form-check-input" type="checkbox" value="" id="polyplus-itemwish-isLimited">
 		<label class="form-check-label" for="polyplus-itemwish-isLimited">
-			Is Limited?
-			<span class="text-muted" style="font-size: 0.65rem; display: block;">Items that are limited</span>
+			Is Collectible?
+			<span class="text-muted" style="font-size: 0.65rem; display: block;">Items that are collectible</span>
 		</label>
 		</div>
 	</div>
@@ -156,7 +164,7 @@ function ItemWishlist() {
 		Wishlist.forEach((element) => {
 			let NewItemCard = document.createElement('div');
 			NewItemCard.classList = 'px-0';
-			fetch('https://api.polytoria.com/v1/store/:id'.replace(':id', element))
+			fetch('https://api.polytoria.com/v1/store/' + element)
 				.then((response) => response.json())
 				.then((data) => {
 					NewItemCard.innerHTML = ItemCardContents.replace(':ItemID', data.id)
@@ -200,50 +208,51 @@ function ItemWishlist() {
 				});
 		});
 	});
-}
 
-const Update = function(type, query, isLimited, isAvailable) {
-	let ItemGrid = document.getElementsByClassName('itemgrid')[0];
-	let BrickBalance = parseInt(JSON.parse(window.localStorage.getItem('p+account_info')).Bricks);
-	query = query.toLowerCase();
-	let Results = Array.from(ItemGrid.children);
-	for (let i = 0; i < Results.length; i++) {
-		let Show = true;
-
-		console.log('type: ', type);
-		if (!(type === 'any')) {
-			console.log("isn't any");
-			if (!(Results[i].getAttribute('data-type') === type)) {
+	const Update = function(type, query, isLimited, isAvailable) {
+		let ItemGrid = document.getElementsByClassName('itemgrid')[0];
+		let BrickBalance = parseInt(JSON.parse(window.localStorage.getItem('p+account_info')).Bricks);
+		query = query.toLowerCase();
+		let Results = Array.from(ItemGrid.children);
+		for (let i = 0; i < Results.length; i++) {
+			let Show = true;
+	
+			console.log('type: ', type);
+			if (!(type === 'any')) {
+				console.log("isn't any");
+				if (!(Results[i].getAttribute('data-type') === type)) {
+					Show = false;
+				}
+			}
+	
+			if (!Results[i].getAttribute('data-name').toLowerCase().startsWith(query)) {
 				Show = false;
 			}
-		}
-
-		if (!Results[i].getAttribute('data-name').toLowerCase().startsWith(query)) {
-			Show = false;
-		}
-
-		if (isLimited === true) {
-			if (!(Results[i].getAttribute('data-limited') === 'true')) {
-				Show = false;
+	
+			if (isLimited === true) {
+				if (!(Results[i].getAttribute('data-limited') === 'true')) {
+					Show = false;
+				}
 			}
-		}
-
-		if (isAvailable === true) {
-			if (!(parseInt(Results[i].getAttribute('data-price')) <= BrickBalance)) {
-				Show = false;
+	
+			if (isAvailable === true) {
+				if (!(parseInt(Results[i].getAttribute('data-price')) <= BrickBalance)) {
+					Show = false;
+				}
 			}
-		}
-
-		if (Show === true) {
-			Results[i].style.display = 'block';
-		} else {
-			Results[i].style.display = 'none';
+	
+			if (Show === true) {
+				Results[i].style.display = 'block';
+			} else {
+				Results[i].style.display = 'none';
+			}
 		}
 	}
 }
 
 async function CollectibleCategory() {
 	ItemGrid.innerHTML = ''
+	document.getElementsByClassName('pagination')[0].remove()
 	const CollectibleItemTypes = [
 		"hat",
 		"face",
