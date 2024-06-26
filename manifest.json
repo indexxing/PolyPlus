@@ -9,117 +9,117 @@
 	"permissions": ["storage", "contextMenus", "scripting", "alarms", "notifications"],
 	"content_scripts": [
 		{
-			"matches": ["https://polytoria.com/*", "https://polytoria.co/*"],
+			"matches": ["https://polytoria.com/*"],
 			"js": ["/js/sitewide.js", "/js/membership-themes.js"],
 			"css": ["/css/specific.css"],
 			"run_at": "document_start"
 		},
 
 		{
-			"matches": ["https://polytoria.com/my/settings/*", "https://polytoria.co/my/settings/*"],
+			"matches": ["https://polytoria.com/my/settings/*"],
 			"js": ["/js/settings.js", "/js/extra-pages.js"],
 			"run_at": "document_start"
 		},
 
 		{
-			"matches": ["https://polytoria.com/", "https://polytoria.com/home", "https://polytoria.co/", "https://polytoria.co/home"],
+			"matches": ["https://polytoria.com/", "https://polytoria.com/home"],
 			"js": ["/js/account/home.js"],
 			"run_at": "document_idle"
 		},
 
 		{
-			"matches": ["https://polytoria.com/places/**", "https://polytoria.co/places/**"],
+			"matches": ["https://polytoria.com/places/**"],
 			"js": ["/js/places/place-view.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/create/place/**", "https://polytoria.co/create/place/**"],
+			"matches": ["https://polytoria.com/create/place/**"],
 			"js": ["/js/places/place-edit.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/create/image", "https://polytoria.com/create/image/", "https://polytoria.co/create/image", "https://polytoria.co/create/image/"],
+			"matches": ["https://polytoria.com/create/image", "https://polytoria.com/create/image/"],
 			"js": ["/js/create/image.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/forum/post/**", "https://polytoria.co/forum/post/**"],
+			"matches": ["https://polytoria.com/forum/post/**"],
 			"js": ["/js/forum/forum-view.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/u/**", "https://polytoria.com/users/**", "https://polytoria.co/u/**", "https://polytoria.co/users/**"],
+			"matches": ["https://polytoria.com/u/**", "https://polytoria.com/users/**"],
 			"js": ["/js/account/profile.js", "/js/account/inventory.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/my/friends", "https://polytoria.com/my/friends/", "https://polytoria.co/my/friends", "https://polytoria.co/my/friends/"],
+			"matches": ["https://polytoria.com/my/friends", "https://polytoria.com/my/friends/"],
 			"js": ["/js/account/friends.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/store", "https://polytoria.com/store/", "https://polytoria.co/store", "https://polytoria.co/store/"],
+			"matches": ["https://polytoria.com/store", "https://polytoria.com/store/"],
 			"js": ["/js/store/store.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/store/**", "https://polytoria.co/store/**"],
+			"matches": ["https://polytoria.com/store/**"],
 			"js": ["/js/store/item-view.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/forum/search", "https://polytoria.com/forum/search?*", "https://polytoria.co/forum/search", "https://polytoria.co/forum/search?*"],
+			"matches": ["https://polytoria.com/forum/search", "https://polytoria.com/forum/search?*"],
 			"js": ["/js/forum/forum-search.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/trade/sent/*", "https://polytoria.co/trade/sent/*"],
+			"matches": ["https://polytoria.com/trade/sent/*"],
 			"js": ["/js/account/trades-outbound.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/u/*/inventory/", "https://polytoria.co/u/*/inventory/"],
+			"matches": ["https://polytoria.com/u/*/inventory/"],
 			"js": ["/js/account/inventory.js"],
 			"run_at": "document_idle"
 		},
 
 		{
-			"matches": ["https://polytoria.com/my/settings/privacy", "https://polytoria.co/my/settings/privacy"],
+			"matches": ["https://polytoria.com/my/settings/privacy"],
 			"js": ["/js/account/settings-privacy.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/my/settings/transactions*", "https://polytoria.co/my/settings/transactions*"],
+			"matches": ["https://polytoria.com/my/settings/transactions*"],
 			"js": ["/js/account/transactions.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/places/**", "https://polytoria.com/guilds/**", "https://polytoria.com/feed/**", "https://polytoria.co/store/**", "https://polytoria.co/places/**", "https://polytoria.co/guilds/**", "https://polytoria.co/feed/**"],
+			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/places/**", "https://polytoria.com/guilds/**", "https://polytoria.com/feed/**"],
 			"js": ["/js/op-comments.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/my/avatar*", "https://polytoria.co/my/avatar*"],
-			"js": ["/js/account/avatar-sandbox-rewrite.js"]
+			"matches": ["https://polytoria.com/my/avatar*"],
+			"js": ["/js/account/avatar-sandbox2.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/inbox*", "https://polytoria.co/inbox*"],
+			"matches": ["https://polytoria.com/inbox*"],
 			"js": ["/js/account/inbox.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/guilds/**", "https://polytoria.co/guilds/**"],
+			"matches": ["https://polytoria.com/guilds/**"],
 			"js": ["/js/guilds.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/models/**", "https://polytoria.co/store/**", "https://polytoria.co/models/**"],
+			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/models/**"],
 			"js": ["/js/library-download.js"]
 		},
 
 		{
-			"matches": ["https://polytoria.com/places/**", "https://polytoria.com/u/**", "https://polytoria.co/places/**", "https://polytoria.co/u/**"],
+			"matches": ["https://polytoria.com/places/**", "https://polytoria.com/u/**"],
 			"js": ["the-great-divide.js"]
 		}
 	],
@@ -127,16 +127,16 @@
 		"service_worker": "/js/background.js",
 		"type": "module"
 	},
-	"host_permissions": ["https://*.polytoria.com/*", "https://*.polytoria.co/*"],
+	"host_permissions": ["https://*.polytoria.com/*"],
 	"web_accessible_resources": [
 		{
 			"resources": ["resources/*"],
-			"matches": ["https://polytoria.com/*", "https://polytoria.co/*"]
+			"matches": ["https://polytoria.com/*"]
 		},
 
 		{
 			"resources": ["settings.html", "settings.js"],
-			"matches": ["https://polytoria.com/*", "https://polytoria.co/*"]
+			"matches": ["https://polytoria.com/*"]
 		}
 	],
 	"short_name": "Poly+",
