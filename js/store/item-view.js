@@ -35,10 +35,6 @@ var Utilities;
 			IRLPrice();
 		}
 
-		if (Settings.ItemWishlistOn === true) {
-			HandleItemWishlist();
-		}
-
 		if (Settings.TryOnItemsOn === true && (Utilities.MeshTypes.indexOf(ItemType.toLowerCase()) !== -1 || Utilities.TextureTypes.indexOf(ItemType.toLowerCase()) !== -1)) {
 			TryOnItems();
 		}
@@ -62,6 +58,10 @@ var Utilities;
 		} else if (Settings.ItemOwnerCheckOn === true && document.getElementById('timer') && /\d/.test(document.getElementById('timer').innerText)) {
 			CheckOwner();
 		}
+
+		if (Settings.ItemWishlistOn === true) {
+			HandleItemWishlist();
+		}
 	});
 })();
 
@@ -71,23 +71,20 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 			ItemWishlist = result.PolyPlus_ItemWishlist || [];
 
 			if (Array.isArray(ItemWishlist) && ItemWishlist.includes(parseInt(ItemID))) {
-				WishlistBtn.classList = 'btn btn-danger btn-sm';
 				WishlistBtn.innerHTML = `
-        <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Un-Wishlist Item
-        `;
+				<i class="fa-solid fa-star" style="color: orange;"></i>
+				`;
 			} else {
 				if (!(ItemWishlist.length === 25)) {
 					WishlistBtn.removeAttribute('disabled');
-					WishlistBtn.classList = 'btn btn-warning btn-sm';
 					WishlistBtn.innerHTML = `
-          <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Wishlist Item
-          `;
+					<i class="fa-regular fa-star"></i>
+					`;
 				} else {
 					WishlistBtn.setAttribute('disabled', true);
-					WishlistBtn.classList = 'btn btn-warning btn-sm';
 					WishlistBtn.innerHTML = `
-          <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Wishlist Item
-          `;
+					<i class="fad fa-star"></i>
+					`;
 				}
 			}
 		});
@@ -131,7 +128,17 @@ async function IRLPrice() {
 
 function HandleItemWishlist() {
 	const DescriptionText = document.querySelector('.mcard .card-body:has(p)');
-	WishlistBtn = document.createElement('button');
+	const Column = document.createElement('div')
+	Column.classList = 'col'
+	Column.style = 'text-align: right; --bs-gutter-x: 0px;'
+	Column.innerHTML = `
+		<button class="btn btn-sm btn-link"></button>
+	`
+	const ItemNameHeading = document.getElementsByTagName('h1')[0]
+	ItemNameHeading.parentElement.parentElement.prepend(Column)
+	ItemNameHeading.parentElement.classList.add('col-auto')
+	ItemNameHeading.parentElement.style.paddingLeft = '0px !important'
+	WishlistBtn = Column.children[0];
 	chrome.storage.sync.get(['PolyPlus_ItemWishlist'], function (result) {
 		ItemWishlist = result.PolyPlus_ItemWishlist || [];
 
@@ -150,15 +157,13 @@ function HandleItemWishlist() {
 		}
 
 		if (ItemWishlist.includes(parseInt(ItemID))) {
-			WishlistBtn.classList = 'btn btn-danger btn-sm';
 			WishlistBtn.innerHTML = `
-      <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Un-Wishlist Item
-      `;
+			<i class="fa-solid fa-star" style="color: orange;"></i>
+			`;
 		} else {
-			WishlistBtn.classList = 'btn btn-warning btn-sm';
 			WishlistBtn.innerHTML = `
-      <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Wishlist Item
-      `;
+			<i class="fa-regular fa-star"></i>
+			`;
 		}
 
 		WishlistBtn.addEventListener('click', function () {
@@ -169,16 +174,14 @@ function HandleItemWishlist() {
 				let i = ItemWishlist.indexOf(parseInt(ItemID));
 				if (i !== -1) {
 					ItemWishlist.splice(i, 1);
-					WishlistBtn.classList = 'btn btn-warning btn-sm';
 					WishlistBtn.innerHTML = `
-          <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Wishlist Item
-          `;
+					<i class="fa-solid fa-star" style="color: orange;"></i>
+					`;
 				} else {
 					ItemWishlist.push(parseInt(ItemID));
-					WishlistBtn.classList = 'btn btn-danger btn-sm';
 					WishlistBtn.innerHTML = `
-          <i class="fa fa-star" style="margin-right: 2.5px;"></i>  Un-Wishlist Item
-          `;
+					<i class="fa-regular fa-star"></i>
+					`;
 				}
 
 				chrome.storage.sync.set({PolyPlus_ItemWishlist: ItemWishlist, arrayOrder: true}, function () {
@@ -189,8 +192,8 @@ function HandleItemWishlist() {
 			});
 		});
 
-		DescriptionText.appendChild(document.createElement('br'));
-		DescriptionText.appendChild(WishlistBtn);
+		//DescriptionText.appendChild(document.createElement('br'));
+		//DescriptionText.appendChild(WishlistBtn);
 	});
 }
 
