@@ -269,7 +269,7 @@ async function CollectibleCategory() {
 				InitialInventory.pages = 3
 			}
 
-			for (let page = 2; i < InitialInventory.pages; i++) {
+			for (let page = 2; page < InitialInventory.pages; page++) {
 				const PageResult = (await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=' + type + '&limit=100&page=' + page)).json())
 				Collectibles.push(...PageResult.inventory.filter((x) => x.asset.isLimited === true))
 			}

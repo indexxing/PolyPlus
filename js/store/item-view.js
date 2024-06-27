@@ -214,7 +214,7 @@ function TryOnItems() {
 	const ItemThumbnail = document.getElementsByClassName('store-thumbnail')[0];
 	//const IFrame = document.getElementsByClassName('store-thumbnail-3d')[0]
 	const TryIFrame = document.createElement('iframe');
-	TryIFrame.style = 'width: 100%; height: auto; aspect-ratio: 1; border-radius: 20px;';
+	TryIFrame.style = 'width: 100%; height: auto; aspect-ratio: 1; border-radius: 20px; background: #1e1e1e;';
 
 	const TryOnBtn = document.createElement('button');
 	TryOnBtn.classList = 'btn btn-warning';
