@@ -32,7 +32,7 @@ async function ActivityToggle() {
 	const ActivityBtn = document.createElement('button');
 	ActivityBtn.type = 'button';
 	ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
-	ActivityBtn.innerText = Status === true ? 'Deactivate' : 'Activate';
+	ActivityBtn.innerText = 'Set ' + Status === true ? 'Private' : 'Public';
 	DIV.appendChild(ActivityBtn);
 
 	ActivityBtn.addEventListener('click', async function () {
@@ -40,10 +40,11 @@ async function ActivityToggle() {
 		console.log(Toggle)
 		if (Toggle.success) {
 			Status = data.isActive;
-			ActivityBtn.innerText = Status === true ? 'Deactivate' : 'Activate';
+			ActivityBtn.innerText = 'Set ' + Status === true ? 'Private' : 'Public';
 			ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
 		} else {
-			chrome.runtime.sendMessage({ action: "sweetalert2", icon: "error", title: "Error", text: Toggle.message });
+			//chrome.runtime.sendMessage({ action: "sweetalert2", icon: "error", title: "Error", text: Toggle.message });
+			alert(Toggle.message)
 		}
 	});
 }
