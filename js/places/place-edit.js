@@ -32,15 +32,14 @@ async function ActivityToggle() {
 	const ActivityBtn = document.createElement('button');
 	ActivityBtn.type = 'button';
 	ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
-	ActivityBtn.innerText = 'Set ' + Status === true ? 'Private' : 'Public';
+	ActivityBtn.innerText = 'Set ' + (Status === true ? 'Private' : 'Public');
 	DIV.appendChild(ActivityBtn);
 
 	ActivityBtn.addEventListener('click', async function () {
 		const Toggle = (await (await fetch(`https://polytoria.com/api/places/${PlaceID}/toggle-active`,{ method: 'POST' })).json())
-		console.log(Toggle)
 		if (Toggle.success) {
 			Status = data.isActive;
-			ActivityBtn.innerText = 'Set ' + Status === true ? 'Private' : 'Public';
+			ActivityBtn.innerText = 'Set ' + (Status === true ? 'Private' : 'Public');
 			ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
 		} else {
 			//chrome.runtime.sendMessage({ action: "sweetalert2", icon: "error", title: "Error", text: Toggle.message });
