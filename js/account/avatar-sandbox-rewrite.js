@@ -53,6 +53,9 @@ let Avatar = {
 /* Discovery */
 let Page = 1
 let Search =  ""
+let Sort = "createdAt"
+let Order = "desc"
+let ShowOffsale = true
 let TabSelected = "hat"
 
 !(async () => {
@@ -100,6 +103,38 @@ async function PageLoad() {
             }
         });
     });
+
+    const ItemSearch = document.getElementById('search-btn')
+    ItemSearch.addEventListener('click', function(){
+        Search = ItemSearch.previousElementSibling.value
+        Page = 1
+        LoadItems()
+    })
+
+    const ItemSort = document.getElementById('item-sort')
+    ItemSort.addEventListener('change', function(){
+        Sort = ItemSort.options[ItemSort.selectedIndex].value
+        Page = 1
+        LoadItems()
+    })
+
+    const ItemOrder = document.getElementById('item-order')
+    ItemOrder.addEventListener('change', function(){
+        Order = ItemOrder.options[ItemOrder.selectedIndex].value
+        Page = 1
+        LoadItems()
+    })
+
+    /*
+    Public API does not have an offsale parameter
+    
+    document.getElementById('show-offsale').addEventListener('change', function(){
+        ShowOffsale = !ShowOffsale
+        console.log(ShowOffsale)
+        Page = 1
+        LoadItems()
+    })
+    */
 
     const ClearButton = document.getElementById('clear');
     ClearButton.addEventListener('click', function () {
@@ -336,7 +371,7 @@ function LoadUser(id) {
 async function LoadItems() {
     document.getElementById('inventory').innerHTML = ''
 
-    const Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=desc&sort=createdAt&showOffsale=true&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json()).assets
+    const Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json()).assets
     Items.forEach(item => {
         const ItemColumn = document.createElement('div')
         ItemColumn.classList = 'col-auto'

@@ -124,6 +124,14 @@
 			</div>
 		</div>
 		<small class="text-muted text-center" style="font-size: 0.7rem;">feature of Poly+</small>
+		<!--
+		Public API does not have an offsale parameter
+
+		<span class="form-check form-switch" style="font-size: 0.7rem;">
+			<input class="form-check-input" type="checkbox" role="switch" id="show-offsale" checked />
+			<label class="form-check-label" for="hide-user-ads-banner">Show Offsale Items</label>
+		</span>
+		-->
 	</div>
 	<div class="col-12 col-lg-9">
 		<ul class="nav nav-pills nav-justified mb-3" id="tabs">
@@ -159,7 +167,28 @@
 			</li>
 		</ul>
 		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
-			<input id="item-search" type="text" class="form-control mb-2" placeholder="Search for an item..." />
+			<div class="row mb-2">
+				<div class="col-md-4">
+					<div class="input-group">
+						<select id="item-sort" class="form-select">
+							<option value="name">Name</option>
+							<option value="price">Price</option>
+							<option value="createdAt" selected>Creation Date</option>
+							<option value="updatedAt">Updated Date</option>
+						</select>
+						<select id="item-order" class="form-select">
+							<option value="asc">Ascending</option>
+							<option value="desc">Descending</option>
+						</select>
+					</div>
+				</div>
+				<div class="col">
+					<div class="input-group">
+						<input id="item-search" type="text" class="form-control mb-2" placeholder="Search for an item..." />
+						<button id="search-btn" class="btn btn-primary h-100">Search</button>
+					</div>
+				</div>
+			</div>
 			<div class="row alignleft itemgrid mb-4" id="inventory"></div>
 			<nav id="pagination" style="margin: auto;">
 				<ul class="pagination">
@@ -189,3 +218,4 @@
 			<div class="row alignleft itemgrid" id="wearing"></div>
 		</div>
 	</div>
+</div>
