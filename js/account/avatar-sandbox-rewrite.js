@@ -359,6 +359,9 @@ async function LoadItems() {
             <small class="text-muted d-block text-truncate">
                 by <a href="/users/${ (item.type !== 'hat' && item.type !== 'tool') ? '1' : item.creator.id }" class="text-reset">${ (item.type !== 'hat' && item.type !== 'tool') ? 'Polytoria' : item.creator.name }</a>
             </small>
+            <small style="font-size: 0.8rem;" class="d-block text-truncate 
+                ${ (item.price === 0) ? 'text-primary">Free' : (item.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + item.price : 'text-muted">???</small>' }
+            </small>
         </div>
         `
         document.getElementById('inventory').appendChild(ItemColumn)
