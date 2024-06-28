@@ -52,6 +52,7 @@ let Avatar = {
 
 /* Discovery */
 let Page = 1
+let PageCount = 1
 let Search =  ""
 let Sort = "createdAt"
 let Order = "desc"
@@ -135,6 +136,48 @@ async function PageLoad() {
         LoadItems()
     })
     */
+
+    // Pagination is annoying
+    const First = document.getElementById('pagination-first');
+    const Prev = document.getElementById('pagination-prev');
+    const Next = document.getElementById('pagination-next');
+    const Last = document.getElementById('pagination-last');
+
+    if (Page > 0) {
+        Prev.parentElement.classList.remove('disabled');
+        First.parentElement.classList.remove('disabled');
+    } else {
+        Prev.parentElement.classList.add('disabled');
+        First.parentElement.classList.add('disabled');
+    }
+
+    First.addEventListener('click', function () {
+        if (Page > 1) {
+            Page = 1;
+            LoadItems();
+        }
+    });
+
+    Prev.addEventListener('click', function () {
+        if (Page > 1) {
+            Page--;
+            LoadItems();
+        }
+    });
+
+    Next.addEventListener('click', function () {
+        if (Page < PageCount) {
+            Page++;
+            LoadItems();
+        }
+    });
+
+    Last.addEventListener('click', function () {
+        if (Page < PageCount) {
+            Page = PageCount;
+            LoadItems();
+        }
+    });
 
     const ClearButton = document.getElementById('clear');
     ClearButton.addEventListener('click', function () {
@@ -318,7 +361,7 @@ async function UpdateAvatar() {
     LoadWearing()
 }
 
-function LoadUser(id) {
+async function LoadUser(id) {
 	fetch('https://api.polytoria.com/v1/users/' + id + '/avatar')
 		.then((response) => {
 			if (!response.ok) {
@@ -371,8 +414,26 @@ function LoadUser(id) {
 async function LoadItems() {
     document.getElementById('inventory').innerHTML = ''
 
-    const Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json()).assets
-    Items.forEach(item => {
+    const Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json())
+    PageCount = Items.pages
+    if (Page < PageCount) {
+        document.getElementById('pagination-next').classList.remove('disabled');
+        document.getElementById('pagination-last').classList.remove('disabled');
+    } else {
+        document.getElementById('pagination-next').classList.add('disabled');
+        document.getElementById('pagination-last').classList.add('disabled');
+    }
+    if (Page > 1 && PageCount > 1) {
+        console.log('aaa')
+        console.log(Page > 1, PageCount > 1)
+        document.getElementById('pagination-prev').classList.remove('disabled');
+        document.getElementById('pagination-first').classList.remove('disabled');
+    } else {
+        document.getElementById('pagination-prev').classList.add('disabled');
+        document.getElementById('pagination-first').classList.add('disabled');
+    }
+    document.getElementById('pagination-current').innerText = Page
+    Items.assets.forEach(item => {
         const ItemColumn = document.createElement('div')
         ItemColumn.classList = 'col-auto'
         ItemColumn.innerHTML = `
