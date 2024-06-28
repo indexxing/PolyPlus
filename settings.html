@@ -288,7 +288,7 @@
 			>
 				Poly+ Settings
 			</h1>
-			<div class="card card-body limited-time setting-container mb-3" id="greatdivide-server-unbalance" style="background-image: linear-gradient(rgba(0.8, 0.8, 0.8, 0.8), rgba(0.8, 0.8, 0.8, 0.8)), url(/images/greatdivide.png); background-size: cover; background-position: center;">
+			<div class="card card-body limited-time setting-container mb-4" id="greatdivide-server-unbalance" style="background-image: linear-gradient(rgba(0.8, 0.8, 0.8, 0.8), rgba(0.8, 0.8, 0.8, 0.8)), url(/images/greatdivide.png); background-size: cover; background-position: center;">
 				<div class="row">
 					<div class="col-auto">
 						<span class="indicator">&nbsp;</span>
@@ -296,8 +296,10 @@
 					<div class="col">
 						<span class="title">
 							The Great Divide
-							<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="TheGreatDivide">Toggle</button>
 						</span>
+						<div class="setting-buttons">
+							<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="TheGreatDivide">Toggle</button>
+						</div>
 					</div>
 				</div>
 				<span class="desc">Reinforcements to aid in your quest to bring home the victory to your team, and bring honor to your peers.</span>
@@ -334,8 +336,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Pinned Games
-					<button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="PinnedGamesOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Pin your favorite places to the top of the homepage! (limit: <span id="PinnedGames-limit"></span> places)</span>
 			</div>
@@ -343,39 +347,51 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Forum Mentions
-					<button class="btn btn-sm toggle-btn" data-setting="ForumMentsOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ForumMentsOn">Toggle</button>
+				</div>
 				<br />
-				<span class="desc">Get a quick link to the popular person everyone is talking about's profile!</span>
-				<br />
-				<span class="warning">* Forum Mentions do not notify the user or show up as a notification on their account.</span>
+				<span class="desc">
+					Get a quick link to the popular person everyone is talking about's profile!
+				</span>
+				<span class="warning">
+					* Forum Mentions do not notify the user or show up as a notification on their account.
+				</span>
 			</div>
 			<div class="setting-container" id="improved-friend-lists">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Improved Friend Lists
-					<button class="btn btn-sm toggle-btn" data-setting="ImprovedFrListsOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ImprovedFrListsOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">
 					Accept or decline all friend requests with the click of a button or multi-remove existing friends!
-					<br />
-					<span class="warning">* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.</span>
+				</span>
+				<span class="warning">
+					* You can only remove up to <span id="ImprovedFrLists-limit"></span> friends at once.
 				</span>
 			</div>
 			<div class="setting-container" id="irl-price-with-brick-count">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show IRL price with Brick Count
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="IRLPriceWithCurrency">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="IRLPriceWithCurrency">Toggle</button>
+				</div>
 				<br />
-				<span class="desc mb-4">
+				<span class="desc">
 					See the real life currency value along with Bricks across the site!
-					<br />
-					<span class="warning">* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.</span>
-					<br />
-					<span class="warning">* Currencies other than USD are purely approximations.</span>
+				</span>
+				<span class="warning">
+					* Currencies were calculated on <span id="IRLPriceWithCurrency-Date">[DATE]</span>.
+				</span>
+				<span class="warning">
+					* Currencies other than USD are purely approximations.
 				</span>
 				<select id="IRLPriceWithCurrencyCurrency" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Currency" data-parent="IRLPriceWithCurrency">
 					<option value="USD" selected>United States Dollar (USD)</option>
@@ -403,8 +419,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Hide Notification Badges
-					<button class="btn btn-sm toggle-btn" data-setting="HideNotifBadgesOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="HideNotifBadgesOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Hide the annoying red circles on the sidebar!</span>
 			</div>
@@ -412,8 +430,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show "OWNED" Tag on Store Main Page
-					<button class="btn btn-sm toggle-btn" data-setting="StoreOwnTagOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="StoreOwnTagOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Quickly see if you own the item at a glance with a little tag in the top left corner of item cards on the main store page! (if the star is blue, then the item is not a collectible - however if the star is yellow/orange then the item is a collectible and you can hover on it to see your serial)</span>
 			</div>
@@ -421,9 +441,11 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Theme Creator
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ThemeCreator">Toggle</button>
-					<button id="ThemeCreator-Options" class="btn btn-primary btn-sm" data-modal="ThemeCreator">Options</button>
 				</span>
+				<div class="setting-buttons">
+					<button id="ThemeCreator-Options" class="btn btn-primary btn-sm options-btn" data-modal="ThemeCreator">Options</button>
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ThemeCreator">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Unleash your creativity and customize the Polytoria website to your liking! (this feature is still in development)</span>
 			</div>
@@ -431,19 +453,26 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					More Search Filters
-					<button class="btn btn-sm toggle-btn" data-setting="MoreSearchFiltersOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="MoreSearchFiltersOn">Toggle</button>
+				</div>
 				<br />
-				<span class="desc">Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)</span>
-				<br />
-				<span class="warning">* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.</span>
+				<span class="desc">
+					Easily find what you're looking for with more search filters side-wide! (this does not affect the main site search on the navbar)
+				</span>
+				<span class="warning">
+					* This currently only has a "Creator" username filter on the forum search page, more search filters are yet to come.
+				</span>
 			</div>
 			<div class="setting-container" id="apply-membership-theme">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Apply Membership Theme for <b>Free</b>
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ApplyMembershipTheme">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ApplyMembershipTheme">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Ever want the fancy membership themes for completely <b>free</b>? Well now you can get apply them site-wide!</span>
 				<select id="ApplyMembershipThemeTheme" class="form-select form-select-sm mb-2" style="width:350px;" data-setting="Theme" data-parent="ApplyMembershipTheme">
@@ -455,8 +484,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Multi-Cancel Outbound Trades
-					<button class="btn btn-sm toggle-btn" data-setting="MultiCancelOutTradesOns">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="MultiCancelOutTradesOns">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">
 					Quickly cancel several out-bound trades (trades that you have sent) all at once
@@ -468,9 +499,11 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Modify Navbar
-					<button class="btn btn-sm toggle-btn" data-setting="ModifyNavOn">Toggle</button>
-					<button id="ModifyNav-Options" class="btn btn-primary btn-sm" data-modal="ModifyNav">Options</button>
 				</span>
+				<div class="setting-buttons">
+					<button id="ModifyNav-Options" class="btn btn-primary btn-sm options-btn" data-modal="ModifyNav">Options</button>
+					<button class="btn btn-sm toggle-btn" data-setting="ModifyNavOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc"> Customize the navbar to your liking! </span>
 			</div>
@@ -478,8 +511,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Item Wishlist
-					<button class="btn btn-sm toggle-btn" data-setting="ItemWishlistOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ItemWishlistOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc"> Wishlist that item that you REALLY want! </span>
 			</div>
@@ -487,8 +522,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Try-On Items
-					<button class="btn btn-sm toggle-btn" data-setting="TryOnItemsOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="TryOnItemsOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">See how that new item looks on your avatar before spending your bricks!</span>
 			</div>
@@ -496,8 +533,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show Outfit Cost on Profiles
-					<button class="btn btn-sm toggle-btn" data-setting="OutfitCostOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="OutfitCostOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Quickly see how many bricks a user spent on their avatar!</span>
 			</div>
@@ -505,21 +544,26 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show Approximate Place Revenue
-					<button class="btn btn-sm toggle-btn" data-setting="ShowPlaceRevenueOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ShowPlaceRevenueOn">Toggle</button>
+				</div>
 				<br />
-				<span class="desc">Quickly see how many bricks a user has gained from one of their places!</span>
-				<br />
-				<span class="warning"
-					>* Gamepass revenue is calculated assuming the price hasn't changed and all users that bought the gamepass, bought it at the same price that it is at the time of calculating.</span
-				>
+				<span class="desc">
+					Quickly see how many bricks a user has gained from one of their places!
+				</span>
+				<span class="warning">
+					* Gamepass revenue is calculated assuming the price hasn't changed and all users that bought the gamepass, bought it at the same price that it is at the time of calculating.
+				</span>
 			</div>
 			<div class="setting-container" id="item-replace-sales">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show "Owners" instead of "Sales"
-					<button class="btn btn-sm toggle-btn" data-setting="ReplaceItemSalesOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ReplaceItemSalesOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Replace the "Sales" statistic with the "Owners" statistic if the item has 0 sales (most likely meaning it is an item awarded by staff).</span>
 			</div>
@@ -527,8 +571,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Collectibles' Hoarders List
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HoardersList">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HoardersList">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">List all the users that have more than 1 copy of a collectible!</span>
 				<span class="form-check form-switch">
@@ -536,7 +582,9 @@
 					<label class="form-check-label" for="hoarders-list-avatars">
 						Show Avatar Icons
 						<br />
-						<span style="font-size: 0.6rem; color: orange;">* Avatar icons will result in more requests, potentially leading to more ratelimiting and slower hoarder list loading.</span>
+						<span class="warning">
+							* Avatar icons will result in more requests, potentially leading to more ratelimiting and slower hoarder list loading.
+						</span>
 					</label>
 				</span>
 				<select class="form-select form-select-sm mb-2" style="width:350px;" data-setting="MinCopies" data-parent="HoardersList" data-useValue="true">
@@ -552,8 +600,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Quick Library Downloads
-					<button class="btn btn-sm toggle-btn" data-setting="LibraryDownloadsOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="LibraryDownloadsOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">Quickly download a model (as a <code>.ptmd</code> file), mesh, decal, or sound right from the page showing you details about the asset!</span>
 			</div>
@@ -561,8 +611,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					"Event Items" Store Category
-					<button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="EventItemsCatOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">List all the on-going and past event items separated by their event with a store category!</span>
 			</div>
@@ -570,8 +622,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Show Friend Count on Homepage
-					<button class="btn btn-sm toggle-btn" data-setting="HomeFriendCountOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="HomeFriendCountOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">See how many friends you have on your homepage/dashboard, just scroll to the "friends" section and you'll see it next to the heading!</span>
 			</div>
@@ -579,24 +633,31 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Timed-Item Owner Check
-					<button class="btn btn-sm toggle-btn" data-setting="ItemOwnerCheckOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="ItemOwnerCheckOn">Toggle</button>
+				</div>
 				<br />
-				<span class="desc"
-					>Click the shopping bags icon in the bottom left-hand corner of the timed item's item thumbnail to toggle an input and a button. Then just enter someone's username and it'll tell you whether
-					they own it or not and if so what serial!</span
-				>
+				<span class="desc">
+					Click the shopping bags icon in the bottom left-hand corner of the timed item's item thumbnail to toggle an input and a button. Then just enter someone's username and it'll tell you whether
+					they own it or not and if so what serial!
+				</span>
 			</div>
 			<div class="setting-container" id="hide-user-ads">
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Hide User Ads
-					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HideUserAds">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="HideUserAds">Toggle</button>
+				</div>
 				<br />
-				<span class="desc">Hide those annoying <s>out of context Discord message</s> user ads!</span>
-				<br />
-				<span class="warning">* Ads that are shown to help support Polytoria are not hidden.</span>
+				<span class="desc">
+					Hide those annoying <s>out of context Discord message</s> user ads!
+				</span>
+				<span class="warning">
+					* Ads that are shown to help support Polytoria are not hidden.
+				</span>
 				<span class="form-check form-switch">
 					<input class="form-check-input" type="checkbox" role="switch" id="hide-user-ads-banner" data-setting="Banners" data-parent="HideUserAds" />
 					<label class="form-check-label" for="hide-user-ads-banner"> Hide Banner User Ads </label>
@@ -610,8 +671,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Multi-Decal Uploading
-					<button class="btn btn-sm toggle-btn" data-setting="UploadMultipleDecals">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="UploadMultipleDecals">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">
 					Quickly upload several decals all at once!
@@ -621,8 +684,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Avatar Dimension Toggle
-					<button class="btn btn-sm toggle-btn" data-setting="AvatarDimensionToggleOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="AvatarDimensionToggleOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">
 					Quickly switch between a 3D or 2D rendition of somebody's avatar on their profile page!
@@ -632,8 +697,10 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					"Collectibles" Inventory Category
-					<button class="btn btn-sm toggle-btn" data-setting="CollectibleInventoryCatOn">Toggle</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-sm toggle-btn" data-setting="CollectibleInventoryCatOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">
 					Sort a player's inventory by all of their limited-edition collectibles!
@@ -644,9 +711,11 @@
 				<span class="indicator">&nbsp;</span>
 				<span class="title">
 					Automatic Ad Bidding
-					<button class="btn btn-sm toggle-btn" data-setting="AutoAdBiddingOn">Toggle</button>
-					<button class="btn btn-primary btn-sm" data-modal="AutoAdBidding">Options</button>
 				</span>
+				<div class="setting-buttons">
+					<button class="btn btn-primary btn-sm" data-modal="AutoAdBidding">Options</button>
+					<button class="btn btn-sm toggle-btn" data-setting="AutoAdBiddingOn">Toggle</button>
+				</div>
 				<br />
 				<span class="desc">description</span>
 			</div>
@@ -660,49 +729,69 @@
 						<span class="indicator">&nbsp;</span>
 						<span class="title">
 							Game Profiles
-							<button class="btn btn-sm toggle-btn" data-setting="GameProfilesOn">Toggle</button>
 						</span>
+						<div class="setting-buttons">
+							<button class="btn btn-sm toggle-btn" data-setting="GameProfilesOn">Toggle</button>
+						</div>
 						<br />
-						<span class="desc">Traverse a place view page that matches a place's color palette!</span>
-						<br />
-						<span class="warning">* Place creators must request a game profile for one to be made.</span>
-						<br />
-						<span class="warning">* This feature will be expanded upon in the future.</span>
+						<span class="desc">
+							Traverse a place view page that matches a place's color palette!
+						</span>
+						<span class="warning">
+							* Place creators must request a game profile for one to be made.
+						</span>
+						<span class="warning">
+							* This feature will be expanded upon in the future.
+						</span>
 					</div>
 					<div class="setting-container" id="inline-editing">
 						<span class="indicator">&nbsp;</span>
 						<span class="title">
 							Inline Editing
-							<button class="btn btn-sm toggle-btn" data-setting="InlineEditingOn">Toggle</button>
 						</span>
+						<div class="setting-buttons">
+							<button class="btn btn-sm toggle-btn" data-setting="InlineEditingOn">Toggle</button>
+						</div>
 						<br />
 						<span class="desc">Quickly edit your asset's details such as name and description on the same page as viewing the asset!</span>
-						<br />
-						<span class="warning">* This feature currently only supports places.</span>
-						<br />
-						<span class="warning">* This feature is not finished or polished.</span>
+						<span class="warning">
+							* This feature only supports places at this time.
+						</span>
+						<span class="warning">
+							* This feature is not finished or polished.
+						</span>
 					</div>
 					<div class="setting-container" id="forum-unix-timestamps">
 						<span class="indicator">&nbsp;</span>
 						<span class="title">
 							Forum Unix Timestamps
-							<button class="btn btn-sm toggle-btn" data-setting="ForumUnixStampsOn">Toggle</button>
 						</span>
+						<div class="setting-buttons">
+							<button class="btn btn-sm toggle-btn" data-setting="ForumUnixStampsOn">Toggle</button>
+						</div>
 						<br />
-						<span class="desc">See a date and time that is adjusted to everyone (who is using Poly+)'s local time</span>
-						<br />
-						<span class="warning">* The styling for this feature is not yet done.</span>
+						<span class="desc">
+							See a date and time that is adjusted to everyone (who is using Poly+)'s local time.
+						</span>
+						<span class="warning">
+							* The styling for this feature is not yet done.
+						</span>
 					</div>
 					<div class="setting-container" id="avatar-sandbox">
 						<span class="indicator">&nbsp;</span>
 						<span class="title">
 							Avatar Sandbox
-							<button class="btn btn-sm toggle-btn" data-setting="AvatarSandboxOn">Toggle</button>
 						</span>
+						<div class="setting-buttons">
+							<button class="btn btn-sm toggle-btn" data-setting="AvatarSandboxOn">Toggle</button>
+						</div>
 						<br />
-						<span class="desc">Create an avatar with all the item possibilities available to your heart's content!</span>
-						<br />
-						<span class="warning">* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.</span>
+						<span class="desc">
+							Create an avatar with all the item possibilities available to your heart's content!
+						</span>
+						<span class="warning">
+							* This feature is not polished - things like modifying avatar "Body Colors", pagination, outfits, etc haven't been added.
+						</span>
 					</div>
 				</div>
 			</div>

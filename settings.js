@@ -11,8 +11,7 @@ var Utilities;
 	LoadCurrent();
 
 	document.getElementById('PinnedGames-limit').innerText = Utilities.Limits.PinnedGames;
-	document.getElementById('BestFriends-limit').innerText = Utilities.Limits.BestFriends;
-	document.getElementById('ImprovedFrLists-limit').innerText = Utilities.Limits.ImprovedFrLists;
+	//document.getElementById('ImprovedFrLists-limit').innerText = Utilities.Limits.ImprovedFrLists;
 	//document.getElementById('ItemWishlist-limit').innerText = Utilities.Limits.ItemWishlist;
 })();
 
@@ -37,8 +36,8 @@ document.getElementById('ResetDefaults-Modal-No').addEventListener('click', func
 
 // Loop thru each setting container and handle toggling, selecting, opening modal, etc
 Elements.forEach((element) => {
-	let Button = element.getElementsByTagName('button')[0];
-	let Options = element.getElementsByTagName('button')[1];
+	let Button = element.getElementsByClassName('toggle-btn')[0];
+	let Options = element.getElementsByClassName('options-btn')[1];
 	let Select = element.getElementsByTagName('select')[0];
 	let Checkbox = element.getElementsByTagName('input')[0];
 
@@ -69,6 +68,7 @@ Elements.forEach((element) => {
 	}
 
 	if (Options) {
+		console.log(Options)
 		const Modal = document.getElementById(Options.getAttribute('data-modal') + '-Modal');
 		const ModalButtons = Modal.getElementsByTagName('button');
 		const ModalInputs = Modal.getElementsByTagName('input');

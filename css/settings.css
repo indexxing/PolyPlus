@@ -43,7 +43,7 @@ h2 span.indent {
 }
 
 .setting-container:not(:last-child) {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .setting-container .title {
@@ -51,8 +51,29 @@ h2 span.indent {
     font-weight: bold;
 }
 
+.setting-container .desc, .setting-container .warning {
+    display: block;
+    width: 75%;
+}
+
 .setting-container .desc {
     color: rgb(120, 120, 120);
+}
+
+.setting-buttons {
+    float: right;
+}
+
+.setting-buttons button {
+    width: 100px;
+}
+
+.setting-buttons button:first-child:not(:last-child) {
+    margin-right: 5px;
+}
+
+.setting-container select:first-of-type {
+    margin-top: 10px;
 }
 
 .goback {
@@ -102,11 +123,6 @@ dialog .modal-body p:first-child {
 
 .setting-container.enabled .indicator { background-color: #007bff;}
 .setting-container.disabled .indicator { background-color: orangered; }
-
-.toggle-btn {
-    float: right;
-    width: 100px;
-}
 
 .limited-time {
     background: transparent;
