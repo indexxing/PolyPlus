@@ -160,7 +160,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 						Kill Death Ratio
 					</b>
 					<span class="float-end">
-						${KDR}
+						${KDR} <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="KDR is a user's kills divided by the amount of times they have died. If their KDR is above 1, they are making a positive contribution. If their KDR is less than 1, that means they die more than they kill."></i>
 					</span>
 				</div>
 				<div class="mb-1">
@@ -204,6 +204,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				document.getElementById('p+greatdivide_stats').innerHTML = "<div class=\"mb-3\">This user hasn't participated in The Great Divide.</div>"
 			}
 		}
+		return true
 	}
 });
 
