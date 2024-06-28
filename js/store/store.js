@@ -27,9 +27,7 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 
 	if (Settings.StoreOwnTagOn === true) {
 		chrome.storage.local.get('PolyPlus_InventoryCache', async function(result){
-			console.log(result)
 			if (result.PolyPlus_InventoryCache !== undefined && (new Date().getTime() - result.PolyPlus_InventoryCache.requested < 30000)) {
-				console.log('not undefined')
 				Inventory = result.PolyPlus_InventoryCache.data
 				Array.from(ItemGrid.children).forEach((element) => {
 					LoadOwnedTags(element);
