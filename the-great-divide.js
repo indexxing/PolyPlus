@@ -62,6 +62,54 @@ async function UnbalancedServerMarkers() {
 }
 
 async function UserStatsTab() {
+	const EventSection = document.createElement('div')
+	EventSection.innerHTML = `
+	<div class="d-grid mt-2 mb-4"></div>
+	<h6 class="section-title px-3 px-lg-0">
+		<i class="fas fa-swords me-1"></i> Great Divide
+	</h6>
+	<div class="card mcard card-themed mb-4">
+		<div class="card-body" id="p+greatdivide_card">
+			<button class="btn btn-primary btn-sm w-100">Load Statistics</button>
+		</div>
+	</div>
+	`
+	document.getElementsByClassName('user-right')[0].appendChild(EventSection)
+
+	const EventCard = document.getElementById('p+greatdivide_card')
+	EventCard.innerHTML = `
+	<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
+		loading...
+	</small>
+	<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
+	`
+	chrome.runtime.sendMessage({
+		action: "greatdivide_stats",
+		userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
+	});
+
+	/*
+	let Fetched = false
+	EventCard.children[0].addEventListener('click', function(){
+		if (Fetched === false) {
+			EventCard.innerHTML = `
+			<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
+				loading...
+			</small>
+			<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
+			`
+
+			chrome.runtime.sendMessage({
+				action: "greatdivide_stats",
+				userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
+			});
+			Fetched = true
+		}
+	})
+	*/
+}
+
+async function UserStatsTabOLD() {
 	const Tabs = document.getElementById('user-info-tabs')
 
 	const EventTab = document.createElement('li')
@@ -100,7 +148,7 @@ async function UserStatsTab() {
 		let SelectedTab
 		if (tab.children[0].getAttribute('data-bs-target')) {
 			SelectedTab = document.getElementById(tab.children[0].getAttribute('data-bs-target').substring(1))
-		} else {
+		} else if (tab.children[0].classList.contains('fw-bold')) {
 			SelectedTab = TabContainer
 		}
 		SelectedTab.classList.add('active');

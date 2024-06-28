@@ -101,25 +101,41 @@ chrome.runtime.onInstalled.addListener(() => {
 	})
 });
 
-chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
 	} else if (request.action === 'greatdivide_stats') {
-		const Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
+		chrome.storage.local.get(['PolyPlus_GreatDivideStats_' + request.userID], async function(result){
+			let Statistics = result['PolyPlus_GreatDivideStats_' + request.userID]
 
-		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
-			chrome.scripting
-				.executeScript({
-					target: {tabId: tabs[0].id},
-					func: LoadStats,
-					args: [Statistics]
-				})
+			// cache for 5 minutes
+			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 5000)) {
+				Statistics = Statistics.data
+			} else {
+				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results[0]
+				chrome.storage.local.set({['PolyPlus_GreatDivideStats_' + request.userID]: {data: Statistics, requested: new Date().getTime()}}, function(){})
+			}
+
+			chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+				chrome.scripting
+					.executeScript({
+						target: {tabId: tabs[0].id},
+						func: LoadStats,
+						args: [Statistics]
+					})
+			})
 		})
 
 		const LoadStats = function(stats){			
 			if (stats !== null) {
-				stats = stats[0]
-				document.getElementById('p+greatdivide_stats').innerHTML = `
+				let KDR = (stats.Kills / stats.Deaths)
+				if (isNaN(KDR)) {
+					KDR = "N/A"
+				} else {
+					KDR = KDR.toFixed(4)
+				}
+
+				document.getElementById('p+greatdivide_card').innerHTML = `
 				<div class="mb-1">
 					<b>
 						<i class="fa-duotone fa-swords text-center d-inline-block" style="width:1.2em"></i>
@@ -144,7 +160,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 						Kill Death Ratio
 					</b>
 					<span class="float-end">
-						${(stats.Kills / stats.Deaths).toFixed(4)}
+						${KDR}
 					</span>
 				</div>
 				<div class="mb-1">
@@ -174,7 +190,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 						${stats.FlagsCaptured} (${stats.FlagsReturned} returned)
 					</span>
 				</div>
-				<div class="mb-3">
+				<div>
 					<b>
 						<i class="fa-solid fa-box-open text-center d-inline-block" style="width:1.2em"></i>
 						Airdrops Collected
