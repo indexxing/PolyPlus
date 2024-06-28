@@ -91,6 +91,5 @@
 			action: "greatdivide_stats",
 			userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
 		});
-		Utilities.InjectResource("registerTooltips")
 	}
 })();

@@ -200,6 +200,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 					</span>
 				</div>
 				`
+
+				const Script = document.createElement('script');
+				Script.setAttribute('type', 'text/javascript');
+				Script.setAttribute('src', chrome.runtime.getURL('resources/registerTooltips.js'));
+				Script.addEventListener('load', function () {
+					Script.remove();
+				});
+				document.body.appendChild(Script);
 			} else {
 				document.getElementById('p+greatdivide_stats').innerHTML = "<div class=\"mb-3\">This user hasn't participated in The Great Divide.</div>"
 			}
