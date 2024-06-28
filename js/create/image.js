@@ -1,5 +1,3 @@
-console.log("PolyPlus: Running image.js");
-
 (async () => {
   var Settings = [];
   chrome.storage.sync.get(["PolyPlus_Settings"], async function (result) {
@@ -11,8 +9,6 @@ console.log("PolyPlus: Running image.js");
 
     if (Settings.UploadMultipleDecals === true) {
       UploadMultipleDecals();
-    } else {
-      console.log("PolyPlus: UploadMultipleDecals is disabled");
     }
 
     async function UploadMultipleDecals() {
@@ -46,7 +42,6 @@ console.log("PolyPlus: Running image.js");
               }
             );
 
-            console.log(response.status);
             if (response.ok) {
               i++;
               submitBtn.textContent =
