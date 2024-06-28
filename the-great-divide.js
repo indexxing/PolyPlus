@@ -87,26 +87,6 @@ async function UserStatsTab() {
 		action: "greatdivide_stats",
 		userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
 	});
-
-	/*
-	let Fetched = false
-	EventCard.children[0].addEventListener('click', function(){
-		if (Fetched === false) {
-			EventCard.innerHTML = `
-			<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
-				loading...
-			</small>
-			<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
-			`
-
-			chrome.runtime.sendMessage({
-				action: "greatdivide_stats",
-				userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
-			});
-			Fetched = true
-		}
-	})
-	*/
 }
 
 async function UserStatsTabOLD() {
