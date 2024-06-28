@@ -1,3 +1,7 @@
+/*
+  credit to goldenretriveryt on Polytoria for making the multi-decal uploading feature
+*/
+
 (async () => {
   var Settings = [];
   chrome.storage.sync.get(["PolyPlus_Settings"], async function (result) {
