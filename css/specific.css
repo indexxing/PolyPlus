@@ -24,6 +24,10 @@ body[data-URL^='/create/'] .col.d-flex.align-content-between.flex-wrap {
     margin-bottom: 10px;
 }
 
+.home-event-container .img-container {
+    height: 100% !important;
+}
+
 /* ------------------------------------------ */
 
 /*
