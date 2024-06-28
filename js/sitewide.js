@@ -60,9 +60,16 @@ let Theme = ``;
     document.addEventListener("keypress", function (e) {
       currentCombination += e.key;
       if (currentCombination === combination && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-        console.log("Reloading Poly+...");
-        chrome.runtime.sendMessage({ action: "reload" });
-        window.location.reload();
+        try {
+          console.log("Reloading Poly+...");
+          chrome.runtime.sendMessage({ action: "reload" });
+          window.location.reload();
+        } catch(error) {
+          console.log("Reloading Poly+...");
+          window.location.reload()
+          chrome.runtime.sendMessage({ action: "reload" });
+          window.location.reload();
+        }
       } else if (!combination.startsWith(currentCombination)) {
         currentCombination = "";
       }
