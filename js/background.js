@@ -109,7 +109,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			let Statistics = result['PolyPlus_GreatDivideStats_' + request.userID]
 
 			// cache for 5 minutes
-			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 5000)) {
+			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 300000)) {
 				Statistics = Statistics.data
 			} else {
 				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results[0]
