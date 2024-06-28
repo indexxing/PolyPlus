@@ -177,16 +177,21 @@ function EventItems() {
 					<h6 class="dash-ctitle2">${x.date}</h6>
 					<h5 class="dash-ctitle">${x.name}</h5>
 				</div>
-				${x.link !== undefined ? `
+				${x.link !== undefined ? typeof(x.link) !== "object" ? `
 				<div class="col-auto d-flex align-items-center">
 					<a class="text-muted" href="${x.link}">
 						<span class="d-none d-lg-inline">${x.link.startsWith('https://polytoria.com/places/') ? 'Event Place' : 'Blog Post'}</span>
 						<i class="fas fa-angle-right ms-2"></i>
 					</a>
 				</div>
-				`
-				: ''
-				}
+				` : x.link.map(l => `
+				<div class="col-auto d-flex align-items-center">
+					<a class="text-muted" href="${l.link}">
+						<span class="d-none d-lg-inline">${l.label}</span>
+						<i class="fas fa-angle-right ms-2"></i>
+					</a>
+				</div>
+				`).join('') : ''}
 			</div>
 			<div class="card card-dash mcard mb-3" style="animation-delay: 0.27s;">
 				<div class="card-body p-0 m-1 scrollFadeContainer">
