@@ -37,7 +37,7 @@ document.getElementById('ResetDefaults-Modal-No').addEventListener('click', func
 // Loop thru each setting container and handle toggling, selecting, opening modal, etc
 Elements.forEach((element) => {
 	let Button = element.getElementsByClassName('toggle-btn')[0];
-	let Options = element.getElementsByClassName('options-btn')[1];
+	let Options = element.getElementsByClassName('options-btn')[0];
 	let Select = element.getElementsByTagName('select')[0];
 	let Checkbox = element.getElementsByTagName('input')[0];
 
