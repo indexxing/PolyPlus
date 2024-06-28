@@ -13,6 +13,7 @@ var Utilities;
 	document.getElementById('PinnedGames-limit').innerText = Utilities.Limits.PinnedGames;
 	//document.getElementById('ImprovedFrLists-limit').innerText = Utilities.Limits.ImprovedFrLists;
 	//document.getElementById('ItemWishlist-limit').innerText = Utilities.Limits.ItemWishlist;
+	document.getElementById('HoardersList-pageLimit').innerText = Utilities.Limits.HoardersListPages;
 })();
 
 // Handle buttons at the bottom of the page

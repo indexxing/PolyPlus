@@ -51,7 +51,7 @@ h2 span.indent {
     font-weight: bold;
 }
 
-.setting-container .desc, .setting-container .warning {
+.setting-container .desc, .setting-container .warning, .setting-container .note {
     display: block;
     width: 75%;
 }
@@ -187,9 +187,15 @@ dialog .modal-body p:first-child {
     border-radius: inherit;
 }
 
-.warning {
+.setting-container .warning {
     font-size: 0.8rem;
     color: orange;
+    font-weight: lighter;
+}
+
+.setting-container .note {
+    font-size: 0.8rem;
+    color: #439eff;
     font-weight: lighter;
 }
 
