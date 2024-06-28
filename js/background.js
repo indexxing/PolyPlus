@@ -105,7 +105,7 @@ chrome.runtime.onMessage.addListener(async function (request, sender, sendRespon
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
 	} else if (request.action === 'greatdivide_stats') {
-		const Statistics = (await (await fetch('https://stats.silly.mom/player_stats?username=' + request.username)).json()).results
+		const Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
 
 		chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
 			chrome.scripting

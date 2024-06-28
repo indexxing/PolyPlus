@@ -119,7 +119,7 @@ async function UserStatsTab() {
 		if (Fetched === false) {
 			chrome.runtime.sendMessage({
 				action: "greatdivide_stats",
-				username: window.location.pathname.split('/')[2]
+				userID: document.querySelector('.dropdown-item.text-danger[href^="/report"]').getAttribute('href').split('?')[0].split('/')[3]
 			});
 			Fetched = true
 		}
