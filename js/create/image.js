@@ -20,8 +20,9 @@ console.log("PolyPlus: Running image.js");
       fileInput.setAttribute("multiple", "true");
 
       const submitBtn = document.querySelector(
-        "#main-content > div:nth-child(4) > div.container.p-0.p-lg-5 > div.row.mx-auto > div.col-lg-10 > div.card.mb-2 > div > form > div.form-group.mb-0 > button"
+        "form[action^=\"/create\"] button[type=\"submit\"]"
       );
+      console.log(submitBtn)
       submitBtn.addEventListener("click", async function (ev) {
         ev.preventDefault();
         submitBtn.disabled = true;
