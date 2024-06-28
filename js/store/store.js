@@ -28,9 +28,9 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 	if (Settings.StoreOwnTagOn === true) {
 		chrome.storage.local.get('PolyPlus_InventoryCache', async function(result){
 			console.log(result)
-			if (result.PolyPlus_InventoryCache !== undefined && (new Date().getTime() - result.PolyPlus_InventoryCache[1] < 5000)) {
+			if (result.PolyPlus_InventoryCache !== undefined && (new Date().getTime() - result.PolyPlus_InventoryCache.requested < 30000)) {
 				console.log('not undefined')
-				Inventory = result.PolyPlus_InventoryCache[0]
+				Inventory = result.PolyPlus_InventoryCache.data
 				Array.from(ItemGrid.children).forEach((element) => {
 					LoadOwnedTags(element);
 				});
@@ -41,8 +41,7 @@ chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=face&limit=100')).json()).inventory];
 					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=tool&limit=100')).json()).inventory];
 					Inventory = [...Inventory, ...(await (await fetch('https://api.polytoria.com/v1/users/' + UserID + '/inventory?type=profileTheme&limit=100')).json()).inventory];
-					console.log(Inventory);
-					chrome.storage.local.set({'PolyPlus_InventoryCache': [Inventory, new Date().getTime()]}, function(){})
+					chrome.storage.local.set({'PolyPlus_InventoryCache': {data: Inventory, requested: new Date().getTime()}}, function(){})
 					Array.from(ItemGrid.children).forEach((element) => {
 						LoadOwnedTags(element);
 					});
