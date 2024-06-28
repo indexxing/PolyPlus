@@ -112,7 +112,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 300000)) {
 				Statistics = Statistics.data
 			} else {
-				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results[0]
+				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
+				if (Statistics !== null) { Statistics = Statistics[0] }
 				chrome.storage.local.set({['PolyPlus_GreatDivideStats_' + request.userID]: {data: Statistics, requested: new Date().getTime()}}, function(){})
 			}
 
@@ -209,7 +210,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				});
 				document.body.appendChild(Script);
 			} else {
-				document.getElementById('p+greatdivide_stats').innerHTML = "<div class=\"mb-3\">This user hasn't participated in The Great Divide.</div>"
+				document.getElementById('p+greatdivide_card').innerText = "This user hasn't participated in The Great Divide."
 			}
 		}
 		return true
