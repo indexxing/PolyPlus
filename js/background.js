@@ -159,7 +159,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 						<i class="fa-solid fa-percent text-center d-inline-block" style="width:1.2em"></i>
 						Kill Death Ratio
 					</b>
-					<span class="float-end">
+					<span class="float-end ${ (!isNaN(KDR) && KDR > 1) ? 'text-success' : (!isNaN(KDR) && KDR !== 0) ? 'text-danger' : '' }">
 						${KDR} <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="KDR is a user's kills divided by the amount of times they have died. If their KDR is above 1, they are making a positive contribution. If their KDR is less than 1, that means they die more than they kill."></i>
 					</span>
 				</div>
