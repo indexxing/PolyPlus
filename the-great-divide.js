@@ -33,7 +33,7 @@ const PlaceAllowlist = [
 		if (Settings.TheGreatDivide.UnbalancedIndicatorOn === true && window.location.pathname.split('/')[1] === 'places' && PlaceAllowlist.indexOf(window.location.pathname.split('/')[2]) !== -1) {
 			UnbalancedServerMarkers()
 		}
-		
+
 		if (Settings.TheGreatDivide.UserStatsOn === true && window.location.pathname.split('/')[1] === 'u') {
 			if (HasTeam === true) {
 				UserStatsTab()
@@ -85,9 +85,9 @@ const PlaceAllowlist = [
 		EventSection.innerHTML = `
 		<div class="d-grid mt-2 mb-4"></div>
 		<h6 class="text-center section-title px-3 px-lg-0 fw-bold" style="background-clip:text;-webkit-background-clip:text;color:transparent;background-image: linear-gradient(90deg, #1ad05b, #68f);-webkit-text-fill-color: transparent;">
-			<i class="fas fa-swords me-1"></i>
+			<i class="fas fa-swords me-1 float-start"></i>
 			GREATEST DIVISION
-			<i class="fas fa-swords me-1"></i>
+			<i class="fas fa-swords me-1 float-end"></i>
 		</h6>
 		<div class="card mcard mb-4" style="min-height: 226px; background-image: linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url(${ (HasTeam === true) ? (Team === "phantoms") ? 'https://c0.ptacdn.com/assets/N3DH4x5a6iW7raaQ-3lwHpRHHpWShdXc.png' : 'https://c0.ptacdn.com/assets/1HXpaoDLHJo2rrvwwxqJEDWvDZ6BgvSE.png' : '' }); background-size: cover; background-position: center; ${HasTeam === true ? 'border: 1.25px solid ' + ((Team === "phantoms") ? 'blue' : 'green') + ' !important;' : ''}">
 			<div class="card-body" id="p+greatdivide_card">
