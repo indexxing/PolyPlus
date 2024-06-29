@@ -357,7 +357,7 @@ async function HoardersList(min, avatars) {
 	TabContent.classList = 'd-none';
 	TabContent.innerHTML = `
 	<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
-		loading... (this may take a few seconds)
+		Loading... (this may take a few seconds)
 	</small>
 	<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
 	`;
