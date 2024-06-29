@@ -80,7 +80,7 @@ const PlaceAllowlist = [
 		}
 	}
 	
-	async function UserStatsTab(hasTeam) {
+	async function UserStatsTab() {
 		const EventSection = document.createElement('div')
 		EventSection.innerHTML = `
 		<div class="d-grid mt-2 mb-4"></div>
