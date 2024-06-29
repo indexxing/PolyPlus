@@ -1,4 +1,17 @@
+Sync:
+------------------
 PolyPlus_Settings: {}
 PolyPlus_PinnedGames: []
 PolyPlus_BestFriends: []
 PolyPlus_ItemWishlist: []
+
+Local:
+------------------
+PolyPlus_InventoryCache: {
+    data: [],
+    requested: number (repersenting date)
+}
+PolyPlus_GreatDivideStats_[USER ID]: {
+    data: {},
+    requested: number (representing date)
+}
