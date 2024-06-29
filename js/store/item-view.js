@@ -431,7 +431,6 @@ async function HoardersList(min, avatars) {
 							hoarder.user.avatar = Avatar.thumbnail.icon;
 						} catch(error) {
 							hoarder.user.avatar = ''
-							console.log(hoarder.user.username + ` (${hoarder.user.id}) - avatar failed`)
 						}
 					}
 				}
@@ -595,7 +594,6 @@ async function HoardersList(min, avatars) {
 		});
 
 		const UpdateHoardersList = function () {
-			console.log(Hoarders, AmountOfHoarders, Groups);
 			Current.innerText = Page + 1;
 
 			if (Groups[Page] !== undefined) {
