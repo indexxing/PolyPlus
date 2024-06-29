@@ -1,3 +1,7 @@
+let EventOngoing = true;
+let Team;
+let HasTeam = true;
+
 (async () => {
 	Utilities = await import(chrome.runtime.getURL('resources/utils.js'))
 		.default
@@ -8,17 +12,26 @@
 		if (Settings.TheGreatDivide.Enabled !== true) {
 			return
 		}
-	
-		let EventOngoing = true
-		let HasTeam = true
-		if (document.querySelector('#user-avatar-card a[href="/event/the-great-divide"]') === null) { HasTeam = false }
+
+		Team = document.querySelector('#user-avatar-card a[href^="/event/"]')
+		if (Team === null) {
+			HasTeam = false
+		} else {
+			if (Team.getElementsByClassName('userlink-team-phantoms').length > 0) {
+				console.log('phartoms')
+				Team = "phantoms"
+			} else if (Team.getElementsByClassName('userlink-team-cobras').length > 0) {
+				console.log('cobras drool')
+				Team = "cobras"
+			}
+		}
 		if (new Date().getMonth().toString()+new Date().getDate().toString() >= 714) { EventOngoing = false }
 	
 		if (Settings.TheGreatDivide.UnbalancedIndicatorOn === true && window.location.pathname.split('/')[1] === 'places' && window.location.pathname.split('/')[2] === '9656') {
 			UnbalancedServerMarkers()
 		}
 	
-		console.log('ongoing|has team', EventOngoing, HasTeam)
+		console.log('ongoing|has team|team', EventOngoing, HasTeam, Team)
 		if (Settings.TheGreatDivide.UserStatsOn === true && window.location.pathname.split('/')[1] === 'u') {
 			if (HasTeam === true) {
 				UserStatsTab()
@@ -38,7 +51,7 @@
 			Servers.forEach(server => {
 				const TeamCounts = {
 					phantoms: server.getElementsByClassName('border-phantoms').length,
-					 cobras: server.getElementsByClassName('border-cobras').length
+					cobras: server.getElementsByClassName('border-cobras').length
 				}
 	
 				let Enemy = "cobras"
@@ -65,14 +78,16 @@
 		}
 	}
 	
-	async function UserStatsTab() {
+	async function UserStatsTab(hasTeam) {
 		const EventSection = document.createElement('div')
 		EventSection.innerHTML = `
 		<div class="d-grid mt-2 mb-4"></div>
-		<h6 class="section-title px-3 px-lg-0">
-			<i class="fas fa-swords me-1"></i> Great Divide
+		<h6 class="text-center section-title px-3 px-lg-0 fw-bold" style="background-clip:text;-webkit-background-clip:text;color:transparent;background-image: linear-gradient(90deg, #1ad05b, #68f);-webkit-text-fill-color: transparent;">
+			<i class="fas fa-swords me-1"></i>
+			GREATEST DIVISION
+			<i class="fas fa-swords me-1"></i>
 		</h6>
-		<div class="card mcard card-themed mb-4">
+		<div class="card mcard mb-4" style="min-height: 226px; background-image: linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url(${ (HasTeam === true) ? (Team === "phantoms") ? 'https://c0.ptacdn.com/assets/N3DH4x5a6iW7raaQ-3lwHpRHHpWShdXc.png' : 'https://c0.ptacdn.com/assets/1HXpaoDLHJo2rrvwwxqJEDWvDZ6BgvSE.png' : '' }); background-size: cover; background-position: center; ${HasTeam === true ? 'border: 1.25px solid ' + ((Team === "phantoms") ? 'blue' : 'green') + ' !important;' : ''}">
 			<div class="card-body" id="p+greatdivide_card">
 				<button class="btn btn-primary btn-sm w-100">Load Statistics</button>
 			</div>
