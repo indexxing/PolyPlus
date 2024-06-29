@@ -2,6 +2,11 @@ let EventOngoing = true;
 let Team;
 let HasTeam = true;
 
+const PlaceAllowlist = [
+	'9656',
+	'9757'
+];
+
 (async () => {
 	Utilities = await import(chrome.runtime.getURL('resources/utils.js'))
 		.default
@@ -25,7 +30,7 @@ let HasTeam = true;
 		}
 		if (new Date().getMonth().toString()+new Date().getDate().toString() >= 714) { EventOngoing = false }
 
-		if (Settings.TheGreatDivide.UnbalancedIndicatorOn === true && window.location.pathname.split('/')[1] === 'places' && window.location.pathname.split('/')[2] === '9656') {
+		if (Settings.TheGreatDivide.UnbalancedIndicatorOn === true && window.location.pathname.split('/')[1] === 'places' && PlaceAllowlist.indexOf(window.location.pathname.split('/')[2]) !== -1) {
 			UnbalancedServerMarkers()
 		}
 		
