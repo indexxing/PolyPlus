@@ -115,7 +115,11 @@ if (Username) {
 							if (CustomBadge === null) {
 								AvatarCard.children[0].insertBefore(AvatarImage, AvatarCard.getElementsByClassName('user-badges')[0])
 							} else {
-								AvatarCard.children[0].insertBefore(AvatarImage, CustomBadge.parentElement)
+								try {
+									AvatarCard.children[0].insertBefore(AvatarImage, CustomBadge)
+								} catch(error) {
+									AvatarCard.children[0].insertBefore(AvatarImage, CustomBadge.parentElement)
+								}
 							}
 
 							ToggleButton.children[0].classList = 'toggleIcn fad fa-360-degrees'
