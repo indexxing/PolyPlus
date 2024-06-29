@@ -18,20 +18,17 @@ let HasTeam = true;
 			HasTeam = false
 		} else {
 			if (Team.getElementsByClassName('userlink-team-phantoms').length > 0) {
-				console.log('phartoms')
 				Team = "phantoms"
 			} else if (Team.getElementsByClassName('userlink-team-cobras').length > 0) {
-				console.log('cobras drool')
 				Team = "cobras"
 			}
 		}
 		if (new Date().getMonth().toString()+new Date().getDate().toString() >= 714) { EventOngoing = false }
-	
+
 		if (Settings.TheGreatDivide.UnbalancedIndicatorOn === true && window.location.pathname.split('/')[1] === 'places' && window.location.pathname.split('/')[2] === '9656') {
 			UnbalancedServerMarkers()
 		}
-	
-		console.log('ongoing|has team|team', EventOngoing, HasTeam, Team)
+		
 		if (Settings.TheGreatDivide.UserStatsOn === true && window.location.pathname.split('/')[1] === 'u') {
 			if (HasTeam === true) {
 				UserStatsTab()
