@@ -428,7 +428,6 @@ async function HoardersList(min, avatars) {
 						try {
 							AvatarsFetched++
 							const Avatar = (await (await fetch('https://api.polytoria.com/v1/users/' + hoarder.user.id)).json());
-							console.log(hoarder.user.username, Avatar)
 							hoarder.user.avatar = Avatar.thumbnail.icon;
 						} catch(error) {
 							hoarder.user.avatar = ''
