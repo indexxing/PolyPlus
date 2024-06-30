@@ -40,7 +40,7 @@ Elements.forEach((element) => {
 	let Button = element.getElementsByClassName('toggle-btn')[0];
 	let Options = element.getElementsByClassName('options-btn')[0];
 	let Select = element.getElementsByTagName('select')[0];
-	let Checkbox = element.getElementsByTagName('input')[0];
+	let Checkbox = element.getElementsByTagName('input');
 
 	if (Button) {
 		Button.addEventListener('click', function () {
@@ -63,9 +63,11 @@ Elements.forEach((element) => {
 	}
 
 	if (Checkbox) {
-		Checkbox.addEventListener('change', function () {
-			SetSetting(Checkbox, Checkbox.checked, false);
-		});
+		Array.from(Checkbox).forEach(check => {
+			check.addEventListener('change', function () {
+				SetSetting(check, check.checked, false);
+			});
+		})
 	}
 
 	if (Options) {
