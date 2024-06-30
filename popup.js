@@ -2,6 +2,8 @@
     ParseGLB & GetTexture function code made by ChatGPT (I didn't want to use external libraries because of storage space)
 */
 
+document.getElementById('settings-btn').href = chrome.runtime.getURL('settings.html')
+
 const ExtractButton = document.getElementById('extract-texture')
 
 ExtractButton.addEventListener('click', async function(){
