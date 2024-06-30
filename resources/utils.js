@@ -109,7 +109,13 @@ export default {
 			LeaderboardsOn: true
 		},
 		CollectibleInventoryCatOn: true,
-		ShowValueListDataOn: true
+		ShowValueListDataOn: true,
+		ImprovedAchievements: {
+			Enabled: true,
+			ProgressBarOn: true,
+			PercentageOn: true,
+			OpacityOn: true
+		}
 	},
 	Limits: {
 		PinnedGames: 10,

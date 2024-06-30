@@ -95,13 +95,21 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 			});
 		}
 
-		if (AchievementsTab.getElementsByClassName('display-3')[0] === undefined) {
-			AchievementProgressBar();
-			AchievementEarnedPercentage();
+		if (Settings.ImprovedAchievements && Settings.ImprovedAchievements.Enabled === true && AchievementsTab.getElementsByClassName('display-3')[0] === undefined) {
+			if (Settings.ImprovedAchievements.ProgressBarOn && Settings.ImprovedAchievements.ProgressBarOn === true) {
+				AchievementProgressBar();
+			}
 
-			for (let achievement of Achievements) {
-				if ((achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined) === false) {
-					achievement.style.opacity = '0.5';
+			if (Settings.ImprovedAchievements.PercentageOn && Settings.ImprovedAchievements.PercentageOn === true) {
+				AchievementEarnedPercentage();
+			}
+
+			if (Settings.ImprovedAchievements.OpacityOn && Settings.ImprovedAchievements.OpacityOn === true) {
+				console.log(Settings)
+				for (let achievement of Achievements) {
+					if ((achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined) === false) {
+						achievement.style.opacity = '0.5';
+					}
 				}
 			}
 		}

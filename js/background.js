@@ -89,7 +89,13 @@ const DefaultSettings = {
 		LeaderboardsOn: true
 	},
 	CollectibleInventoryCatOn: true,
-	ShowValueListDataOn: true
+	ShowValueListDataOn: true,
+	ImprovedAchievements: {
+		Enabled: true,
+		ProgressBarOn: true,
+		PercentageOn: true,
+		OpacityOn: true
+	}
 }
 
 // ON EXTENSION INSTALL / RELOAD
