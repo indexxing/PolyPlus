@@ -71,7 +71,6 @@ Elements.forEach((element) => {
 	}
 
 	if (Options) {
-		console.log(Options)
 		const Modal = document.getElementById(Options.getAttribute('data-modal') + '-Modal');
 		const ModalButtons = Modal.getElementsByTagName('button');
 		const ModalInputs = Modal.getElementsByTagName('input');
