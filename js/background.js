@@ -88,7 +88,8 @@ const DefaultSettings = {
 		UserStatsOn: true,
 		LeaderboardsOn: true
 	},
-	CollectibleInventoryCatOn: true
+	CollectibleInventoryCatOn: true,
+	ShowValueListDataOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD

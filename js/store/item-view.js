@@ -55,7 +55,13 @@ var Utilities;
 			if (Settings.HoardersList && Settings.HoardersList.Enabled === true) {
 				HoardersList(parseInt(Settings.HoardersList.MinCopies), Settings.HoardersList.AvatarsEnabled);
 			}
-		} else if (Settings.ItemOwnerCheckOn === true && document.getElementById('timer') && /\d/.test(document.getElementById('timer').innerText)) {
+
+			if (Settings.ShowValueListDataOn && Settings.ShowValueListDataOn === true) {
+				ValueListData()
+			}
+		}
+		
+		if (Settings.ItemOwnerCheckOn === true && ((document.getElementById('timer') !== null && /\d/.test(document.getElementById('timer').innerText) || document.getElementById('resellers') !== null))) {
 			CheckOwner();
 		}
 
@@ -727,4 +733,140 @@ function CheckOwner() {
 			ResultText.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> No user found under the username "' + Username + '".';
 		}
 	});
+}
+
+async function ValueListData() {
+	let Tabs = document.getElementById('store-tabs');
+
+	const ValueSection = document.createElement('div')
+	ValueSection.classList = 'mb-3'
+	ValueSection.innerHTML = `
+	<h6 class="section-title mt-3 mt-lg-0 mb-3 px-2">
+		Valuation <a href="https://docs.google.com/document/d/1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4/" target="_blank">(based off LOVE)</a>
+	</h6>
+	<div class="card" id="p+valuation_card">
+		<div class="card-body">
+			<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
+				Loading...
+			</small>
+			<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
+		</div>
+	</div>
+	`
+	Tabs.parentElement.insertBefore(ValueSection, Tabs)
+
+	const ValueCard = document.getElementById('p+valuation_card').children[0]
+
+	const ColumnLabels = [
+		"name",
+		"short",
+		"value",
+		"type",
+		"trend",
+		"demand",
+		"tags"
+	]
+
+	const TagColors = {
+		"Projected": "warning",
+		"Hoarded": "success",
+		"Rare": "primary",
+		"Freaky": "danger"
+	}
+
+	const ValueListDocument = new DOMParser().parseFromString(await (await fetch('https://docs.google.com/feeds/download/documents/Export?exportFormat=html&format=html&id=1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4')).text(), 'text/html')
+
+	/*
+		Table to JSON function (slightly modified for my use-case)
+		https://stackoverflow.com/questions/9927126/how-to-convert-the-following-table-to-json-with-javascript#answer-60196347
+	*/
+	const ExtractTableJSON = function(table) { 
+		var data = [];
+		for (var i = 1; i < table.rows.length; i++) { 
+			var tableRow = table.rows[i]; 
+			var rowData = {
+				tags: []
+			}; 
+			for (var j = 0; j < tableRow.cells.length; j++) { 
+				let Value = tableRow.cells[j].children[0].children[0].innerText;
+				if (ColumnLabels[j] === "name") {
+					rowData.id = tableRow.cells[j].children[0].children[0].children[0].href.split('https://www.google.com/url?q=')[1].split('&')[0].split('/')[4]
+				}
+				if (ColumnLabels[j] === "tags") {
+					Array.from(tableRow.cells[j].children).forEach(tag => {
+						/* 
+							The regex for the emoji character codes replacement was made by AI, such a time saver lol
+						*/
+						rowData.tags.push(tag.children[0].innerHTML.replace(/\s/g,'').replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, ''))
+					})
+				} else {
+					rowData[ColumnLabels[j]] = Value
+				}
+			} 
+			data.push(rowData); 
+		} 
+		return data; 
+	}
+
+	const GetTagColor = function(label) {
+		if (TagColors[label] !== undefined) {
+			return TagColors[label]
+		} else if (TagColors[label.substring(1)] !== undefined) {
+			return TagColors[label.substring(1)]
+		} else {
+			return 'dark'
+		}
+	}
+
+	const ValueDetails = ExtractTableJSON(ValueListDocument.getElementsByTagName('table')[0]).filter((x) => x.id === ItemID)[0]
+
+	if (ValueDetails !== undefined) {
+		ValueCard.innerHTML = `
+		<div class="mb-1">
+			<b class="text-success">
+				<i class="pi pi-brick" style="width:1.2em"></i>
+				Value
+			</b>
+			<span class="float-end">
+				${ValueDetails.value}
+			</span>
+		</div>
+		<div class="mb-1">
+			<b class="text-primary"">
+				<i class="pi" style="width:1.2em">%</i>
+				Trend
+			</b>
+			<span class="float-end">
+				${ValueDetails.trend}
+			</span>
+		</div>
+		<div class="mb-1">
+			<b>
+				<i class="fa-duotone fa-triangle" style="width:1.2em"></i>
+				Valuation Type
+			</b>
+			<span class="float-end">
+				${ValueDetails.type}
+			</span>
+		</div>
+		<div class="mb-1">
+			<b>
+				<i class="fa-duotone fa-hand-wave" style="width:1.2em"></i>
+				Shorthand
+			</b>
+			<span class="float-end">
+				${ValueDetails.short}
+			</span>
+		</div>
+		<div class="d-flex" style="gap: 5px;">
+			${ ValueDetails.tags.map((x) => `
+			<span class="badge bg-${ GetTagColor(x) }">${x}</span>
+			`).join('')}
+		</div>
+		`
+	} else {
+		ValueCard.innerHTML = `
+		There is no evaluation for this item at this time.
+		`
+	}
 }

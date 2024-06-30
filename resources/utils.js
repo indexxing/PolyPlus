@@ -108,7 +108,8 @@ export default {
 			UserStatsOn: true,
 			LeaderboardsOn: true
 		},
-		CollectibleInventoryCatOn: true
+		CollectibleInventoryCatOn: true,
+		ShowValueListDataOn: true
 	},
 	Limits: {
 		PinnedGames: 10,
