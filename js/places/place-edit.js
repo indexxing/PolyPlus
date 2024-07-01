@@ -22,7 +22,7 @@ async function ActivityToggle() {
 	DIV.innerHTML = `
     <label class="mb-2">
       <h5 class="mb-0">Toggle Activity</h5>
-      <small class="text-muted">Make your place active or inactive (currently ${Status === true ? 'active' : 'inactive'}).</small>
+      <small class="text-muted">Make your place active or inactive (currently <span id="p+current_place_activity">${Status === true ? 'active' : 'inactive'}</span>).</small>
     </label>
     <br>
     `;
@@ -41,6 +41,7 @@ async function ActivityToggle() {
 			Status = Toggle.isActive;
 			ActivityBtn.innerText = 'Set ' + (Status === true ? 'Private' : 'Public');
 			ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
+			Status === true ? document.getElementById('p+current_place_activity').innerText = 'active' : document.getElementById('p+current_place_activity').innerText = 'inactive'
 		} else {
 			//chrome.runtime.sendMessage({ action: "sweetalert2", icon: "error", title: "Error", text: Toggle.message });
 			alert(Toggle.message)
