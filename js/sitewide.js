@@ -45,6 +45,46 @@ let Theme = ``;
           }
         }
       }
+
+      if (Settings.HideUserAds && Settings.HideUserAds.Enabled === true) {
+        if (Settings.HideUserAds.Banners && Settings.HideUserAds.Banners === true) {
+          Theme += `
+          div[style^="max-width: 728px;"]:has(a[href^="/ads"]) {
+            display: none;
+          }
+          `;
+        }
+  
+        if (Settings.HideUserAds.Rectangles && Settings.HideUserAds.Rectangles === true) {
+          Theme += `
+          div[style^="max-width: 300px;"]:has(a[href^="/ads"]) {
+            display: none;
+          }
+          `;
+        }
+      }
+  
+      if (Settings.HideNotifBadgesOn === true) {
+        document.getElementsByClassName('notifications-toggle')[0].getElementsByTagName('i')[0].classList = 'fa-bell far'
+        Theme += `
+        .notif-nav.notif-sidebar {
+          display: none;
+        }
+  
+        .notifications-toggle {
+          opacity: 0.6;
+        }
+  
+        .notifications-toggle .unread-indicator {
+          display: none;
+        }
+        `;
+      }
+      
+      // Credit to @SK-Fast (also known as DevPixels) for the improved loading code (taken from his original Poly+, and reformatted to Index Poly+)
+      const ThemeBlob = new Blob([Theme], { type: 'text/css' });
+      const ThemeURL = URL.createObjectURL(ThemeBlob);
+      document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`;
     }
     if (document.readyState === 'complete') {
       PageLoad()
@@ -74,46 +114,6 @@ let Theme = ``;
         currentCombination = "";
       }
     });
-
-    if (Settings.HideUserAds && Settings.HideUserAds.Enabled === true) {
-      if (Settings.HideUserAds.Banners && Settings.HideUserAds.Banners === true) {
-        Theme += `
-        div[style^="max-width: 728px;"]:has(a[href^="/ads"]) {
-          display: none;
-        }
-        `;
-      }
-
-      if (Settings.HideUserAds.Rectangles && Settings.HideUserAds.Rectangles === true) {
-        Theme += `
-        div[style^="max-width: 300px;"]:has(a[href^="/ads"]) {
-          display: none;
-        }
-        `;
-      }
-    }
-
-    if (Settings.HideNotifBadgesOn === true) {
-      document.getElementsByClassName('notifications-toggle')[0].getElementsByTagName('i')[0].classList = 'fa-bell far'
-      Theme += `
-      .notif-nav.notif-sidebar {
-        display: none;
-      }
-
-      .notifications-toggle {
-        opacity: 0.6;
-      }
-
-      .notifications-toggle .unread-indicator {
-        display: none;
-      }
-      `;
-    }
-    
-    // Credit to @SK-Fast (also known as DevPixels) for the improved loading code (taken from his original Poly+, and reformatted to Index Poly+)
-    const ThemeBlob = new Blob([Theme], { type: 'text/css' });
-    const ThemeURL = URL.createObjectURL(ThemeBlob);
-    document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`;
   });
 })();
 
