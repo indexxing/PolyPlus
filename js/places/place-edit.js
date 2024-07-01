@@ -38,7 +38,7 @@ async function ActivityToggle() {
 	ActivityBtn.addEventListener('click', async function () {
 		const Toggle = (await (await fetch(`https://polytoria.com/api/places/${PlaceID}/toggle-active`,{ method: 'POST' })).json())
 		if (Toggle.success) {
-			Status = data.isActive;
+			Status = Toggle.isActive;
 			ActivityBtn.innerText = 'Set ' + (Status === true ? 'Private' : 'Public');
 			ActivityBtn.classList = 'btn ' + (Status === true ? 'btn-danger' : 'btn-success');
 		} else {
