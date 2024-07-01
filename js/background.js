@@ -146,11 +146,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				document.getElementById('p+greatdivide_card').innerHTML = `
 				<div class="mb-1">
 					<b>
+						<i class="fa-duotone fa-eye text-center d-inline-block" style="width:1.2em"></i>
+						Last Round Seen
+					</b>
+					<span class="float-end">
+						${ (stats.LastRoundSeen === 0) ? '-' : stats.LastRoundSeen }
+					</span>
+				</div>
+				<hr class="mb-3 mt-2">
+				<div class="mb-1">
+					<b>
 						<i class="fa-duotone fa-swords text-center d-inline-block" style="width:1.2em"></i>
 						Kills
 					</b>
 					<span class="float-end">
-						${stats.Kills.toLocaleString()} (${stats.UniqueKills.toLocaleString()} unique)
+						${stats.Kills.toLocaleString()} <small class="text-muted" style="font-size: 0.8rem;">(${stats.UniqueKills.toLocaleString()} unique)</small>
 					</span>
 				</div>
 				<div class="mb-1">
@@ -205,6 +215,34 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 					</b>
 					<span class="float-end">
 						${stats.AirdropsCollected}
+					</span>
+				</div>
+				<hr class="mb-3 mt-2">
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-chart-pyramid text-center d-inline-block" style="width:1.2em"></i>
+						Monoliths Destroyed
+					</b>
+					<span class="float-end">
+						${stats.ObelisksDestroyed}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-block-question text-center d-inline-block" style="width:1.2em"></i>
+						Blocks Placed
+					</b>
+					<span class="float-end">
+						${stats.BlocksPlaced} (${stats.BlocksDestroyed} destroyed)
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-head-side-brain text-center d-inline-block" style="width:1.2em"></i>
+						Headshots
+					</b>
+					<span class="float-end">
+						${stats.Headshots}
 					</span>
 				</div>
 				`
