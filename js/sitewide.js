@@ -86,7 +86,8 @@ let Theme = ``;
       const ThemeURL = URL.createObjectURL(ThemeBlob);
       document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`;
     }
-    if (document.readyState === 'complete') {
+    
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
       PageLoad()
     } else {
       document.addEventListener('DOMContentLoaded', PageLoad);
