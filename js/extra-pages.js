@@ -32,7 +32,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
                         <p class="text-muted mb-1">Version: v${Version}</p>
                         <p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
                         <button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
-                        <a href="https://github.com/IndexingGitHub/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
+                        <a href="https://github.com/indexxing/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
                     </div>
                 </div>
                 <hr>
@@ -295,7 +295,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 								<p class="text-muted mb-1">Version: v${Version}</p>
 								<p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
 								<button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
-								<a href="https://github.com/IndexingGitHub/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
+								<a href="https://github.com/indexxing/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
 							</div>
 						</div>
 						<div class="card mb-3">
