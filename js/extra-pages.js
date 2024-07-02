@@ -323,6 +323,12 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 					</div>
 				</div>
 				`;
+
+				chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist'], function (sync) {
+					chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
+						document.getElementById('data-size').innerText = (sync + local).toLocaleString();
+					})
+				});
 			})
 		})
 	});
