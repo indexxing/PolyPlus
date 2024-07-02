@@ -3,6 +3,7 @@ const UserID = JSON.parse(window.localStorage.getItem('p+account_info')).ID;
 const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2];
 
 let Utilities;
+let PlaceDetails = null;
 
 var Settings;
 var PinnedGamesData = [];
@@ -112,6 +113,10 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 					}
 				}
 			}
+		}
+
+		if (Settings.ReaddCopyableOn === true || 1 === 1) {
+			ReaddCopyable()
 		}
 	});
 })();
@@ -391,8 +396,9 @@ async function IRLPrice() {
 async function PlaceRevenue() {
 	const BricksPerView = 5;
 
-	let PlaceDetails = await fetch('https://api.polytoria.com/v1/places/' + PlaceID);
-	PlaceDetails = await PlaceDetails.json();
+	if (PlaceDetails === null) {
+		PlaceDetails = (await (await fetch('https://api.polytoria.com/v1/places/' + PlaceID)).json());
+	}
 
 	let CreatorDetails = await fetch('https://api.polytoria.com/v1/users/' + GameCreator);
 	CreatorDetails = await CreatorDetails.json();
@@ -476,48 +482,96 @@ function AchievementProgressBar() {
 	AchievementsTab.prepend(ProgressBar);
 }
 
-function AchievementEarnedPercentage() {
-	fetch('https://api.polytoria.com/v1/places/' + PlaceID)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error('Network not ok');
-			}
-			return response.json();
-		})
-		.then((data) => {
-			const UserCount = data.uniqueVisits;
-			for (let achievement of Achievements) {
-				const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0];
-				// thanks to Stackoverflow on how to remove everything except numbers from string
-				const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''));
-				const PercentageOfPlayers = ((OwnerCount * 100) / UserCount).toFixed(2);
+async function AchievementEarnedPercentage() {
+	if (PlaceDetails === null) {
+		PlaceDetails = (await (await fetch('https://api.polytoria.com/v1/places/' + PlaceID)).json());
+	}
 
-				OwnerText.innerHTML += ' (' + PercentageOfPlayers + '%, ' + GetAchievementDifficulty(PercentageOfPlayers) + ')';
-			}
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+	const GetAchievementDifficulty = function(percent) {
+		if (percent >= 90 && percent <= 100) {
+			return 'Freebie';
+		} else if (percent >= 80 && percent <= 89.9) {
+			return 'Cake Walk';
+		} else if (percent >= 50 && percent <= 79.9) {
+			return 'Easy';
+		} else if (percent >= 30 && percent <= 49.9) {
+			return 'Moderate';
+		} else if (percent >= 20 && percent <= 29.9) {
+			return 'Challenging';
+		} else if (percent >= 10 && percent <= 19.9) {
+			return 'Hard';
+		} else if (percent >= 5 && percent <= 9.9) {
+			return 'Extreme';
+		} else if (percent >= 1 && percent <= 4.9) {
+			return 'Insane';
+		} else if (percent >= 0 && percent <= 0.9) {
+			return 'Impossible';
+		}
+	}
+	
+	const UserCount = PlaceDetails.uniqueVisits;
+	for (let achievement of Achievements) {
+		const OwnerText = achievement.getElementsByClassName('text-muted small my-0')[0];
+		// thanks to Stackoverflow on how to remove everything except numbers from string
+		const OwnerCount = parseInt(OwnerText.innerText.replace(/[^0-9]/g, ''));
+		const PercentageOfPlayers = ((OwnerCount * 100) / UserCount).toFixed(2);
+
+		OwnerText.innerHTML += ' (' + PercentageOfPlayers + '%, ' + GetAchievementDifficulty(PercentageOfPlayers) + ')';
+	}
 }
 
-function GetAchievementDifficulty(percent) {
-	if (percent >= 90 && percent <= 100) {
-		return 'Freebie';
-	} else if (percent >= 80 && percent <= 89.9) {
-		return 'Cake Walk';
-	} else if (percent >= 50 && percent <= 79.9) {
-		return 'Easy';
-	} else if (percent >= 30 && percent <= 49.9) {
-		return 'Moderate';
-	} else if (percent >= 20 && percent <= 29.9) {
-		return 'Challenging';
-	} else if (percent >= 10 && percent <= 19.9) {
-		return 'Hard';
-	} else if (percent >= 5 && percent <= 9.9) {
-		return 'Extreme';
-	} else if (percent >= 1 && percent <= 4.9) {
-		return 'Insane';
-	} else if (percent >= 0 && percent <= 0.9) {
-		return 'Impossible';
+async function ReaddCopyable() {
+	if (PlaceDetails === null) {
+		PlaceDetails = (await (await fetch('https://api.polytoria.com/v1/places/' + PlaceID)).json());
+	}
+
+	if (PlaceDetails.isCopyable) {
+		const TitleCardButtons = document.querySelector('.card:has(h1.my-0) .col-auto[style^="m"]')
+		
+		const DownloadCopyButton = document.createElement('button')
+		DownloadCopyButton.style.padding = '9px'
+		DownloadCopyButton.classList = 'px-4 btn btn-success my-2'
+		DownloadCopyButton.setAttribute('data-bs-toggle', 'tooltip')
+		DownloadCopyButton.setAttribute('data-bs-title', 'Download this place')
+		DownloadCopyButton.innerHTML = '<i class="fas fa-download"></i>'
+
+		if (TitleCardButtons.children[0].children.length === 0) {
+			TitleCardButtons.children[0].innerHTML = '<div class="col-auto px-1"></div>'
+			TitleCardButtons.children[0].appendChild(DownloadCopyButton)
+		} else {
+			TitleCardButtons.children[0].prepend(DownloadCopyButton)
+		}
+
+		DownloadCopyButton.addEventListener('click', async function () {
+			let CreatorToken = (await (await fetch('https://polytoria.com/api/places/edit', {
+				method: 'POST',
+				body: JSON.stringify({placeID: PlaceID})
+			})).json()).token;
+	
+			fetch(`https://api.polytoria.com/v1/places/get-place?id=${PlaceID}&tokenType=creator`, {
+				headers: {
+					Authorization: CreatorToken
+				}
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error('Network not ok');
+					}
+					return response.blob();
+				})
+				.then((data) => {
+					const DownloadURL = URL.createObjectURL(data);
+	
+					const Link = document.createElement('a');
+					Link.href = DownloadURL;
+					Link.download = PlaceDetails.name + '.poly';
+					document.body.appendChild(Link);
+					Link.click();
+					Link.remove();
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		});
 	}
 }
