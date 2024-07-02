@@ -384,19 +384,21 @@ async function LoadUser(id) {
 			Avatar.items = [];
 
 			data.assets.forEach((item) => {
-                ItemCache[item.id] = {
-                    type: item.type,
-                    name: item.name,
-                    price: null,
-                    creator: null,
-                    thumbnail: item.thumbnail,
-                    asset: item.path
-                }
-
-                if (item.type === 'hat' || item.type === 'tool') {
-                    ItemCache[item.id].creator = {
-                        id: 1,
-                        name: "Polytoria"
+                if (ItemCache[item.id] === undefined) {
+                    ItemCache[item.id] = {
+                        type: item.type,
+                        name: item.name,
+                        price: null,
+                        creator: null,
+                        thumbnail: item.thumbnail,
+                        asset: item.path
+                    }
+    
+                    if (item.type === 'hat' || item.type === 'tool' || item.type === 'torso') {
+                        ItemCache[item.id].creator = {
+                            id: 1,
+                            name: "Polytoria"
+                        }
                     }
                 }
 
