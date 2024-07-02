@@ -35,6 +35,17 @@ const ItemCache = {
         },
         thumbnail: "https://c0.ptacdn.com/thumbnails/assets/anebTuFMLg8NKhRL3ab7hbzCfmcsFqGO.png",
         asset: "https://c0.ptacdn.com/assets/HD6TFdXD8CaflRNmd84VCNyNsmTB0SH3.png"
+    },
+    37582: {
+        type: "torso",
+        name: "Slim Body",
+        price: 0,
+        creator: {
+            name: "Polytoria",
+            id: 1
+        },
+        thumbnail: "https://c0.ptacdn.com/thumbnails/assets/f_k-ZN_xmA_ALZiJQanOKT-Y4qq5kI1b.png",
+        asset: "https://c0.ptacdn.com/assets/qoqZ2qPyaGvB3MLGgJZ6oLWTz-xxGo-8.glb"
     }
 }
 let Avatar = {
@@ -257,7 +268,7 @@ async function UpdateAvatar() {
 
     const FormattedAvatar = structuredClone(Avatar)
 
-    const AccessoryPromise = [...Avatar.items, Avatar.tool].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:')).map(async (x, index) => {
+    const AccessoryPromise = [...Avatar.items, Avatar.tool, Avatar.torso].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:')).map(async (x, index) => {
         if (ItemCache[x] === undefined) {
             const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
             ItemCache[x] = {
@@ -495,7 +506,7 @@ async function LoadItems() {
 
 function LoadWearing() {
     document.getElementById('wearing').innerHTML = '';
-    [...Avatar.items, Avatar.shirt, Avatar.pants].filter((x) => x !== undefined).forEach(id => {
+    [...Avatar.items, Avatar.shirt, Avatar.pants, Avatar.torso].filter((x) => x !== undefined).forEach(id => {
         const Cached = Object.values(ItemCache)[Object.keys(ItemCache).indexOf(id.toString())]
         if (Cached !== undefined) {
             if (Cached.creator === null) {
