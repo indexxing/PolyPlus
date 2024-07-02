@@ -100,8 +100,13 @@ async function LoadIRLPrices(element) {
 	}
 }
 
-function LoadOwnedTags(element) {
-	let Item = CheckInventory(parseInt(element.querySelector('[href^="/store/"]').getAttribute('href').split('/')[2]));
+function LoadOwnedTags(element, id) {
+	let Item;
+	if (id !== undefined) {
+		Item = CheckInventory(parseInt(id))
+	} else {
+		Item = CheckInventory(parseInt(element.querySelector('[href^="/store/"]').getAttribute('href').split('/')[2]));
+	}
 	if (Item !== null) {
 		const Tag = document.createElement('span');
 		Tag.classList = `badge ${Item.asset.isLimited === false ? 'bg-primary' : 'bg-warning'} polyplus-own-tag`;
@@ -247,6 +252,12 @@ function EventItems() {
 		const Next = document.getElementById('p+ei-pagination-next');
 		const Last = document.getElementById('p+ei-pagination-last');
 
+		if (Settings.StoreOwnTagOn === true) {
+			Array.from(Container.querySelectorAll('a[href^="/store"]')).forEach((element) => {
+				LoadOwnedTags(element);
+			});
+		}
+		
 		if (Page > 0) {
 			Prev.parentElement.classList.remove('disabled');
 			First.parentElement.classList.remove('disabled');
@@ -346,6 +357,12 @@ function EventItems() {
 			} else {
 				Next.parentElement.classList.add('disabled');
 				Last.parentElement.classList.add('disabled');
+			}
+
+			if (Settings.StoreOwnTagOn === true) {
+				Array.from(Container.querySelectorAll('a[href^="/store"]')).forEach((element) => {
+					LoadOwnedTags(element);
+				});
 			}
 		};
 	});
