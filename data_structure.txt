@@ -2,7 +2,6 @@ Sync:
 ------------------
 PolyPlus_Settings: {}
 PolyPlus_PinnedGames: []
-PolyPlus_BestFriends: []
 PolyPlus_ItemWishlist: []
 
 Local:
