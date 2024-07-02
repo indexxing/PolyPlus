@@ -256,6 +256,10 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						font-size: 0.9rem;
 						margin-top: -4px;
 					}
+
+					.card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) a:has(.card-header), .card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) .card-header {
+						border-radius: inherit;
+					}
 				</style>
 				<div class="text-center mb-3">
 					<h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
@@ -264,9 +268,13 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 				<div class="row">
 					<div class="col" style="padding-left: 0px;">
 						<div class="card mb-3">
-							<div class="card-body">
-								<span class="badge bg-primary mb-1">Sync</span>
-								<h2>Settings</h2>
+							<a class="text-reset" data-bs-toggle="collapse" href="#settings" role="button" aria-expanded="false" aria-controls="settings">
+								<div class="card-header">
+									<span class="badge bg-primary">Sync</span>
+									Settings
+								</div>
+							</a>
+							<div class="card-body collapse" id="settings">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_Settings || {}), null, 2)
 										.replaceAll('\n','<br>')
@@ -277,9 +285,13 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 							</div>
 						</div>
 						<div class="card">
-							<div class="card-body">
-								<span class="badge bg-secondary mb-1">Local</span>
-								<h3>Inventory Cache</h3>
+							<a class="text-reset" data-bs-toggle="collapse" href="#inventory-cache" role="button" aria-expanded="false" aria-controls="inventory-cache">
+								<div class="card-header">
+									<span class="badge bg-secondary">Local</span>
+									Inventory Cache
+								</div>
+							</a>
+							<div class="card-body collapse" id="inventory-cache">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((local.PolyPlus_InventoryCache || {data: [], requested: "never"}), null, 2)
 										.replaceAll('\n','<br>')
@@ -299,9 +311,13 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 							</div>
 						</div>
 						<div class="card mb-3">
-							<div class="card-body">
-								<span class="badge bg-primary mb-1">Sync</span>
-								<h3>Pinned Games (${(sync.PolyPlus_PinnedGames || []).length})</h3>
+							<a class="text-reset" data-bs-toggle="collapse" href="#pinned-games" role="button" aria-expanded="false" aria-controls="pinned-games">
+								<div class="card-header">
+									<span class="badge bg-primary">Sync</span>
+									Pinned Games (${(sync.PolyPlus_PinnedGames || []).length})
+								</div>
+							</a>
+							<div class="card-body collapse" id="pinned-games">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_PinnedGames || []), null, 2)
 										.replaceAll('\n','<br>')
@@ -312,9 +328,13 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 							</div>
 						</div>
 						<div class="card mb-3">
-							<div class="card-body">
-								<span class="badge bg-primary mb-1">Sync</span>
-								<h3>Item Wishlist (${(sync.PolyPlus_ItemWishlist || []).length})</h3>
+							<a class="text-reset" data-bs-toggle="collapse" href="#item-wishlist" role="button" aria-expanded="false" aria-controls="item-wishlist">
+								<div class="card-header">
+									<span class="badge bg-primary">Sync</span>
+									Item Wishlist (${(sync.PolyPlus_ItemWishlist || []).length})
+								</div>
+							</a>
+							<div class="card-body collapse" id="item-wishlist">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_ItemWishlist || []), null, 2)
 										.replaceAll('\n','<br>')
