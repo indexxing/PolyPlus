@@ -257,13 +257,13 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						margin-top: -4px;
 					}
 
-					.card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) a:has(.card-header), .card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) .card-header {
+					.card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) a:has(.card-header), .card:has([data-bs-toggle="collapse"]):not(:has(.card-body.collapse.show)) .card-header, .card:has([data-bs-toggle="collapse"]):has(.card-body.collapse.collapsing) a:has(.card-header), .card:has([data-bs-toggle="collapse"]):has(.card-body.collapse.collapsing) .card-header {
 						border-radius: inherit;
 					}
 				</style>
 				<div class="text-center mb-3">
 					<h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
-					<p class="w-75 d-block mx-auto">This page is used by developers for debugging most data related things. It is unrecommended you modify any data on this page, but if you ever want to go ahead.</p>
+					<p class="w-75 d-block mx-auto">This page is used for accessing most data-related objects stored by the extension.</p>
 				</div>
 				<div class="row">
 					<div class="col" style="padding-left: 0px;">
