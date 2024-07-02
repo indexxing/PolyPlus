@@ -265,6 +265,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 					<div class="col" style="padding-left: 0px;">
 						<div class="card mb-3">
 							<div class="card-body">
+								<span class="badge bg-primary mb-1">Sync</span>
 								<h2>Settings</h2>
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_Settings || {}), null, 2)
@@ -277,6 +278,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						</div>
 						<div class="card">
 							<div class="card-body">
+								<span class="badge bg-secondary mb-1">Local</span>
 								<h3>Inventory Cache</h3>
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((local.PolyPlus_InventoryCache || {data: [], requested: "never"}), null, 2)
@@ -298,6 +300,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						</div>
 						<div class="card mb-3">
 							<div class="card-body">
+								<span class="badge bg-primary mb-1">Sync</span>
 								<h3>Pinned Games (${(sync.PolyPlus_PinnedGames || []).length})</h3>
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_PinnedGames || []), null, 2)
@@ -310,6 +313,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						</div>
 						<div class="card mb-3">
 							<div class="card-body">
+								<span class="badge bg-primary mb-1">Sync</span>
 								<h3>Item Wishlist (${(sync.PolyPlus_ItemWishlist || []).length})</h3>
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_ItemWishlist || []), null, 2)
