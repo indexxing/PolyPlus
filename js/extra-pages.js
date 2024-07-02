@@ -234,9 +234,10 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 			});
 		});
 
-		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist'], function (bytes) {
-			console.log(bytes)
-			document.getElementById('data-size').innerText = bytes.toLocaleString();
+		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist'], function (sync) {
+			chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
+				document.getElementById('data-size').innerText = (sync + local).toLocaleString();
+			})
 		});
 	});
 } else if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#debug') {
