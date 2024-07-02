@@ -266,11 +266,31 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 					<p class="w-75 d-block mx-auto">This page is used for accessing most data-related objects stored by the extension.</p>
 				</div>
 				<div class="row">
-					<div class="col" style="padding-left: 0px;">
-						<div class="card mb-3">
+					<div class="col-md-2" style="padding-left: 0px;">
+						<div class="card">
+							<div class="card-body">
+								<p class="text-muted mb-1">Version: v${Version}</p>
+								<p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
+								<button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
+								<a href="https://github.com/indexxing/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
+							</div>
+						</div>
+						<hr>
+						Created by <a href="/u/Index" target="_blank">Index</a>
+						<br><br>
+						Beta Testers:
+						<ul>
+							<li><a href="/u/datastore" target="_blank">datastore</a></li>
+							<li><a href="/u/Emir" target="_blank">Emir</a></li>
+							<li><a href="/u/InsertSoda" target="_blank">InsertSoda</a></li>
+							<li><a href="/u/qwp" target="_blank">qwp</a></li>
+						</ul>
+					</div>
+					<div class="col">
+					<div class="card mb-3">
 							<a class="text-reset" data-bs-toggle="collapse" href="#settings" role="button" aria-expanded="false" aria-controls="settings">
 								<div class="card-header">
-									<span class="badge bg-primary">Sync</span>
+									<span class="badge bg-primary" style="margin-right: 5px; vertical-align: text-bottom;">Sync</span>
 									Settings
 								</div>
 							</a>
@@ -280,41 +300,15 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 										.replaceAll('\n','<br>')
 										.replaceAll(' ', '&nbsp;')
 										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
-									<!--<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((sync.PolyPlus_Settings || [])).replaceAll('"', "\'")}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>-->
 								</div>
-							</div>
-						</div>
-						<div class="card">
-							<a class="text-reset" data-bs-toggle="collapse" href="#inventory-cache" role="button" aria-expanded="false" aria-controls="inventory-cache">
-								<div class="card-header">
-									<span class="badge bg-secondary">Local</span>
-									Inventory Cache
-								</div>
-							</a>
-							<div class="card-body collapse" id="inventory-cache">
-								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
-									${JSON.stringify((local.PolyPlus_InventoryCache || {data: [], requested: "never"}), null, 2)
-										.replaceAll('\n','<br>')
-										.replaceAll(' ', '&nbsp;')
-										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
-						<div class="card mb-3">
-							<div class="card-body">
-								<p class="text-muted mb-1">Version: v${Version}</p>
-								<p class="text-muted mb-3">Data Size: <span id="data-size">Loading</span> byte(s)</p>
-								<button class="btn btn-primary btn-sm w-100" id="check-for-updates">Check for Updates</button>
-								<a href="https://github.com/indexxing/PolyPlus" class="btn btn-dark btn-sm w-100 mt-2" target="_blank">Open GitHub</a>
 							</div>
 						</div>
 						<div class="card mb-3">
 							<a class="text-reset" data-bs-toggle="collapse" href="#pinned-games" role="button" aria-expanded="false" aria-controls="pinned-games">
 								<div class="card-header">
-									<span class="badge bg-primary">Sync</span>
-									Pinned Games (${(sync.PolyPlus_PinnedGames || []).length})
+									<span class="badge bg-primary" style="margin-right: 5px; vertical-align: text-bottom;">Sync</span>
+									Pinned Games
+									<small class="text-muted" style="font-size: 0.7rem;">(${(sync.PolyPlus_PinnedGames || []).length})</small>
 								</div>
 							</a>
 							<div class="card-body collapse" id="pinned-games">
@@ -330,8 +324,9 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 						<div class="card mb-3">
 							<a class="text-reset" data-bs-toggle="collapse" href="#item-wishlist" role="button" aria-expanded="false" aria-controls="item-wishlist">
 								<div class="card-header">
-									<span class="badge bg-primary">Sync</span>
-									Item Wishlist (${(sync.PolyPlus_ItemWishlist || []).length})
+									<span class="badge bg-primary" style="margin-right: 5px; vertical-align: text-bottom;">Sync</span>
+									Item Wishlist
+									<small class="text-muted" style="font-size: 0.7rem;">(${(sync.PolyPlus_ItemWishlist || []).length})</small>
 								</div>
 							</a>
 							<div class="card-body collapse" id="item-wishlist">
@@ -344,9 +339,50 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 								</div>
 							</div>
 						</div>
+						<div class="card">
+							<a class="text-reset" data-bs-toggle="collapse" href="#inventory-cache" role="button" aria-expanded="false" aria-controls="inventory-cache">
+								<div class="card-header">
+									<span class="badge bg-secondary" style="margin-right: 5px; vertical-align: text-bottom;">Local</span>
+									Inventory Cache
+									<small class="text-muted" style="font-size: 0.7rem;">(cached for 5 minutes)</small>
+								</div>
+							</a>
+							<div class="card-body collapse" id="inventory-cache">
+								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+									${JSON.stringify((local.PolyPlus_InventoryCache || {data: [], requested: "never"}), null, 2)
+										.replaceAll('\n','<br>')
+										.replaceAll(' ', '&nbsp;')
+										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				`;
+
+				const CheckForUpdatesButton = document.getElementById('check-for-updates');
+				function CheckForUpdates() {
+					CheckForUpdatesButton.removeEventListener('click', CheckForUpdates);
+					CheckForUpdatesButton.disabled = true;
+					fetch('https://polyplus.vercel.app/data/version.json')
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error('Network not ok');
+							}
+							return response.json();
+						})
+						.then((data) => {
+							if (data.version === Version || Math.floor((data.version - Version) * 10) === 0) {
+								CheckForUpdatesButton.innerText = 'No updates available';
+							} else {
+								CheckForUpdatesButton.innerText = Math.floor((data.version - Version) * 10) + ' updates available';
+							}
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+				}
+				CheckForUpdatesButton.addEventListener('click', CheckForUpdates);
 
 				chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist'], function (sync) {
 					chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
