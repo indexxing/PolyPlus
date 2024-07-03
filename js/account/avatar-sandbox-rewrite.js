@@ -561,6 +561,7 @@ function LoadWearing() {
 }
 
 function WearAsset(details) {
+    const ItemID = Object.keys(ItemCache)[Object.values(ItemCache).indexOf(details)]
     if (Avatar[details.type] !== details.id && Avatar.items.indexOf(details.id) === -1) {
         // Equip
         if (details.type === 'hat') {
@@ -571,7 +572,7 @@ function WearAsset(details) {
     } else {
         // Unequip
         if (details.type === 'hat') {
-            Avatar.items.splice(Avatar.items.indexOf(details.id), 1);
+            Avatar.items.splice(Avatar.items.indexOf(ItemID), 1);
         } else {
             Avatar[details.type] = undefined
         }
