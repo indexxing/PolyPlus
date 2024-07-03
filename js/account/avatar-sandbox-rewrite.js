@@ -110,7 +110,9 @@ async function PageLoad() {
                 Link.classList.add('active');
                 Tabs.querySelector(`[data-tab="${TabSelected}"]`).classList.remove('active');
                 TabSelected = Link.getAttribute('data-tab');
+                ItemSearch.previousElementSibling.value = ''
                 Page = 1;
+                Search = ""
                 LoadItems();
             }
         });
