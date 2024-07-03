@@ -262,6 +262,10 @@ async function PageLoad() {
             LoadUser(LoadAsset.previousElementSibling.value)
         }
     })
+
+    document.getElementById('view-cache').addEventListener('click', function(){
+        console.log('Cache: ', ItemCache)
+    })
 }
 
 async function UpdateAvatar() {
