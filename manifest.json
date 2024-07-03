@@ -100,7 +100,7 @@
 
 		{
 			"matches": ["https://polytoria.com/my/avatar*"],
-			"js": ["/js/account/avatar-sandbox-rewrite.js"]
+			"js": ["/js/account/avatar-sandbox.js"]
 		},
 
 		{
