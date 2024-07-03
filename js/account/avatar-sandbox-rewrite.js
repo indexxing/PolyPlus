@@ -474,7 +474,7 @@ async function LoadItems() {
                 by <a href="/users/${ (item.type !== 'hat' && item.type !== 'tool') ? '1' : item.creator.id }" class="text-reset">${ (item.type !== 'hat' && item.type !== 'tool') ? 'Polytoria' : item.creator.name }</a>
             </small>
             <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
-                ${ (item.price === 0) ? 'text-primary">Free' : (item.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + item.price : 'text-muted">???</small>' }
+                ${ (item.price === 0) ? 'text-primary fw-bold">Free' : (item.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + item.price : 'text-muted">???</small>' }
             </small>
         </div>
         `
@@ -547,7 +547,7 @@ function LoadWearing() {
                     by <a href="/users/${Cached.creator.id || "1"}" class="text-reset">${Cached.creator.name || "-"}</a>
                 </small>
                 <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
-                    ${ (Cached.price === 0) ? 'text-primary">Free' : (Cached.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + Cached.price : 'text-muted">???</small>' }
+                    ${ (Cached.price === 0) ? 'text-primary fw-bold">Free' : (Cached.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + Cached.price : 'text-muted">???</small>' }
                 </small>
             </div>
             `
