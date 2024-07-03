@@ -292,6 +292,11 @@ async function UpdateAvatar() {
             const MeshURL = (await (await fetch('https://api.polytoria.com/v1/assets/serve-mesh/' + x)).json())
             if (MeshURL.success) {
                 ItemCache[x].asset = MeshURL.url
+
+                if (["mesh", "decal", "audio"].indexOf(ItemCache[x].type) !== -1) {
+                    ItemCache[x].type = document.getElementById('load-asset-type').options[document.getElementById('load-asset-type').selectedIndex].value
+                }
+
                 if (ItemCache[x].type === 'hat') {
                     FormattedAvatar.items[index] = MeshURL.url
                 } else {
