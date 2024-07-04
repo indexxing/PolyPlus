@@ -70,6 +70,9 @@ let Order = "desc"
 let ShowOffsale = true
 let TabSelected = "hat"
 
+/* Customization */
+let SelectedBodyPart
+
 !(async () => {
     Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
     Utilities = Utilities.default;
@@ -117,6 +120,24 @@ async function PageLoad() {
             }
         });
     });
+
+    const BodyColorsModal = document.getElementById('p+body_colors')
+    const BodyParts = Array.from(document.getElementsByClassName('bodypart'))
+    BodyParts.forEach(part => {
+        part.addEventListener('click', function(){
+            SelectedBodyPart = part.id
+            BodyColorsModal.showModal()
+        })
+    })
+
+    const BodyColors = Array.from(document.getElementsByClassName('colorpicker-color'))
+    BodyColors.forEach(color => {
+        color.addEventListener('click', function(){
+            Avatar[SelectedBodyPart+'Color'] = color.style.backgroundColor
+            BodyColorsModal.close()
+            UpdateAvatar()
+        })
+    })
 
     const ItemSearch = document.getElementById('search-btn')
     ItemSearch.addEventListener('click', function(){
