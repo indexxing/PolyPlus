@@ -84,9 +84,9 @@ if (Username) {
 				const AvatarCard = document.getElementById('user-avatar-card')
 				const ToggleButton = document.createElement('button')
 				ToggleButton.classList = 'btn btn-primary btn-sm 3dviewtoggler isactive'
-				ToggleButton.style = 'position: absolute; right: 15px; margin: 10px;'
+				ToggleButton.style = 'position: absolute; right: 15px; margin-top: 20px;'
 				ToggleButton.innerHTML = '<i class="toggleIcn fad fa-image"></i>'
-				AvatarCard.children[0].insertBefore(ToggleButton, AvatarIFrame)
+				AvatarCard.getElementsByClassName('position-relative')[0].insertBefore(ToggleButton, AvatarIFrame)
 
 				ToggleButton.addEventListener('click', async function(){
 					if (ToggleButton.children[0].classList.contains('fa-image')) {
