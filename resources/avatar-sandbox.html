@@ -112,14 +112,13 @@
 		<div class="colorpicker-color" style="background-color: #e8bac8"></div>
 	</div>
 </dialog>
+<span class="badge bg-warning mb-2" id="view-cache" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-title="Debug: Item Cache" data-bs-placement="right">Poly+</span>
+<h4 class="d-none d-lg-block">
+	Avatar Sandbox
+</h4>
 <div class="row">
 	<div class="col-12 col-lg-3">
 		<div class="card mcard mb-3">
-			<h6 class="card-header">
-				<i class="fad fa-user-crown"></i>
-				Avatar Sandbox
-				<span class="badge bg-warning float-end" id="view-cache" style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-title="Debug: Item Cache">Poly+</span>
-			</h6>
 			<div class="card-body">
 				<iframe id="viewFrame" style="width: 100%; height: 314px; border-radius: 0.65rem;"></iframe>
 				<div id="options">
@@ -180,8 +179,8 @@
 			<button class="btn btn-primary" id="load-asset">Wear</button>
 		</div>
 		<hr class="mt-2 mb-3">
-		<div class="card mcard mb-3">
-			<h6 class="card-header">
+		<div class="card mcard mb-1">
+			<h6 class="card-header text-center">
 				<i class="fad fa-palette"></i>
 				Body Colors
 			</h6>
@@ -213,46 +212,46 @@
 		-->
 	</div>
 	<div class="col-12 col-lg-9">
-		<ul class="nav nav-pills nav-justified mb-3" id="tabs">
-			<li class="nav-item">
+		<ul class="nav nav-pills no-shrink avatar-nav-pills nav-justified row" id="tabs">
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
 				<a class="nav-link active" data-tab="hat">
-					<i class="fas fa-hat-cowboy me-1"></i>
-					Hats
+					<i class="fas fa-hat-wizard me-1"></i>
+					<span class="pilltitle">Accessories</span>
 				</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="tool">
-					<i class="fas fa-hammer me-1"></i>
-					Tools
-				</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" data-tab="face">
-					<i class="fas fa-face-smile me-1"></i>
-					Faces
-				</a>
-			</li>
-			<li class="nav-item">
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
 				<a class="nav-link" data-tab="shirt">
 					<i class="fas fa-tshirt me-1"></i>
-					Shirts
+					<span class="pilltitle">Shirts</span>
 				</a>
 			</li>
-			<li class="nav-item">
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
 				<a class="nav-link" data-tab="pants">
 					<i class="fas fa-socks me-1"></i>
-					Pants
+					<span class="pilltitle">Pants</span>
 				</a>
 			</li>
-			<li class="nav-item">
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
+				<a class="nav-link" data-tab="tool">
+					<i class="fas fa-hammer me-1"></i>
+					<span class="pilltitle">Tools</span>
+				</a>
+			</li>
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
+				<a class="nav-link" data-tab="face">
+					<i class="fas fa-face-smile me-1"></i>
+					<span class="pilltitle">Faces</span>
+				</a>
+			</li>
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
 				<a class="nav-link" data-tab="torso">
 					<i class="fas fa-cube me-1"></i>
-					Torsos
+					<span class="pilltitle">Body Parts</span>
 				</a>
 			</li>
 		</ul>
-		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
-			<div class="row mb-2">
+		<div class="card px-2 pt-2 pb-2 mb-2" style="background: transparent; border-color: transparent; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+			<div class="row mb-1">
 				<div class="col-md-4">
 					<div class="input-group">
 						<select id="item-sort" class="form-select">
@@ -299,7 +298,7 @@
 			</nav>
 		</div>
 		<h6 class="card-header mb-2"><i class="fad fa-hat-wizard me-1"></i> Wearing</h6>
-		<div class="card px-2 pt-2 pb-2 mb-4" style="background: rgba(0, 0, 0, 0.23); border-color: rgba(0, 0, 0, 0.23); border-top-left-radius: 20px; border-top-right-radius: 20px;">
+		<div class="card px-2 pt-2 pb-2 mb-4" style="background: transparent; border-color: transparent; border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			<div class="row alignleft itemgrid" id="wearing"></div>
 		</div>
 	</div>
