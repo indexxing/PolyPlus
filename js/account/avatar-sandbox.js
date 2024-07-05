@@ -553,7 +553,7 @@ function LoadWearing() {
             <div style="max-width: 150px;">
                 <div class="card mb-2 avatar-item-container">
                     <div class="p-2">
-                        <img src="${Cached.thumbnail}" class="img-fluid">
+                        <img src="${Cached.thumbnail}" class="img-fluid" style="border-radius: 10px;">
                         ${ (Cached.type === 'hat') ? `
                         <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
                             <span class="badge bg-secondary">${CleanAccessoryType(Cached.accessoryType)}</span>
