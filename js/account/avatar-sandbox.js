@@ -262,11 +262,6 @@ async function PageLoad() {
         document.body.removeChild(Download);
     });
 
-    const OpenInNewTabButton = document.getElementById('openNewTab');
-    OpenInNewTabButton.addEventListener('click', function () {
-        window.open(IFrame, "_blank")
-    });
-
     const LoadAsset = document.getElementById('load-asset')
     const LoadAssetType = document.getElementById('load-asset-type')
     LoadAsset.addEventListener('click', function(){
