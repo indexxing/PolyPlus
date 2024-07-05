@@ -241,22 +241,18 @@ function TryOnItems() {
 			})
 			.then((data) => {
 				data.assets.forEach((item) => {
-					switch (item.type) {
-						case 'hat':
+					if (item.type !== AssetType.toLowerCase()) {
+						if (item.type === 'hat') {
 							Avatar.items[Avatar.items.length] = item.path || '';
-							break;
-						case 'face':
+						} else if (item.type === 'face') {
 							Avatar.face = item.path || '';
-							break;
-						case 'tool':
+						} else if (item.type === 'tool') {
 							Avatar.tool = item.path || '';
-							break;
-						case 'shirt':
+						} else if (item.type === 'shirt') {
 							Avatar.shirt = item.path || '';
-							break;
-						case 'pants':
+						} else if (item.type === 'pants') {
 							Avatar.pants = item.path || '';
-							break;
+						}
 					}
 				});
 
@@ -276,7 +272,7 @@ function TryOnItems() {
 							return response.json();
 						})
 						.then((data) => {
-							if (ItemType === 'tool') {
+							if (AssetType === 'Tool') {
 								Avatar.tool = data.url;
 							} else {
 								Avatar.items.push(data.url);
