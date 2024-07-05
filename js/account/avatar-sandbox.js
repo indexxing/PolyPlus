@@ -535,7 +535,7 @@ async function LoadItems() {
 
 function LoadWearing() {
     document.getElementById('wearing').innerHTML = '';
-    [...Avatar.items, Avatar.shirt, Avatar.pants, Avatar.torso].filter((x) => x !== undefined).forEach(id => {
+    [...Avatar.items, Avatar.shirt, Avatar.pants, Avatar.tool, Avatar.torso].filter((x) => x !== undefined).forEach(id => {
         const Cached = Object.values(ItemCache)[Object.keys(ItemCache).indexOf(id.toString())]
         if (Cached !== undefined) {
             if (Cached.creator === undefined || Cached.creator === null) {
@@ -630,5 +630,5 @@ function CleanAccessoryType(type) {
         headCover: "Head Cover",
         headAccessory: "Head Accessory"
     }
-    return Object.values(CleanAccessoryTypes)[Object.keys(CleanAccessoryTypes).indexOf(type)] || "!!!"+type
+    return Object.values(CleanAccessoryTypes)[Object.keys(CleanAccessoryTypes).indexOf(type)] || type
 }
