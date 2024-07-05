@@ -566,7 +566,7 @@ function LoadWearing() {
                     <h6 class="text-truncate mb-0">${Cached.name}</h6>
                 </a>
                 <small class="text-muted d-block text-truncate">
-                    by <a href="/users/${Cached.creator.id || "1"}" class="text-reset">${Cached.creator.name || "-"}</a>
+                    ${ (Cached.creator.id || 1) === 1 ? (Cached.accessoryType !== undefined ? CleanAccessoryType(Cached.accessoryType) : Cached.type.substring(0, 1).toUpperCase()+Cached.type.substring(1)) : `by <a href="/users/${Cached.creator.id || "1"}" class="text-reset">${Cached.creator.name || "-"}</a>` }
                 </small>
                 <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
                     ${ (Cached.price === 0) ? 'text-primary fw-bold">Free' : (Cached.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + Cached.price : 'text-muted">???</small>' }
