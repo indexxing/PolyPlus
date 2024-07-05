@@ -464,8 +464,6 @@ async function LoadItems() {
         document.getElementById('pagination-last').classList.add('disabled');
     }
     if (Page > 1 && PageCount > 1) {
-        console.log('aaa')
-        console.log(Page > 1, PageCount > 1)
         document.getElementById('pagination-prev').classList.remove('disabled');
         document.getElementById('pagination-first').classList.remove('disabled');
     } else {
