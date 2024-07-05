@@ -278,7 +278,6 @@ function TryOnItems() {
 								Avatar.items.push(data.url);
 							}
 
-							console.log(Avatar);
 							TryIFrame.src = 'https://polytoria.com/ptstatic/itemview/#' + btoa(encodeURIComponent(JSON.stringify(Avatar)));
 						})
 						.catch((error) => {
