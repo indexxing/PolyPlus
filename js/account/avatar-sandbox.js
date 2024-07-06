@@ -292,21 +292,33 @@ async function UpdateAvatar() {
 
     const AccessoryPromise = [...Avatar.items, Avatar.tool, Avatar.torso].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:')).map(async (x, index) => {
         if (ItemCache[x] === undefined) {
-            const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
-            ItemCache[x] = {
-                type: ItemDetails.type,
-                name: ItemDetails.name,
-                price: ItemDetails.price,
-                creator: {
-                    name: ItemDetails.creator.name,
-                    id: ItemDetails.creator.id
-                },
-                thumbnail: ItemDetails.thumbnail,
-                asset: undefined
-            }
+            try {
+                const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
+                ItemCache[x] = {
+                    type: ItemDetails.type,
+                    name: ItemDetails.name,
+                    price: ItemDetails.price,
+                    creator: {
+                        name: ItemDetails.creator.name,
+                        id: ItemDetails.creator.id
+                    },
+                    thumbnail: ItemDetails.thumbnail,
+                    asset: undefined
+                }
 
-            if (ItemDetails.type === 'hat') {
-                ItemCache[x].accessoryType = ItemDetails.accessoryType
+                if (ItemDetails.type === 'hat') {
+                    ItemCache[x].accessoryType = ItemDetails.accessoryType
+                }
+            } catch(error) {
+                ItemCache[x] = {
+                    type: "unknown",
+                    name: "#" + x,
+                    price: null,
+                    creator: null,
+                    thumbnail: "https://c0.ptacdn.com/static/images/broken.136e44ee.png",
+                    asset: undefined,
+                    ribbon: "unknown"
+                }
             }
         }
         
@@ -336,24 +348,36 @@ async function UpdateAvatar() {
 
     const TexturePromise = [Avatar.shirt, Avatar.pants, Avatar.face].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:') && x !== undefined).map(async (x, index) => {
         if (ItemCache[x] === undefined) {
-            const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
-            ItemCache[x] = {
-                type: ItemDetails.type,
-                name: ItemDetails.name,
-                price: ItemDetails.price,
-                creator: {
-                    name: ItemDetails.creator.name,
-                    id: ItemDetails.creator.id
-                },
-                thumbnail: ItemDetails.thumbnail,
-                asset: undefined
-            }
+            try {
+                const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
+                ItemCache[x] = {
+                    type: ItemDetails.type,
+                    name: ItemDetails.name,
+                    price: ItemDetails.price,
+                    creator: {
+                        name: ItemDetails.creator.name,
+                        id: ItemDetails.creator.id
+                    },
+                    thumbnail: ItemDetails.thumbnail,
+                    asset: undefined
+                }
 
-            if (ItemDetails.price === 0) {
-                if (ItemDetails.sales === 0) {
-                    ItemCache[x].price = null
-                } else {
-                    ItemCache[x].price = 0
+                if (ItemDetails.price === 0) {
+                    if (ItemDetails.sales === 0) {
+                        ItemCache[x].price = null
+                    } else {
+                        ItemCache[x].price = 0
+                    }
+                }
+            } catch(error) {
+                ItemCache[x] = {
+                    type: "unknown",
+                    name: "#" + x,
+                    price: null,
+                    creator: null,
+                    thumbnail: "https://c0.ptacdn.com/static/images/broken.136e44ee.png",
+                    asset: undefined,
+                    ribbon: "unknown"
                 }
             }
         }
