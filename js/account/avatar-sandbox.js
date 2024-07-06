@@ -500,29 +500,31 @@ async function LoadItems() {
         `
         document.getElementById('inventory').appendChild(ItemColumn)
 
-        ItemCache[item.id] = {
-            type: item.type,
-            name: item.name,
-            price: item.price,
-            creator: {
-                name: item.creator.name,
-                id: item.creator.id
-            },
-            thumbnail: item.thumbnail,
-            asset: undefined
-        }
-
-        if (item.price === 0) {
-            if (item.sales === 0) {
-                console.log("ITEM IS AWARD-ONLY!!! ", item)
-                ItemCache[item.id].price = null
-            } else {
-                ItemCache[item.id].price = 0
+        if (ItemCache[item.id] === undefined) {
+            ItemCache[item.id] = {
+                type: item.type,
+                name: item.name,
+                price: item.price,
+                creator: {
+                    name: item.creator.name,
+                    id: item.creator.id
+                },
+                thumbnail: item.thumbnail,
+                asset: undefined
             }
-        }
-
-        if (item.type === 'hat') {
-            ItemCache[item.id].accessoryType = item.accessoryType
+    
+            if (item.price === 0) {
+                if (item.sales === 0) {
+                    console.log("ITEM IS AWARD-ONLY!!! ", item)
+                    ItemCache[item.id].price = null
+                } else {
+                    ItemCache[item.id].price = 0
+                }
+            }
+    
+            if (item.type === 'hat') {
+                ItemCache[item.id].accessoryType = item.accessoryType
+            }
         }
 
         ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
