@@ -118,7 +118,9 @@ dialog .modal-body p:first-child {
 }
 
 .setting-container.enabled .indicator { background-color: #007bff;}
+.setting-container.enabled .title { text-shadow: 0px 1px 3px blue; }
 .setting-container.disabled .indicator { background-color: orangered; }
+.setting-container.disabled .title { text-shadow: 0px 1px 3px orangered; }
 
 .limited-time {
     background: transparent;
