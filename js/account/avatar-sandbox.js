@@ -271,7 +271,11 @@ async function PageLoad() {
             if (SelectedType === 'hat') {
                 Avatar.items.push(LoadAsset.previousElementSibling.value);
             } else {
-                Avatar[SelectedType] = parseInt(LoadAsset.previousElementSibling.value)
+                if (!isNaN(LoadAsset.previousElementSibling.value)) {
+                    Avatar[SelectedType] = parseInt(LoadAsset.previousElementSibling.value)
+                } else {
+                    Avatar[SelectedType] = LoadAsset.previousElementSibling.value
+                }
             }
             UpdateAvatar();
         } else {
