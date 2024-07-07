@@ -28,6 +28,11 @@
 		},
 
 		{
+			"matches": ["https://polytoria.com/login"],
+			"js": ["/js/login.js"]
+		},
+
+		{
 			"matches": ["https://polytoria.com/places/**"],
 			"js": ["/js/places/place-view.js"]
 		},
