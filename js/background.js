@@ -134,7 +134,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			})
 		})
 
-		const LoadStats = function(stats){			
+		const LoadStats = function(stats){	
+			const GreatDivideCard = document.getElementById('p+greatdivide_card')
 			if (stats !== null) {
 				let KDR = (stats.Kills / stats.Deaths)
 				if (isNaN(KDR)) {
@@ -143,7 +144,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 					KDR = KDR.toFixed(4)
 				}
 
-				document.getElementById('p+greatdivide_card').innerHTML = `
+				GreatDivideCard.innerHTML = `
 				<div class="mb-1">
 					<b>
 						<i class="fa-duotone fa-eye text-center d-inline-block" style="width:1.2em"></i>
@@ -255,7 +256,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				});
 				document.body.appendChild(Script);
 			} else {
-				document.getElementById('p+greatdivide_card').innerText = "This user hasn't participated in The Great Divide."
+				GreatDivideCard.classList.add('text-center', 'py-5')
+				GreatDivideCard.innerHTML = `
+				<h1 class="display-3"><i class="fa-solid fa-face-thinking"></i></h1>
+				<h5> Not Drafted </h5>
+				<p class="mb-0">This user hasn't participated in The Great Divide.</p>
+				`
 			}
 		}
 		return true

@@ -89,7 +89,7 @@ const PlaceAllowlist = [
 			GREATEST DIVISION
 			<i class="fas fa-swords me-1 float-end"></i>
 		</h6>
-		<div class="card mcard mb-4" style="min-height: 226px; background-image: linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url(${ (HasTeam === true) ? (Team === "phantoms") ? 'https://c0.ptacdn.com/assets/N3DH4x5a6iW7raaQ-3lwHpRHHpWShdXc.png' : 'https://c0.ptacdn.com/assets/1HXpaoDLHJo2rrvwwxqJEDWvDZ6BgvSE.png' : '' }); background-size: cover; background-position: center; ${HasTeam === true ? 'border: 1.25px solid ' + ((Team === "phantoms") ? 'blue' : 'green') + ' !important;' : ''}">
+		<div class="card mcard mb-4" style="min-height: 226px; background-image: linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url(${ (HasTeam === true) ? (Team === "phantoms") ? 'https://c0.ptacdn.com/assets/N3DH4x5a6iW7raaQ-3lwHpRHHpWShdXc.png' : 'https://c0.ptacdn.com/assets/1HXpaoDLHJo2rrvwwxqJEDWvDZ6BgvSE.png' : 'https://blog.polytoria.com/content/images/2024/06/TheGreatDivide.png' }); background-size: cover; background-position: center; ${HasTeam === true ? 'border: 1.25px solid ' + ((Team === "phantoms") ? 'blue' : 'green') + ' !important;' : 'border-color: #000 !important;'}">
 			<div class="card-body" id="p+greatdivide_card">
 				<button class="btn btn-primary btn-sm w-100">Load Statistics</button>
 			</div>
