@@ -265,8 +265,8 @@ async function CollectibleCategory() {
 		Collectibles.push(...InitialInventory.inventory.filter((x) => x.asset.isLimited === true))
 
 		if (InitialInventory.pages > 1) {
-			if (InitialInventory.pages > 3) {
-				InitialInventory.pages = 3
+			if (InitialInventory.pages > 12) {
+				InitialInventory.pages = 12
 			}
 
 			for (let page = 2; page < InitialInventory.pages; page++) {
