@@ -69,6 +69,7 @@ let Sort = "createdAt"
 let Order = "desc"
 let ShowOffsale = true
 let TabSelected = "hat"
+let RetroItems = null
 
 /* Customization */
 let SelectedBodyPart
@@ -482,7 +483,43 @@ async function LoadUser(id) {
 async function LoadItems() {
     document.getElementById('inventory').innerHTML = ''
 
-    const Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json())
+    let Items;
+    if (TabSelected !== 'retro') {
+        Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json())
+    } else {
+        if (RetroItems === null) {
+            Items = (await (await fetch('https://poly-upd-archival.pages.dev/data.json')).json())
+            Object.values(Items).forEach((item, index) => {
+                item.id = Object.keys(Items)[index]
+                item.thumbnail = 'https://poly-archive.pages.dev/assets/thumbnails/' + item.id + '.png'
+                item.creator = {
+                    id: 1,
+                    name: "Polytoria"
+                }
+                item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
+                ItemCache[item.id] = item
+            })
+
+            const PaginationItems = Object.values(Items)
+            let Groups = []
+            while (PaginationItems.length > 0) {
+                Groups.push(PaginationItems.splice(0, 12));
+            }
+
+            Items = {
+                assets: Groups[Page - 1],
+                pages: Groups.length
+            }
+
+            RetroItems = Groups
+        } else {
+            console.log('use cache')
+            Items = {
+                assets: RetroItems[Page - 1],
+                pages: RetroItems.length
+            }
+        }
+    }
     PageCount = Items.pages
     if (Page < PageCount) {
         document.getElementById('pagination-next').classList.remove('disabled');
@@ -522,13 +559,13 @@ async function LoadItems() {
                 by <a href="/users/${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? '1' : item.creator.id }" class="text-reset">${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? 'Polytoria' : item.creator.name }</a>
             </small>
             <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
-                ${ (item.price === 0) ? 'text-primary fw-bold">Free' : (item.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + item.price : 'text-muted">???</small>' }
+               ${FormatPrice(item.price)}
             </small>
         </div>
         `
         document.getElementById('inventory').appendChild(ItemColumn)
 
-        if (ItemCache[item.id] === undefined) {
+        if (ItemCache[item.id] === undefined && TabSelected !== "retro") {
             ItemCache[item.id] = {
                 type: item.type,
                 name: item.name,
@@ -543,7 +580,6 @@ async function LoadItems() {
     
             if (item.price === 0) {
                 if (item.sales === 0) {
-                    console.log("ITEM IS AWARD-ONLY!!! ", item)
                     ItemCache[item.id].price = null
                 } else {
                     ItemCache[item.id].price = 0
@@ -597,7 +633,7 @@ function LoadWearing() {
                     ${ (Cached.creator.id || 1) === 1 ? (Cached.accessoryType !== undefined ? CleanAccessoryType(Cached.accessoryType) : Cached.type.substring(0, 1).toUpperCase()+Cached.type.substring(1)) : `by <a href="/users/${Cached.creator.id || "1"}" class="text-reset">${Cached.creator.name || "-"}</a>` }
                 </small>
                 <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
-                    ${ (Cached.price === 0) ? 'text-primary fw-bold">Free' : (Cached.price !== "???") ? 'text-success"><i class="pi mr-1">$</i> ' + Cached.price : 'text-muted">???</small>' }
+                    ${FormatPrice(Cached.price)}
                 </small>
             </div>
             `
@@ -659,4 +695,19 @@ function CleanAccessoryType(type) {
         headAccessory: "Head Accessory"
     }
     return Object.values(CleanAccessoryTypes)[Object.keys(CleanAccessoryTypes).indexOf(type)] || type
+}
+
+function FormatPrice(price) {
+    if (price === 0) {
+        return 'text-primary fw-bold">Free</small>'
+    } else if (price === false) {
+        return 'text-muted fw-bold">Offsale</small>'
+    } else if (price === null) {
+        return 'text-muted">???</small>'
+    } else if (price !== "???") {
+        return 'text-success"><i class="pi mr-1">$</i> ' + price + '</small>'
+    } else {
+        return 'text-muted">???</small>'
+    }
+    return "what"
 }
