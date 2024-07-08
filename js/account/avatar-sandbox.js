@@ -593,7 +593,7 @@ async function LoadItems() {
         }
 
         ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
-            WearAsset(item)
+            WearAsset(item, item.id)
         })
     })
 }
@@ -641,25 +641,24 @@ function LoadWearing() {
             document.getElementById('wearing').appendChild(ItemColumn)
 
             ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
-                WearAsset(Cached)
+                WearAsset(Cached, id)
             })
         }
     })
 }
 
-function WearAsset(details) {
-    const ItemID = Object.keys(ItemCache)[Object.values(ItemCache).indexOf(details)]
-    if (Avatar[details.type] !== details.id && Avatar.items.indexOf(details.id) === -1) {
+function WearAsset(details, id) {
+    if (Avatar[details.type] !== id && Avatar.items.indexOf(id) === -1) {
         // Equip
         if (details.type === 'hat') {
-            Avatar.items.push(details.id)
+            Avatar.items.push(id)
         } else {
-            Avatar[details.type] = details.id
+            Avatar[details.type] = id
         }
     } else {
         // Unequip
         if (details.type === 'hat') {
-            Avatar.items.splice(Avatar.items.indexOf(ItemID), 1);
+            Avatar.items.splice(Avatar.items.indexOf(parseInt(id)), 1);
         } else {
             Avatar[details.type] = undefined
         }
