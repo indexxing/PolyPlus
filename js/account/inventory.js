@@ -277,19 +277,26 @@ async function CollectibleCategory() {
 	}
 
 	Collectibles.forEach(item => {
-		item = item.asset
+		item = item
 		const ItemColumn = document.createElement('div')
 		ItemColumn.classList = 'px-0'
 		ItemColumn.innerHTML = `
-		<a href="/store/${item.id}" class="text-reset">
+		<a href="/store/${item.asset.id}" class="text-reset">
 			<div class="card mb-2">
 				<div class="ribbon ribbon-limited ribbon-top-right"><span>Limited</span></div>
 				<div class="card-body">
-					<img src="${item.thumbnail}" class="img-fluid rounded">
+					<img src="${item.asset.thumbnail}" class="img-fluid rounded">
+					<span class="badge bg-dark" style="
+						font-weight: lighter;
+						position: absolute;
+						bottom: 0;
+						left: 0;
+						margin: 5px;
+					">#${item.serial}</span>
 				</div>
 			</div>
 			<h6 class="text-truncate mb-0">
-				${item.name}
+				${item.asset.name}
 			</h6>
 		</a>
 		<small class="text-muted d-block mb-1">
