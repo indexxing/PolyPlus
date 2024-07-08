@@ -1,26 +1,19 @@
-console.log('start of script')
-
 var Settings;
 let Theme = ``;
 
 (async () => {
-  console.log('start of async')
   let Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
   Utilities = Utilities.default;
-  console.log('imported utils')
 
   chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
-    console.log("fetched settings: ", result)
     // Merge settings and expected settings to make sure all keys exist
     const RawSettings = result.PolyPlus_Settings;
     Settings = Utilities.MergeObjects(RawSettings || Utilities.DefaultSettings, Utilities.DefaultSettings);
 
     const PageLoad = async function() {
-      console.log("fired dom load")
       if (document.getElementsByClassName('card-header')[0] && document.getElementsByClassName('card-header')[0].innerText === ' Page not found') {
         return;
       }
-      console.log("passed error check")
 
       Utilities.InjectResource('getUserDetails');
       document.body.setAttribute('data-URL', window.location.pathname);
