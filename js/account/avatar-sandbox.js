@@ -490,13 +490,14 @@ async function LoadItems() {
         if (RetroItems === null) {
             Items = (await (await fetch('https://poly-upd-archival.pages.dev/data.json')).json())
             Object.values(Items).forEach((item, index) => {
-                item.id = Object.keys(Items)[index]
+                item.id = parseInt(Object.keys(Items)[index])
                 item.thumbnail = 'https://poly-archive.pages.dev/assets/thumbnails/' + item.id + '.png'
                 item.creator = {
                     id: 1,
                     name: "Polytoria"
                 }
                 item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
+                item.id = item.id*-1
                 ItemCache[item.id] = item
             })
 
