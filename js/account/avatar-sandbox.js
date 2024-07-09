@@ -514,7 +514,6 @@ async function LoadItems() {
 
             RetroItems = Groups
         } else {
-            console.log('use cache')
             Items = {
                 assets: RetroItems[Page - 1],
                 pages: RetroItems.length
