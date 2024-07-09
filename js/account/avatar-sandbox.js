@@ -437,7 +437,16 @@ async function LoadUser(id) {
 			return response.json();
 		})
 		.then((data) => {
-			Avatar.items = [];
+			Avatar = {
+                useCharacter: true,
+                items: [],
+                headColor: '#' + data.colors.head || '#cdcdcd',
+                torsoColor: '#' + data.colors.torso || '#cdcdcd',
+                leftArmColor: '#' + data.colors.leftArm || '#cdcdcd',
+                rightArmColor: '#' + data.colors.rightArm || '#cdcdcd',
+                leftLegColor: '#' + data.colors.leftLeg || '#cdcdcd',
+                rightLegColor: '#' + data.colors.rightLeg || '#cdcdcd'
+            };
 
 			data.assets.forEach((item) => {
                 if (ItemCache[item.id] === undefined) {
@@ -465,13 +474,6 @@ async function LoadUser(id) {
                     Avatar[item.type] = item.id
                 }
 			});
-
-			Avatar.headColor = '#' + data.colors.head || '#cdcdcd';
-			Avatar.torsoColor = '#' + data.colors.torso || '#cdcdcd';
-			Avatar.leftArmColor = '#' + data.colors.leftArm || '#cdcdcd';
-			Avatar.rightArmColor = '#' + data.colors.rightArm || '#cdcdcd';
-			Avatar.leftLegColor = '#' + data.colors.leftLeg || '#cdcdcd';
-			Avatar.rightLegColor = '#' + data.colors.rightLeg || '#cdcdcd';
 
 			UpdateAvatar();
 		})
