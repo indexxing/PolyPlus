@@ -6,6 +6,8 @@ Username = window.location.pathname.split('/')[2];
 let UserID;
 let ItemGrid;
 
+let _Utilities;
+
 if (window.location.pathname.split('/')[3] === 'inventory') {
 	!(async () => {
 		UserID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + Username )).json()).id;
@@ -14,7 +16,10 @@ if (window.location.pathname.split('/')[3] === 'inventory') {
 		/*
 			Rewritten item wishlist function will take in the data with a parameter instead
 		*/
-		chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
+		chrome.storage.sync.get(['PolyPlus_Settings'], async function(result){
+			_Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
+  			_Utilities = _Utilities.default
+
 			Settings = result.PolyPlus_Settings
 
 			const Nav = document.getElementsByClassName('nav-pills')[0];
@@ -66,6 +71,19 @@ if (window.location.pathname.split('/')[3] === 'inventory') {
 						}
 					});
 					CollectibleNav.children[0].classList.add('active');
+
+					let HoardedCard = document.createElement('li');
+					HoardedCard.classList.add('nav-item');
+					HoardedCard.classList.add('text-center');
+					HoardedCard.innerHTML = `
+					<h6 class="section-title mt-3 px-2">
+						Hoarded Items
+					</h6>
+					<div class="card bg-dark mt-2">
+						<div class="card-body" id="p+hoarded_card"></div>
+					</div>
+					`;
+					Nav.appendChild(HoardedCard);
 
 					CollectibleCategory()
 				}
@@ -276,8 +294,14 @@ async function CollectibleCategory() {
 		}
 	}
 
+	const ItemMultiples = []
 	Collectibles.forEach(item => {
-		item = item
+		const Multiple = ItemMultiples.findIndex((x) => x.asset.id === item.asset.id)
+		if (Multiple !== -1) {
+			ItemMultiples[Multiple].copies++
+			ItemMultiples[Multiple].serials.push(item.serial)
+		} else { ItemMultiples.push({asset: item.asset, copies: 1, serials: [item.serial]}) }
+
 		const ItemColumn = document.createElement('div')
 		ItemColumn.classList = 'px-0'
 		ItemColumn.innerHTML = `
@@ -305,4 +329,24 @@ async function CollectibleCategory() {
 		`
 		ItemGrid.appendChild(ItemColumn)
 	})
+
+	const Hoarded = ItemMultiples.filter((x) => x.copies > 1)
+
+	const HoardedCard = document.getElementById('p+hoarded_card')
+	Hoarded.forEach(item => {
+		const ListElement = document.createElement('div')
+		ListElement.classList = 'mb-1 mb-2'
+		ListElement.innerHTML = `
+		<a href="/store/${item.asset.id}" style="font-size: 0.8rem; color: #454545 !important;">
+			<b>${item.asset.name}</b>
+		</a>
+		<br>
+		<span>
+			${item.copies} copies <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="#${item.serials.sort((a, b) => a - b).join(', #')}"></i>
+		</span>
+		`
+		HoardedCard.appendChild(ListElement)
+	})
+
+	_Utilities.InjectResource("registerTooltips")
 }
