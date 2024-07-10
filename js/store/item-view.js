@@ -721,7 +721,7 @@ function CheckOwner() {
 				ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' owns #' + Owns.inventory.serial + ' of "' + document.getElementsByTagName('h1')[0].innerText + '".';
 			} else {
 				ResultText.classList = 'text-danger';
-				ResultText.innerHTML = '<i class="fa-duotone fa-circle-check mr-1"></i> ' + Username + ' does not own "' + document.getElementsByTagName('h1')[0].innerText + '".';
+				ResultText.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> ' + Username + ' does not own "' + document.getElementsByTagName('h1')[0].innerText + '".';
 			}
 		} else {
 			ResultText.classList = 'text-warning';
