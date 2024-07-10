@@ -34,6 +34,10 @@
 	#options *:not(input):not(:nth-child(2)) {
 		margin-bottom: 3.5px;
 	}
+
+	[class^="p+outfit_overwrite_button"]:hover, [class^="p+outfit_delete_button"]:hover {
+		cursor: pointer;
+	}
 </style>
 <dialog id="p+body_colors" class="polyplus-modal" style="width: 375px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;">
 	<div class="row text-muted mb-4" style="font-size: 0.8rem;">
@@ -110,6 +114,42 @@
 		<div class="colorpicker-color" style="background-color: #ff00bf"></div>
 		<div class="colorpicker-color" style="background-color: #ff66cc"></div>
 		<div class="colorpicker-color" style="background-color: #e8bac8"></div>
+	</div>
+</dialog>
+<dialog id="p+outfit_create" class="polyplus-modal" style="width: 375px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;">
+	<div class="row text-muted mb-4" style="font-size: 0.8rem;">
+		<div class="col">
+			<h5 class="mb-0" style="color: #fff;">Create Outfit</h5>
+			Save this avatar for later!
+		</div>
+		<div class="col-md-2">
+			<button class="btn btn-info w-100 mx-auto" onclick="this.parentElement.parentElement.parentElement.close();">X</button>
+		</div>
+	</div>
+	<div class="modal-body">
+		<div class="input-group mb-2">
+			<input type="text" class="form-control" placeholder="Outfit Name...">
+			<button id="p+save_outfit_confirm" class="btn btn-success">Save</button>
+		</div>
+		<b id="p+outfit_create_error" class="text-muted" style="font-size: 0.85rem;"><i class="fa-duotone fa-square-question mr-1"></i> ...</b>
+	</div>
+</dialog>
+<dialog id="p+outfit_rename" class="polyplus-modal" style="width: 375px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;">
+	<div class="row text-muted mb-4" style="font-size: 0.8rem;">
+		<div class="col">
+			<h5 class="mb-0" style="color: #fff;">Rename Outfit</h5>
+			Renaming Outfit "<i id="p+outfit_rename_name">none</i>"
+		</div>
+		<div class="col-md-2">
+			<button class="btn btn-info w-100 mx-auto" onclick="this.parentElement.parentElement.parentElement.close();">X</button>
+		</div>
+	</div>
+	<div class="modal-body">
+		<div class="input-group mb-2">
+			<input type="text" class="form-control" placeholder="New Outfit Name...">
+			<button id="p+rename_outfit_confirm" class="btn btn-success">Save</button>
+		</div>
+		<b id="p+outfit_rename_error" class="text-muted" style="font-size: 0.85rem;"><i class="fa-duotone fa-square-question mr-1"></i> ...</b>
 	</div>
 </dialog>
 <span class="badge bg-warning mb-2" id="view-cache">Poly+</span>
@@ -258,6 +298,12 @@
 				<a class="nav-link" data-tab="retro" data-bs-toggle="tooltip" data-bs-title="Items from Bloxtopia, Superium, and Polytoria v1!">
 					<i class="fa-solid fa-tv-retro"></i>
 					<span class="pilltitle">Retro</span>
+				</a>
+			</li>
+			<li class="nav-item col-6 col-md-4 col-xl-3" style="flex: unset">
+				<a class="nav-link" data-tab="outfit">
+					<i class="fa-solid fa-tv-retro"></i>
+					<span class="pilltitle">Outfits</span>
 				</a>
 			</li>
 		</ul>

@@ -70,6 +70,7 @@ let Order = "desc"
 let ShowOffsale = true
 let TabSelected = "hat"
 let RetroItems = null
+let Outfits = null
 
 /* Customization */
 let SelectedBodyPart
@@ -78,8 +79,9 @@ let SelectedBodyPart
     Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
     Utilities = Utilities.default;
 
-    chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
+    chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_AvatarSandboxOutfits'], function(result){
         Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
+        Outfits = result.PolyPlus_AvatarSandboxOutfits || [];
 
         if (Settings.AvatarSandboxOn || 1 === 1) {
             if (new URLSearchParams(window.location.search).has('sandbox')) {
@@ -284,6 +286,44 @@ async function PageLoad() {
         }
     })
 
+    const SaveButton = document.getElementById('saveOutfit')
+    const OutfitCreateModal = document.getElementById('p+outfit_create')
+    const OutfitCreateButton = document.getElementById('p+save_outfit_confirm')
+    const OutfitCreateError = document.getElementById('p+outfit_create_error')
+    SaveButton.addEventListener('click', function(){
+        console.log(Outfits)
+        OutfitCreateModal.showModal()
+    })
+
+    OutfitCreateButton.addEventListener('click', function(){
+        let OutfitName = OutfitCreateButton.previousElementSibling.value.trim()
+        OutfitCreateButton.previousElementSibling.value = ''
+        if (OutfitName === '') {
+            OutfitCreateError.classList = 'text-danger';
+            OutfitCreateError.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> You cannot name an outfit nothing.';
+            return
+        } else if (OutfitName.length > 25) {
+            OutfitName = OutfitName.substring(0, 25)
+        } else if (Outfits.findIndex((x) => x.name.trim() === OutfitName) !== -1) {
+            OutfitCreateError.classList = 'text-danger';
+            OutfitCreateError.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> You already have an outfit with the name "' + OutfitName + '".';
+            return
+        }
+        OutfitCreateModal.close()
+        Outfits.push({
+            name: OutfitName,
+            createdAt: new Date().getTime(),
+            data: Avatar
+        })
+        if (TabSelected === 'outfit') {
+            LoadItems()
+        }
+
+        chrome.storage.sync.set({'PolyPlus_AvatarSandboxOutfits': Outfits}, function(){
+            console.log('Saved outfits!')
+        })
+    })
+
     document.getElementById('view-cache').addEventListener('click', function(){
         console.log('Cache: ', ItemCache)
     })
@@ -486,9 +526,21 @@ async function LoadItems() {
     document.getElementById('inventory').innerHTML = ''
 
     let Items;
-    if (TabSelected !== 'retro') {
+    if (['retro', 'outfit'].indexOf(TabSelected) === -1) {
         Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json())
-    } else {
+    } else if (TabSelected === 'outfit') {
+        const OutfitsClone = structuredClone(Outfits)
+        let Groups = []
+        while (OutfitsClone.length > 0) {
+            Groups.push(OutfitsClone.splice(0, 12));
+        }
+
+        console.log(Groups, OutfitsClone)
+        Items = {
+            assets: Groups[Page - 1],
+            pages: Groups.length
+        }
+    } else if (TabSelected === 'retro') {
         if (RetroItems === null) {
             Items = (await (await fetch('https://poly-upd-archival.pages.dev/data.json')).json())
             Object.values(Items).forEach((item, index) => {
@@ -538,65 +590,239 @@ async function LoadItems() {
         document.getElementById('pagination-first').classList.add('disabled');
     }
     document.getElementById('pagination-current').innerText = Page
-    Items.assets.forEach(item => {
-        const ItemColumn = document.createElement('div')
-        ItemColumn.classList = 'col-auto'
-        ItemColumn.innerHTML = `
-        <div style="max-width: 150px;">
-            <div class="card mb-2 avatar-item-container">
-                <div class="p-2">
-                    <img src="${item.thumbnail}" class="img-fluid">
-                    ${ (item.type === 'hat') ? `
-                    <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
-                        <span class="badge bg-secondary">${CleanAccessoryType(item.accessoryType)}</span>
-                    </span>
-                    ` : ''}
-                    <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
+
+    if (Items.assets === undefined) { Items.assets = [] }
+    if (Items.assets.length > 0) {
+        document.getElementById('inventory').classList.add('itemgrid')
+        if (TabSelected !== 'outfit') {
+            Items.assets.forEach(item => {
+                const ItemColumn = document.createElement('div')
+                ItemColumn.classList = 'col-auto'
+                ItemColumn.innerHTML = `
+                <div style="max-width: 150px;">
+                    <div class="card mb-2 avatar-item-container">
+                        <div class="p-2">
+                            <img src="${item.thumbnail}" class="img-fluid">
+                            ${ (item.type === 'hat') ? `
+                            <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
+                                <span class="badge bg-secondary">${CleanAccessoryType(item.accessoryType)}</span>
+                            </span>
+                            ` : ''}
+                            <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <a href="/store/${item.id}" class="text-reset">
+                        <h6 class="text-truncate mb-0">${item.name}</h6>
+                    </a>
+                    <small class="text-muted d-block text-truncate">
+                        by <a href="/users/${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? '1' : item.creator.id }" class="text-reset">${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? 'Polytoria' : item.creator.name }</a>
+                    </small>
+                    <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
+                       ${FormatPrice(item.price)}
+                    </small>
                 </div>
-            </div>
-            <a href="/store/${item.id}" class="text-reset">
-                <h6 class="text-truncate mb-0">${item.name}</h6>
-            </a>
-            <small class="text-muted d-block text-truncate">
-                by <a href="/users/${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? '1' : item.creator.id }" class="text-reset">${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? 'Polytoria' : item.creator.name }</a>
-            </small>
-            <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
-               ${FormatPrice(item.price)}
-            </small>
-        </div>
-        `
-        document.getElementById('inventory').appendChild(ItemColumn)
-
-        if (ItemCache[item.id] === undefined && TabSelected !== "retro") {
-            ItemCache[item.id] = {
-                type: item.type,
-                name: item.name,
-                price: item.price,
-                creator: {
-                    name: item.creator.name,
-                    id: item.creator.id
-                },
-                thumbnail: item.thumbnail,
-                asset: undefined
-            }
-    
-            if (item.price === 0) {
-                if (item.sales === 0) {
-                    ItemCache[item.id].price = null
-                } else {
-                    ItemCache[item.id].price = 0
+                `
+                document.getElementById('inventory').appendChild(ItemColumn)
+        
+                if (ItemCache[item.id] === undefined && TabSelected !== "retro") {
+                    ItemCache[item.id] = {
+                        type: item.type,
+                        name: item.name,
+                        price: item.price,
+                        creator: {
+                            name: item.creator.name,
+                            id: item.creator.id
+                        },
+                        thumbnail: item.thumbnail,
+                        asset: undefined
+                    }
+            
+                    if (item.price === 0) {
+                        if (item.sales === 0) {
+                            ItemCache[item.id].price = null
+                        } else {
+                            ItemCache[item.id].price = 0
+                        }
+                    }
+            
+                    if (item.type === 'hat') {
+                        ItemCache[item.id].accessoryType = item.accessoryType
+                    }
                 }
-            }
+        
+                ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
+                    WearAsset(item, item.id)
+                })
+            })
+        } else {
+            Items.assets.forEach((outfit, index) => {
+                const ItemColumn = document.createElement('div')
+                ItemColumn.classList = 'col-auto'
+                ItemColumn.innerHTML = `
+                <div style="max-width: 150px;">
+                    <div class="card mb-2">
+                        <div class="p-2 text-center">
+                            <div class="mb-1">
+                                <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.headColor}; padding: 15px;"></button>
+                            </div>
+                            <div class="mb-1">
+                                <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.leftArmColor}; padding: 10px; padding-top: 20px; padding-bottom: 20px;"></button>
+                                <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.torsoColor}; padding: 20px;"></button>
+                                <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.rightArmColor}; padding: 20px; padding: 10px; padding-top: 20px; padding-bottom: 20px;"></button>
+                            </div>
+                            <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.leftLegColor}; padding: 10px; padding-top: 20px; padding-bottom: 20px;"></button>
+                            <button style="border: 0; border-radius: 5px; cursor: default; background-color: ${outfit.data.rightLegColor}; padding: 10px; padding-top: 20px; padding-bottom: 20px;"></button>
+                        </div>
+                    </div>
+                    <h6 class="text-truncate mb-0 text-reset text-center mb-2">${outfit.name}</h6>
+                    <div class="btn-group w-100">
+                        <button class="btn btn-primary btn-sm p+outfit_wear_button">Wear</button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-warning dropdown-toggle btn-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-duotone fa-wrench"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item text-primary p+outfit_rename_button" href="#">
+                                        <i class="fa-solid fa-signature"></i>
+                                        Rename
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="p+outfit_overwrite_button dropdown-item text-warning">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                        <span>Overwrite</span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <span class="p+outfit_delete_button dropdown-item text-danger">
+                                        <i class="fa-duotone fa-trash"></i>
+                                        <span>Delete</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                `
+                document.getElementById('inventory').appendChild(ItemColumn)
+                Utilities.InjectResource("registerTooltips")
     
-            if (item.type === 'hat') {
-                ItemCache[item.id].accessoryType = item.accessoryType
-            }
+                ItemColumn.getElementsByClassName('p+outfit_wear_button')[0].addEventListener('click', function(){
+                    if (Avatar === outfit.data) {
+                        return
+                    }
+                    console.log('Equipped Outfit: ', outfit)
+                    Avatar = outfit.data
+                    UpdateAvatar()
+                })
+    
+                const OutfitRenameModal = document.getElementById('p+outfit_rename')
+                const OutfitRenameButton = document.getElementById('p+rename_outfit_confirm')
+                const OutfitRenameError = document.getElementById('p+outfit_rename_error')
+                ItemColumn.getElementsByClassName('p+outfit_rename_button')[0].addEventListener('click', function(){
+                    OutfitRenameModal.showModal()
+                    document.getElementById('p+outfit_rename_name').innerText = outfit.name
+                })
+    
+                OutfitRenameButton.addEventListener('click', function(){
+                    let OutfitName = OutfitRenameButton.previousElementSibling.value.trim()
+                    OutfitRenameButton.previousElementSibling.value = ''
+                    if (OutfitName === '') {
+                        OutfitRenameError.classList = 'text-danger';
+                        OutfitRenameError.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> You cannot name an outfit nothing.';
+                        return
+                    } else if (OutfitName.length > 25) {
+                        OutfitName = OutfitName.substring(0, 25)
+                    } else if (Outfits.findIndex((x) => x.name.trim() === OutfitName) !== -1) {
+                        OutfitRenameError.classList = 'text-danger';
+                        OutfitRenameError.innerHTML = '<i class="fa-duotone fa-circle-exclamation mr-1"></i> You already have an outfit with the name "' + OutfitName + '".';
+                        return
+                    }
+                    OutfitRenameModal.close()
+                    Outfits[index].name = OutfitName
+                    if (TabSelected === 'outfit') {
+                        LoadItems()
+                    }
+    
+                    chrome.storage.sync.set({'PolyPlus_AvatarSandboxOutfits': Outfits}, function(){
+                        console.log('Saved outfits!')
+                    })
+                })
+    
+                let OverwritePending = false
+                const OutfitOverwriteButton = ItemColumn.getElementsByClassName('p+outfit_overwrite_button')[0]
+                OutfitOverwriteButton.addEventListener('click', function(e){
+                    e.stopPropagation()
+                    if (OverwritePending === false) {
+                        OverwritePending = true
+                        OutfitOverwriteButton.children[1].innerText = 'Are you sure?'
+                        setTimeout(function (){
+                            if (OverwritePending === true) {
+                                OutfitOverwriteButton.children[1].innerText = 'Overwrite'
+                                OverwritePending = false
+                            }
+                        }, 3000)
+                    } else {
+                        OverwritePending = false
+                        console.log('Overwrite Outfit (outfit, avatar): ', outfit, Avatar)
+    
+                        Outfits[index].data = Avatar
+                        if (TabSelected === 'outfit') {
+                            LoadItems()
+                        }
+    
+                        chrome.storage.sync.set({'PolyPlus_AvatarSandboxOutfits': Outfits}, function(){
+                            console.log('Saved outfits!')
+                        })
+                    }
+                })
+    
+                let DeletePending = false
+                const OutfitDeleteButton = ItemColumn.getElementsByClassName('p+outfit_delete_button')[0]
+                OutfitDeleteButton.addEventListener('click', function(e){
+                    e.stopPropagation()
+                    if (DeletePending === false) {
+                        DeletePending = true
+                        OutfitDeleteButton.children[1].innerText = 'Are you sure?'
+                        setTimeout(function (){
+                            if (DeletePending === true) {
+                                OutfitDeleteButton.children[1].innerText = 'Delete'
+                                DeletePending = false
+                            }
+                        }, 3000)
+                    } else {
+                        DeletePending = false
+                        console.log('Deleted Outfit: ', outfit)
+    
+                        Outfits.splice(index, 1)
+                        if (TabSelected === 'outfit') {
+                            LoadItems()
+                        }
+    
+                        chrome.storage.sync.set({'PolyPlus_AvatarSandboxOutfits': Outfits}, function(){
+                            console.log('Saved outfits!')
+                        })
+                    }
+                })
+            })
         }
-
-        ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
-            WearAsset(item, item.id)
-        })
-    })
+    } else {
+        document.getElementById('inventory').classList.remove('itemgrid')
+        document.getElementById('inventory').innerHTML = `
+        <div class="text-muted" style="padding: 37px 30px;">
+			<h1 class="display-3">
+				<i class="fas fa-box-open"></i>
+			</h1>
+			<h6 class="mb-0">
+				You do not have any items matching this	type or search query. Find new items in the <a href="/store">store</a>!
+			</h6>
+		</div>
+        `
+    }
 }
 
 function LoadWearing() {
@@ -710,5 +936,13 @@ function FormatPrice(price) {
     } else {
         return 'text-muted">???</small>'
     }
-    return "what"
+    return '">how did this happen</small>'
 }
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+    if ('PolyPlus_AvatarSandboxOutfits' in changes) {
+        chrome.storage.sync.get(['PolyPlus_AvatarSandboxOutfits'], function (result) {
+            Outfits = result.PolyPlus_AvatarSandboxOutfits || [];
+        });
+    }
+})
