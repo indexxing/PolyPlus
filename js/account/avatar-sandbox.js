@@ -726,6 +726,7 @@ async function LoadItems() {
                 ItemColumn.getElementsByClassName('p+outfit_rename_button')[0].addEventListener('click', function(){
                     OutfitRenameModal.showModal()
                     document.getElementById('p+outfit_rename_name').innerText = outfit.name
+                    OutfitRenameButton.previousElementSibling.value = outfit.name
                 })
     
                 OutfitRenameButton.addEventListener('click', function(){
