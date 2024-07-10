@@ -38,6 +38,16 @@
 	[class^="p+outfit_overwrite_button"]:hover, [class^="p+outfit_delete_button"]:hover {
 		cursor: pointer;
 	}
+
+	[id="p+retro_items_warning"] {
+		display: none;
+		color: #000;
+		font-weight: bold;
+	}
+
+	body:has([data-tab="retro"].active) [id="p+retro_items_warning"] {
+		display: block;
+	}
 </style>
 <dialog id="p+body_colors" class="polyplus-modal" style="width: 375px; border: 1px solid #484848; background-color: #181818; border-radius: 20px; overflow: hidden;">
 	<div class="row text-muted mb-4" style="font-size: 0.8rem;">
@@ -307,6 +317,9 @@
 				</a>
 			</li>
 		</ul>
+		<div role="alert" class="alert bg-warning text-center mb-1 mt-2" id="p+retro_items_warning">
+			Items in this category are from past iterations of Polytoria. They can only be worn in the Avatar Sandbox.
+		</div>
 		<div class="card px-2 pt-2 pb-2 mb-2" style="background: transparent; border-color: transparent; border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			<div class="row mb-1">
 				<div class="col-md-4">
