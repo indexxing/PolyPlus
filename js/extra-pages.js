@@ -242,7 +242,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 	});
 } else if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#debug') {
 	document.addEventListener('DOMContentLoaded', function () {
-		chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist', 'PolyPlus_AvatarSandboxOutfits'], function(sync) {
+		chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist', 'PolyPlus_AvatarSandboxOutfits', 'PolyPlus_TimePlayed'], function(sync) {
 			chrome.storage.local.get(['PolyPlus_InventoryCache'], function(local){
 				document.querySelector('#main-content .container').innerHTML = `
 				<style>
@@ -344,12 +344,30 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 								<div class="card-header">
 									<span class="badge bg-primary" style="margin-right: 5px; vertical-align: text-bottom;">Sync</span>
 									Avatar Sandbox Outfits
-									<small class="text-muted" style="font-size: 0.7rem;">(${(sync.PolyPlus_AvatarSandboxOutfits|| []).length})</small>
+									<small class="text-muted" style="font-size: 0.7rem;">(${(sync.PolyPlus_AvatarSandboxOutfits || []).length})</small>
 								</div>
 							</a>
 							<div class="card-body collapse" id="avatar-sandbox-outfits">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((sync.PolyPlus_AvatarSandboxOutfits || []), null, 2)
+										.replaceAll('\n','<br>')
+										.replaceAll(' ', '&nbsp;')
+										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+									<button class="btn btn-warning btn-sm" style="position: absolute; top: 0; right: 0; margin: 10px;" onclick="navigator.clipboard.writeText('${JSON.stringify((sync.PolyPlus_AvatarSandboxOutfits || []))}') .then(() => {alert('copied')}) .catch(() => {});">copy</button>
+								</div>
+							</div>
+						</div>
+						<div class="card mb-3">
+							<a class="text-reset" data-bs-toggle="collapse" href="#time-played" role="button" aria-expanded="false" aria-controls="item-wishlist">
+								<div class="card-header">
+									<span class="badge bg-primary" style="margin-right: 5px; vertical-align: text-bottom;">Sync</span>
+									Time Played
+									<small class="text-muted" style="font-size: 0.7rem;">(${(Object.keys(sync.PolyPlus_TimePlayed) || []).length} places tracked)</small>
+								</div>
+							</a>
+							<div class="card-body collapse" id="time-played">
+								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+									${JSON.stringify((sync.PolyPlus_TimePlayed || []), null, 2)
 										.replaceAll('\n','<br>')
 										.replaceAll(' ', '&nbsp;')
 										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
