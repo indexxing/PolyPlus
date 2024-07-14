@@ -95,7 +95,8 @@ const DefaultSettings = {
 		ProgressBarOn: true,
 		PercentageOn: true,
 		OpacityOn: true
-	}
+	},
+	TimePlayedOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD
@@ -108,9 +109,47 @@ chrome.runtime.onInstalled.addListener(() => {
 	})
 });
 
+let RecordingTimePlayed = false
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
+	} else if (request.action === 'start_time_played') {
+		if (RecordingTimePlayed === true) {
+			console.log('Time Played: Already Started Interval')
+			return
+		}
+		RecordingTimePlayed = true
+
+		chrome.storage.sync.get(['PolyPlus_TimePlayed'], function(result){
+			console.log('Time Played: Start Interval')
+
+			const Playtime = result.PolyPlus_TimePlayed || {
+				[request.placeID]: 0
+			};
+			let LoadedIn = false
+			const TimePlayedInterval = setInterval(async () => {
+				console.log('Time Played: Run Check')
+				const PlaceStatus = (await (await fetch('https://api.polytoria.com/v1/users/' + request.userID)).json()).playing
+
+				if (PlaceStatus === null) {
+					console.log('Time Played: Not Playing Anything')
+					if (LoadedIn === true) {
+						console.log('Time Played: End Interval')
+						clearInterval(TimePlayedInterval)
+					}
+				} else {
+					LoadedIn = true
+					if (!Playtime[PlaceStatus.placeID]) {
+						Playtime[PlaceStatus.placeID] = 0
+					}
+					Playtime[PlaceStatus.placeID] += 5
+					console.log('Time Played: Time Increase: ', new Date(Playtime[PlaceStatus.placeID] * 1000).toISOString().slice(11, 19), PlaceStatus)
+					chrome.storage.sync.set({'PolyPlus_TimePlayed': Playtime}, function(){
+						console.log('Time Played: Saved Playtime')
+					})
+				}
+			}, 5000);
+		})
 	} else if (request.action === 'greatdivide_stats') {
 		chrome.storage.local.get(['PolyPlus_GreatDivideStats_' + request.userID], async function(result){
 			let Statistics = result['PolyPlus_GreatDivideStats_' + request.userID]

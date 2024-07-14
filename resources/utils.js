@@ -115,7 +115,8 @@ export default {
 			ProgressBarOn: true,
 			PercentageOn: true,
 			OpacityOn: true
-		}
+		},
+		TimePlayedOn: true
 	},
 	Limits: {
 		PinnedGames: 10,

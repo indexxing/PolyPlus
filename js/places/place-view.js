@@ -6,6 +6,7 @@ let Utilities;
 let PlaceDetails = null;
 
 var Settings;
+let TimePlayed;
 var PinnedGamesData = [];
 let GamePinned;
 
@@ -45,8 +46,9 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 
 	RatingsContainer.children[0].appendChild(PercentageLabel);
 
-	chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
+	chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_TimePlayed'], async function (result) {
 		Settings = result.PolyPlus_Settings || {};
+		TimePlayed = result.PolyPlus_TimePlayed || {};
 
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
@@ -70,6 +72,25 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 
 		if (Settings.IRLPriceWithCurrency && Settings.IRLPriceWithCurrency.Enabled === true) {
 			IRLPrice();
+		}
+
+		if (Settings.TimePlayedOn === true) {
+			const TimePlayedNameRow = document.createElement('li');
+			TimePlayedNameRow.innerText = 'Time Played:';
+
+			const TimePlayedValueRow = document.createElement('li')
+			if (TimePlayed[PlaceID]) {
+				TimePlayedValueRow.innerText = new Date(TimePlayed[PlaceID] * 1000).toISOString().slice(11, 19)
+			} else {
+				TimePlayedValueRow.innerText = '-'
+			}
+
+			InfoColumns[0].appendChild(TimePlayedNameRow);
+			InfoColumns[1].appendChild(TimePlayedValueRow);
+
+			document.getElementById('btn-play').addEventListener('click', function(){
+				chrome.runtime.sendMessage({ action: "start_time_played", placeID: PlaceID, userID: UserID })
+			})
 		}
 
 		if (Settings.ShowPlaceRevenueOn === true) {
