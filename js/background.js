@@ -444,6 +444,15 @@ chrome.contextMenus.removeAll(function () {
 			'https://polytoria.com/guilds/**'
 		]
 	});
+	chrome.contextMenus.create({
+		title: 'Copy Thread ID',
+		id: 'PolyPlus-CopyThreadID',
+		contexts: ['link'],
+		documentUrlPatterns: ['https://polytoria.com/*', SettingsURL],
+		targetUrlPatterns: [
+			'https://polytoria.com/forum/post/**'
+		]
+	});
 
 	// COPY AVATAR HASH CONTEXT MENU ITEM REGISTRATION
 	chrome.contextMenus.create({
@@ -460,12 +469,21 @@ chrome.contextMenus.removeAll(function () {
 // HANDLE CONTEXT MENU ITEMS
 chrome.contextMenus.onClicked.addListener(async function (info, tab) {
 	if (["CopyPlaceID", "CopyUserID", "CopyItemID", "CopyGuildID"].indexOf(info.menuItemId.split('-')[1]) !== -1) {
-		console.log(info.linkUrl.split('/')[3]);
 		let ID = info.linkUrl.split('/')[4];
 		if (info.linkUrl.split('/')[3] === 'u') {
 			ID = (await (await fetch('https://api.polytoria.com/v1/users/find?username=' + info.linkUrl.split('/')[4])).json()).id;
 		}
-		console.log(ID);
+		chrome.scripting
+			.executeScript({
+				target: {tabId: tab.id},
+				func: CopyAssetID,
+				args: [ID]
+			})
+			.then(() => console.log('Copied ID!'));
+	}
+
+	if (info.menuItemId === 'PolyPlus-CopyThreadID') {
+		let ID = info.linkUrl.split('/')[5];
 		chrome.scripting
 			.executeScript({
 				target: {tabId: tab.id},
