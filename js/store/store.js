@@ -254,7 +254,7 @@ function EventItems() {
 
 		if (Settings.StoreOwnTagOn === true) {
 			Array.from(Container.querySelectorAll('a[href^="/store"]')).forEach((element) => {
-				LoadOwnedTags(element);
+				LoadOwnedTags(element, element.getAttribute('href').split('/')[2]);
 			});
 		}
 		
@@ -361,7 +361,7 @@ function EventItems() {
 
 			if (Settings.StoreOwnTagOn === true) {
 				Array.from(Container.querySelectorAll('a[href^="/store"]')).forEach((element) => {
-					LoadOwnedTags(element);
+					LoadOwnedTags(element, element.getAttribute('href').split('/')[2]);
 				});
 			}
 		};
