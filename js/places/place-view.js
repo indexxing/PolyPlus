@@ -135,7 +135,7 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 			}
 		}
 
-		if (Settings.ReaddCopyableOn === true) {
+		if (Settings.ReaddCopyablePlacesOn === true) {
 			ReaddCopyable()
 		}
 	});

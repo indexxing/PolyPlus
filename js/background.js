@@ -96,6 +96,7 @@ const DefaultSettings = {
 		PercentageOn: true,
 		OpacityOn: true
 	},
+	ReaddCopyablePlacesOn: true,
 	TimePlayedOn: true
 }
 
