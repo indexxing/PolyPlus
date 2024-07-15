@@ -1,4 +1,4 @@
-const PlaceID = window.location.pathname.split('/')[2];
+const PlaceID = parseInt(window.location.pathname.split('/')[2]);
 const UserID = JSON.parse(window.localStorage.getItem('p+account_info')).ID;
 const GameCreator = document.querySelector('#main-content .card-body .col div.text-muted a[href^="/users/"]').getAttribute('href').split('/')[2];
 
@@ -46,7 +46,7 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 
 	RatingsContainer.children[0].appendChild(PercentageLabel);
 
-	chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_TimePlayed'], async function (result) {
+	chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_TimePlayed'], async function (result) {
 		Settings = result.PolyPlus_Settings || {};
 		TimePlayed = result.PolyPlus_TimePlayed || {};
 
@@ -54,7 +54,7 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 		Utilities = Utilities.default;
 
 		if (Settings.PinnedGamesOn === true) {
-			PinnedGames();
+			PinnedGames(result.PolyPlus_PinnedGames);
 		}
 
 		if (Settings.InlineEditingOn === true && GameCreator === UserID) {
@@ -127,7 +127,6 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 			}
 
 			if (Settings.ImprovedAchievements.OpacityOn && Settings.ImprovedAchievements.OpacityOn === true) {
-				console.log(Settings)
 				for (let achievement of Achievements) {
 					if ((achievement.getElementsByClassName('fad fa-check-circle')[0] !== undefined) === false) {
 						achievement.style.opacity = '0.5';
@@ -142,94 +141,76 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 	});
 })();
 
-async function PinnedGames() {
-	chrome.storage.sync.get(['PolyPlus_PinnedGames'], function (result) {
-		PinnedGamesData = result.PolyPlus_PinnedGames || [];
+function PinnedGames(placeIDs) {
+	const PinButton = document.createElement('button')
+	PinButton.classList = 'btn btn-primary btn-sm'
+	PinButton.style = 'position: absolute; top: 0; right: 0; margin: 4px; font-size: 1.3em;'
+	PinButton.innerHTML = `
+	<i class="fa-regular fa-star"></i>
+	`
 
-		const PinBtn = document.createElement('button');
-		PinBtn.classList = 'btn btn-warning btn-sm';
-		PinBtn.style = 'position: absolute; right: 0; margin-right: 7px;';
-
-		if (PinnedGamesData.includes(parseInt(PlaceID))) {
-			PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
-		} else {
-			if (PinnedGamesData.length !== Utilities.Limits.PinnedGames) {
-				PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin';
-			} else {
-				PinBtn.setAttribute('disabled', true);
-				PinBtn.innerHTML = `<i class="fa-duotone fa-star"></i>  Pin (max ${Utilities.Limits.PinnedGames}/${Utilities.Limits.PinnedGames})`;
+	const UpdatePinButtonState = function(){
+		PinButton.classList = 'btn btn-primary btn-sm'
+		if (placeIDs.indexOf(PlaceID) === -1) {
+			// Not Pinned
+			if (placeIDs.length >= Utilities.Limits.PinnedGames) {
+				PinButton.disabled = true
 			}
+			PinButton.children[0].classList = 'fa-regular fa-star'
+		} else {
+			// Pinned
+			PinButton.children[0].classList = 'fa-duotone fa-star'
+		}
+	}
+
+	PinButton.addEventListener('mouseenter', function(){
+		if (placeIDs.indexOf(PlaceID) !== -1) {
+			PinButton.classList.add('btn-danger')
+			PinButton.classList.remove('btn-primary')
+			PinButton.children[0].classList.add('fa-star-half-stroke')
+			PinButton.children[0].classList.remove('fa-star')
+		}
+	})
+
+	PinButton.addEventListener('mouseleave', function(){
+		if (placeIDs.indexOf(PlaceID) !== -1) {
+			PinButton.classList.add('btn-primary')
+			PinButton.classList.remove('btn-danger')
+			PinButton.children[0].classList.add('fa-star')
+			PinButton.children[0].classList.remove('fa-star-half-stroke')
+		}
+	})
+
+	UpdatePinButtonState()
+	document.querySelector('h1.my-0').parentElement.appendChild(PinButton)
+
+	PinButton.addEventListener('click', function(){
+		if (placeIDs.length >= Utilities.Limits.PinnedGames) {
+			PinButton.disabled = true
+			return
 		}
 
-		PinBtn.addEventListener('click', function () {
-			PinBtn.setAttribute('disabled', 'true');
+		if (placeIDs.indexOf(PlaceID) === -1) {
+			placeIDs.push(PlaceID)
+		} else {
+			placeIDs.splice(placeIDs.indexOf(PlaceID), 1)
+		}
 
-			chrome.storage.sync.get(['PolyPlus_PinnedGames'], function (result) {
-				PinnedGamesData = result.PolyPlus_PinnedGames || [];
-				/*
-                const Index = PinnedGames.indexOf(parseInt(PlaceID))
-                if (Index !== -1) {
-                    //delete PinnedGames[PlaceID]
-                    PinnedGames.splice(Index, 1)
-                    PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Pin'
-                } else {
-                    //PinnedGames[PlaceID] = {lastVisited: new Date()}
-                    PinnedGames.push(parseInt(PlaceID))
-                    PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
-                }
-                */
-				const Index = PinnedGamesData.indexOf(parseInt(PlaceID));
-				if (Index !== -1) {
-					PinnedGamesData.splice(Index, 1);
-					PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Pin';
-				} else {
-					PinnedGamesData.push(parseInt(PlaceID));
-					PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
-				}
+		PinButton.disabled = true
+		UpdatePinButtonState()
 
-				chrome.storage.sync.set({PolyPlus_PinnedGames: PinnedGamesData, arrayOrder: true}, function () {
-					setTimeout(function () {
-						PinBtn.removeAttribute('disabled');
-						console.log(PinnedGamesData);
-					}, 1250);
-				});
-			});
-		});
+		chrome.storage.sync.set({'PolyPlus_PinnedGames': placeIDs}, function(){
+			setTimeout(() => {
+				PinButton.disabled = false
+			}, 750);
+		})
+	});
 
-		document.getElementsByClassName('card-header')[2].appendChild(PinBtn);
-
-		chrome.storage.onChanged.addListener(function (changes, namespace) {
-			if ('PolyPlus_PinnedGames' in changes) {
-				chrome.storage.sync.get(['PolyPlus_PinnedGames'], function (result) {
-					PinnedGamesData = result.PolyPlus_PinnedGames || [];
-
-					/*
-                    if (PinnedGamesData[PlaceID]) {
-                        PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin'
-                    } else {
-                        if (PinnedGamesData.length !== 5) {
-                            PinBtn.removeAttribute('disabled')
-                            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin'
-                        } else {
-                            PinBtn.setAttribute('disabled', true)
-                            PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin (max 5/5)'
-                        }
-                    }
-                    */
-					if (PinnedGamesData.includes(parseInt(PlaceID))) {
-						PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i> Un-pin';
-					} else {
-						if (PinnedGamesData.length !== Utilities.Limits.PinnedGames) {
-							PinBtn.removeAttribute('disabled');
-							PinBtn.innerHTML = '<i class="fa-duotone fa-star"></i>  Pin';
-						} else {
-							PinBtn.setAttribute('disabled', true);
-							PinBtn.innerHTML = `<i class="fa-duotone fa-star"></i>  Pin (max ${Utilities.Limits.PinnedGames}/${Utilities.Limits.PinnedGames})`;
-						}
-					}
-				});
-			}
-		});
+	chrome.storage.onChanged.addListener(function (changes) {
+		if ('PolyPlus_PinnedGames' in changes) {
+			placeIDs = changes.PolyPlus_PinnedGames.newValue
+			UpdatePinButtonState()
+		}
 	});
 }
 
@@ -547,6 +528,7 @@ async function ReaddCopyable() {
 	}
 
 	if (PlaceDetails.isCopyable) {
+		console.log('is copyable')
 		const TitleCardButtons = document.querySelector('.card:has(h1.my-0) .col-auto[style^="m"]')
 		
 		const DownloadCopyButton = document.createElement('button')
