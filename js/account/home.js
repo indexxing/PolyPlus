@@ -105,4 +105,45 @@ chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames'], async fun
         CountText.innerText = ' (' + FriendCount + ')';
         document.querySelector('#home-friendsOnline h5').appendChild(CountText);
     }
+
+    if (Settings.HomeJoinFriendsButtonOn === true) {
+        const FriendsPopup = document.getElementById('friend-name')
+        const ChangeMutator = new MutationObserver(async function (list) {
+            for (let record of list) {
+                for (let node of record.addedNodes) {
+                    if (node.tagName === 'A') {
+                        const JoinButton = document.createElement('button')
+                        JoinButton.classList = 'btn btn-success btn-sm'
+                        JoinButton.style = 'position: absolute; top: 0; right: 0; z-index: 2000; font-size: 1.2rem;'
+                        JoinButton.innerHTML = '<i class="fas fa-play"></i>'
+                        node.parentElement.appendChild(JoinButton)
+
+                        JoinButton.addEventListener('click', async function(){
+                            const PlayingStatus = (await (await fetch('https://api.polytoria.com/v1/users/' + document.getElementById('friendsProfileLink').getAttribute('href').split('/')[2])).json()).playing;
+                            
+                            const Token = (await (await fetch('https://polytoria.com/api/places/join', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    placeID: parseInt(node.getAttribute('href').split('/')[2]),
+                                    serverID: PlayingStatus.serverID
+                                })
+                            })).json())
+
+                            if (!Token.success) {
+                                alert(Token.message);
+                                return
+                            }
+
+                            window.location.href = 'polytoria://client/' + Token.token
+                        })
+                    }
+                }
+            }
+        })
+
+        ChangeMutator.observe(FriendsPopup, {childList: true})
+    }
 })
