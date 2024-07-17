@@ -1,6 +1,5 @@
 const ItemID = window.location.pathname.split('/')[2];
 const ItemType = document.querySelector('.row .badge').innerHTML;
-console.log(ItemType);
 
 var Settings;
 var ItemWishlist;
@@ -19,11 +18,8 @@ var Utilities;
 	chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 		Settings = result.PolyPlus_Settings || {};
 
-		PurchaseBtn = document.querySelector('.btn[onclick^="buy"]');
-		if (PurchaseBtn === null) {
-			PurchaseBtn = document.querySelector('.btn#purchase-button');
-		}
-		ItemOwned = PurchaseBtn.innerText === ' Item owned' || document.querySelector('.btn[onclick="sellItem()"]') !== null;
+		PurchaseBtn = document.querySelector('.col:has(h1) .justify-content-lg-end .d-flex .flex-grow-1:nth-child(2) :nth-child(1)')
+		ItemOwned = PurchaseBtn.innerText === ' Item owned' || PurchaseBtn.innerText === ' You earned this achievement' || document.querySelector('.btn[onclick="sellItem()"]') !== null;
 
 		if (PurchaseBtn.getAttribute('data-seller-name')) {
 			PurchaseBtn.setAttribute('data-bs-toggle', 'tooltip');
