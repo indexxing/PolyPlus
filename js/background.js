@@ -97,7 +97,8 @@ const DefaultSettings = {
 		OpacityOn: true
 	},
 	ReaddCopyablePlacesOn: true,
-	TimePlayedOn: true
+	TimePlayedOn: true,
+	HomeJoinFriendsButtonOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD

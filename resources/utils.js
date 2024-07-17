@@ -116,7 +116,8 @@ export default {
 			PercentageOn: true,
 			OpacityOn: true
 		},
-		TimePlayedOn: true
+		TimePlayedOn: true,
+		HomeJoinFriendsButtonOn: true
 	},
 	Limits: {
 		PinnedGames: 10,
