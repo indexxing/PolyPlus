@@ -75,17 +75,21 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
                 <hr>
 
                 <div class="card">
-                    <div class="card-header text-primary">RUN TESTS</div>
+                    <div class="card-header text-primary">Tools</div>
                     <div class="card-body">
-                        <label>Test "IRL Price with Brick Count"</label>
-                        <p>will add later</p>
+                        <label>Generate <code style="color: orange;">JSON</code> for "Event Items" store category</label>
+                        <div class="input-group">
+							<input type="text" class="form-control bg-dark" placeholder="Event ID..">
+							<input type="text" class="form-control bg-dark" placeholder="Item IDs (separated by commas)..">
+							<button class="btn btn-primary" id="generate-event-items">Generate</button>
+						</div>
                     </div>
                 </div>
                 
                 <hr>
 
                 <div class="card">
-                    <div class="card-header" style="color: red;">DANGER ZONE!</div>
+                    <div class="card-header" style="color: red;">Danger Zone!</div>
                     <div class="card-body">
                         <label>Clear Specific Data Locations</label>
                         <p>Quickly clear specific locations of the extension's local data</p>
@@ -234,7 +238,32 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 			});
 		});
 
-		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist'], function (sync) {
+		const GenerateEventItems = document.getElementById('generate-event-items')
+		GenerateEventItems.addEventListener('click', async function(){
+			const EventItemsJSON = []
+			const ItemIDs = GenerateEventItems.previousElementSibling.value.split(',')
+			for (let id of ItemIDs) {
+				const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + id.trim())).json())
+				EventItemsJSON.push({
+					id: parseInt(id),
+					name: ItemDetails.name,
+					event: GenerateEventItems.previousElementSibling.previousElementSibling.value,
+					thumbnail: ItemDetails.thumbnail
+				})
+			}
+
+			console.log(EventItemsJSON)
+
+			navigator.clipboard.writeText(JSON.stringify(EventItemsJSON, null, 2))
+				.then(() => {
+					alert('Successfully copied generated event items JSON!')
+				})
+				.catch(() => {
+					alert('Failure when trying to copy generated event items JSON.')
+				})
+		})
+
+		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist', 'PolyPlus_TimePlayed', 'PolyPlus_AvatarSandboxOutfits'], function (sync) {
 			chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
 				document.getElementById('data-size').innerText = (sync + local).toLocaleString();
 			})
@@ -420,7 +449,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 				}
 				CheckForUpdatesButton.addEventListener('click', CheckForUpdates);
 
-				chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist'], function (sync) {
+				chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist', 'PolyPlus_TimePlayed', 'PolyPlus_AvatarSandboxOutfits'], function (sync) {
 					chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
 						document.getElementById('data-size').innerText = (sync + local).toLocaleString();
 					})
