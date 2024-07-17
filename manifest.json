@@ -121,11 +121,6 @@
 		{
 			"matches": ["https://polytoria.com/games/*", "https://polytoria.com/shop/*", "https://polytoria.com/my/referrals", "https://polytoria.com/create/?t=*", "https://polytoria.com/user/*", "https://polytoria.com/library/*"],
 			"js": ["/js/site-redirects.js"]
-		},
-
-		{
-			"matches": ["https://polytoria.com/places/**", "https://polytoria.com/u/**"],
-			"js": ["the-great-divide.js"]
 		}
 	],
 	"background": {
