@@ -11,15 +11,7 @@ let Utilities;
 		.default;
 
 	chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
-		Settings = result.PolyPlus_Settings || {
-			ImprovedPlaceManagement: {
-				Enabled: true,
-				QuickActivityToggleOn: true,
-				PlaceFileDownloadOn: true,
-				MultiWhitelistOn: true,
-				ClearWhitelistOn: true
-			}
-		}
+		Settings = result.PolyPlus_Settings || Utilities.DefaultSettings;
 
 		if (Settings.ImprovedPlaceManagement.Enabled) {
 			if (Settings.ImprovedPlaceManagement.QuickActivityToggleOn && Settings.ImprovedPlaceManagement.QuickActivityToggleOn === true) {

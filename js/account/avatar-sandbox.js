@@ -920,7 +920,8 @@ function CleanAccessoryType(type) {
         hair: "Hair",
         neckAccessory: "Neck Accessory",
         headCover: "Head Cover",
-        headAccessory: "Head Accessory"
+        headAccessory: "Head Accessory",
+        frontAccessory: "Front Accessory"
     }
     return Object.values(CleanAccessoryTypes)[Object.keys(CleanAccessoryTypes).indexOf(type)] || type
 }
