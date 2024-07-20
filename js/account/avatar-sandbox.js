@@ -625,7 +625,7 @@ async function LoadItems() {
                         <h6 class="text-truncate mb-0">${item.name}</h6>
                     </a>
                     <small class="text-muted d-block text-truncate">
-                        by <a href="/users/${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? '1' : item.creator.id }" class="text-reset">${ (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) ? 'Polytoria' : item.creator.name }</a>
+                        ${ (item.creator.id || 1) === 1 ? (item.accessoryType !== undefined ? CleanAccessoryType(item.accessoryType) : item.type.substring(0, 1).toUpperCase()+item.type.substring(1)) : `by <a href="/users/${item.creator.id || "1"}" class="text-reset">${item.creator.name || "-"}</a>` }
                     </small>
                     <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
                        ${FormatPrice(item.price)}
