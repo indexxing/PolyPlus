@@ -98,7 +98,14 @@ const DefaultSettings = {
 	},
 	ReaddCopyablePlacesOn: true,
 	TimePlayedOn: true,
-	HomeJoinFriendsButtonOn: true
+	HomeJoinFriendsButtonOn: true,
+	ImprovedPlaceManagement: {
+		Enabled: true,
+		QuickActivityToggleOn: true,
+		PlaceFileDownloadOn: true,
+		MultiWhitelistOn: true,
+		ClearWhitelistOn: true
+	}
 }
 
 // ON EXTENSION INSTALL / RELOAD

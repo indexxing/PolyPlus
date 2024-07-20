@@ -117,7 +117,14 @@ export default {
 			OpacityOn: true
 		},
 		TimePlayedOn: true,
-		HomeJoinFriendsButtonOn: true
+		HomeJoinFriendsButtonOn: true,
+		ImprovedPlaceManagement: {
+			Enabled: true,
+			QuickActivityToggleOn: true,
+			PlaceFileDownloadOn: true,
+			MultiWhitelistOn: true,
+			ClearWhitelistOn: true
+		}
 	},
 	Limits: {
 		PinnedGames: 10,

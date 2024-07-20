@@ -4,10 +4,41 @@ const Form = document.querySelector('form[action="/create/place/update"]');
 var Settings;
 var PlaceData = null;
 
+let Utilities;
+
 !(async () => {
-	ActivityToggle();
-	//RequestGameProfile()
-	CopyOwnedPlace();
+	Utilities = (await import(chrome.runtime.getURL('resources/utils.js')))
+		.default;
+
+	chrome.storage.sync.get(['PolyPlus_Settings'], function(result){
+		Settings = result.PolyPlus_Settings || {
+			ImprovedPlaceManagement: {
+				Enabled: true,
+				QuickActivityToggleOn: true,
+				PlaceFileDownloadOn: true,
+				MultiWhitelistOn: true,
+				ClearWhitelistOn: true
+			}
+		}
+
+		if (Settings.ImprovedPlaceManagement.Enabled) {
+			if (Settings.ImprovedPlaceManagement.QuickActivityToggleOn && Settings.ImprovedPlaceManagement.QuickActivityToggleOn === true) {
+				ActivityToggle();
+			}
+
+			if (Settings.ImprovedPlaceManagement.PlaceFileDownloadOn && Settings.ImprovedPlaceManagement.PlaceFileDownloadOn === true) {
+				CopyOwnedPlace();
+			}
+
+			if (Settings.ImprovedPlaceManagement.MultiWhitelistOn && Settings.ImprovedPlaceManagement.MultiWhitelistOn === true) {
+				MultiWhitelist();
+			}
+
+			if (Settings.ImprovedPlaceManagement.ClearWhitelistOn && Settings.ImprovedPlaceManagement.ClearWhitelistOn === true) {
+				ClearWhitelist();
+			}
+		}
+	})
 })();
 
 async function ActivityToggle() {
@@ -140,4 +171,104 @@ async function CopyOwnedPlace() {
 				console.log(error);
 			});
 	});
+}
+
+function MultiWhitelist(){
+	const WhitelistCard = document.querySelector('.card:has(#whitelist-username)')
+
+	const MultiWhitelistCard = document.createElement('card')
+	MultiWhitelistCard.classList = 'card mt-3'
+	MultiWhitelistCard.innerHTML = `
+	<div class="card-header">
+		<i class="fa-duotone fa-solid fa-vial-circle-check"></i>
+		Multi-Whitelist
+	</div>
+	<div class="card-body">
+		<textarea class="form-control bg-dark mb-2" placeholder="Usernames (separated by lines).." style="min-height: 250px;"></textarea>
+		<button class="btn btn-primary">
+			<i class="fa-duotone fa-solid fa-users"></i>
+			Whitelist
+		</button>
+	</div>
+	`
+	WhitelistCard.parentElement.appendChild(MultiWhitelistCard)
+
+	const MultiWhitelistSubmitButton = MultiWhitelistCard.getElementsByTagName('button')[0]
+
+	MultiWhitelistSubmitButton.addEventListener('click', async function(){
+		const Usernames = MultiWhitelistSubmitButton.previousElementSibling.value.split('\n').filter((x) => x !== "")
+		MultiWhitelistSubmitButton.previousElementSibling.disabled = true
+		if (Usernames.length > 0) {
+			for (let username of Usernames) {
+				const WhitelistAddRequest = (await (await fetch('https://polytoria.com/api/create/whitelist', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						placeID: PlaceID,
+						username: username
+					})
+				})).json())
+			}
+
+			window.location.reload()
+		}
+	})
+}
+
+function ClearWhitelist() {
+	const WhitelistCard = document.querySelector('.card:has(#whitelist-username)')
+
+	const ClearWhitelistButton = document.createElement('button')
+	ClearWhitelistButton.classList = 'btn btn-danger btn-sm'
+	ClearWhitelistButton.style = 'position: absolute; top: 0; right: 0; margin: 4px;'
+	ClearWhitelistButton.innerHTML = '<i class="fa-duotone fa-solid fa-broom-wide"></i> Clear'
+	WhitelistCard.children[0].appendChild(ClearWhitelistButton)
+
+	let WhitelistData = null
+	let ClearPending = false
+	ClearWhitelistButton.addEventListener('click', async function(){
+		if (ClearPending === false) {
+			ClearPending = true
+			ClearWhitelistButton.innerText = 'Are you sure?'
+			setTimeout(() => {
+				if (ClearPending === true) {
+					ClearPending = false;
+					ClearWhitelistButton.innerHTML = '<i class="fa-duotone fa-solid fa-broom-wide"></i> Clear'
+				}
+			}, 3000);
+		} else {
+			ClearPending = false
+			ClearWhitelistButton.innerHTML = '<i class="fa-duotone fa-solid fa-broom-wide"></i> Clear'
+			if (confirm('Are you sure you\'d like to clear all of this place\'s whitelist')) {
+				if (WhitelistData === null) {
+					const InitialWhitelist = (await (await fetch('https://polytoria.com/api/create/whitelist?placeID=' + PlaceID + '&page=1')).json())
+					WhitelistData = [...InitialWhitelist.data]
+
+					if (InitialWhitelist.meta.lastPage > 1) {
+						for (let page = 1; page < InitialWhitelist.meta.lastPage; page++) {
+							const PageResult = (await (await fetch('https://polytoria.com/api/create/whitelist?placeID=' + PlaceID + '&page=' + (page+1))).json())
+							WhitelistData.push(...PageResult.data)
+						}
+					}
+
+					for (let id of WhitelistData.map((x) => x.user.id)) {
+						Utilities.RatelimitRepeatingFetch('https://polytoria.com/api/create/remove-whitelist', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({
+								placeID: PlaceID,
+								userID: id
+							})
+						})
+					}
+
+					window.location.reload()
+				}
+			}
+		}
+	})
 }
