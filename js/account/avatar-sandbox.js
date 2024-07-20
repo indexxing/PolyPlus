@@ -367,16 +367,17 @@ async function UpdateAvatar() {
                     ribbon: "unknown"
                 }
             }
+
+            if (["mesh", "decal", "audio"].indexOf(ItemCache[x].type) !== -1) {
+                ItemCache[x].type = document.getElementById('load-asset-type').options[document.getElementById('load-asset-type').selectedIndex].value
+                ItemCache[x].ribbon = 'custom'
+            }
         }
         
         if (ItemCache[x].asset === undefined) {
             const MeshURL = (await (await fetch('https://api.polytoria.com/v1/assets/serve-mesh/' + x)).json())
             if (MeshURL.success) {
                 ItemCache[x].asset = MeshURL.url
-
-                if (["mesh", "decal", "audio"].indexOf(ItemCache[x].type) !== -1) {
-                    ItemCache[x].type = document.getElementById('load-asset-type').options[document.getElementById('load-asset-type').selectedIndex].value
-                }
 
                 if (ItemCache[x].type === 'hat') {
                     FormattedAvatar.items[index] = MeshURL.url
@@ -427,11 +428,16 @@ async function UpdateAvatar() {
                     ribbon: "unknown"
                 }
             }
+
+            if (["mesh", "decal", "audio"].indexOf(ItemCache[x].type) !== -1) {
+                ItemCache[x].ribbon = 'custom'
+            }
         }
         
         if (ItemCache[x].asset === undefined) {
             const TextureURL = (await (await fetch('https://api.polytoria.com/v1/assets/serve/' + x + '/Asset')).json())
             if (TextureURL.success) {
+
                 ItemCache[x].asset = TextureURL.url
                 if (x === Avatar.shirt) {
                     FormattedAvatar.shirt = TextureURL.url
@@ -558,6 +564,7 @@ async function LoadItems() {
                 }
                 item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
                 item.id = item.id*-1
+                item.ribbon = 'retro'
                 ItemCache[item.id] = item
             })
 
@@ -606,14 +613,17 @@ async function LoadItems() {
                     item.price = false
                 }
 
+                const Ribbon = ChooseRibbon(item)
+
                 const ItemColumn = document.createElement('div')
                 ItemColumn.classList = 'col-auto'
                 ItemColumn.innerHTML = `
                 <div style="max-width: 150px;">
                     <div class="card mb-2 avatar-item-container">
+                        ${ (Ribbon !== null) ? Ribbon : '' }
                         <div class="p-2">
                             <img src="${item.thumbnail}" class="img-fluid">
-                            ${ (item.type === 'hat') ? `
+                            ${ (item.type === 'hat' && Ribbon === null) ? `
                             <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
                                 <span class="badge bg-secondary">${CleanAccessoryType(item.accessoryType)}</span>
                             </span>
@@ -649,6 +659,10 @@ async function LoadItems() {
             
                     if (item.type === 'hat') {
                         ItemCache[item.id].accessoryType = item.accessoryType
+                    }
+
+                    if (item.isLimited) {
+                        ItemCache[item.id].ribbon = 'limited'
                     }
                 }
         
@@ -842,14 +856,17 @@ function LoadWearing() {
 
             if (Cached.price === undefined || Cached.price === null) { Cached.price = "???" }
 
+            const Ribbon = ChooseRibbon(Cached)
+
             const ItemColumn = document.createElement('div')
             ItemColumn.classList = 'col-auto'
             ItemColumn.innerHTML = `
             <div style="max-width: 150px;">
                 <div class="card mb-2 avatar-item-container">
+                    ${ (Ribbon !== null) ? Ribbon : '' }
                     <div class="p-2">
                         <img src="${Cached.thumbnail}" class="img-fluid" style="border-radius: 10px;">
-                        ${ (Cached.type === 'hat') ? `
+                        ${ (Cached.type === 'hat' && Ribbon === null) ? `
                         <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
                             <span class="badge bg-secondary">${CleanAccessoryType(Cached.accessoryType)}</span>
                         </span>
@@ -941,6 +958,23 @@ function FormatPrice(price) {
         return 'text-muted">???</small>'
     }
     return '">how did this happen</small>'
+}
+
+function ChooseRibbon(item) {
+    const NewDateAgo = new Date();
+    NewDateAgo.setDate(NewDateAgo.getDate() - 3);
+
+    if (item.ribbon === 'custom') {
+        return '<div class="ribbon ribbon-polyplus-custom ribbon-top-right"><span>Custom</span></div>';
+    } else if (item.ribbon === 'unknown') {
+        return '<div class="ribbon ribbon-polyplus-unknown ribbon-top-right"><span><i>?</i></span></div>';
+    } else if (item.isLimited) {
+        return '<div class="ribbon ribbon-limited ribbon-top-right"><span><i class="fas fa-star"></i></span></div>';
+    } else if (new Date(item.createdAt) > NewDateAgo) {
+        return '<div class="ribbon ribbon-new ribbon-top-right"><span>New</span></div>';
+    } else {
+        return null
+    }
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {

@@ -96,3 +96,25 @@ body:has(.polyplus-modal[open]) {
     50%{background-position:91% 100%}
     100%{background-position:10% 0%}
 }
+
+/* - */
+
+/*
+    AVATAR SANDBOX
+*/
+
+.ribbon-polyplus-custom span {
+    background-color: orange !important;
+}
+
+.ribbon-polyplus-custom::after, .ribbon-polyplus-custom::before {
+    border-color: #c68000 !important;
+}
+
+.ribbon-polyplus-unknown span {
+    background-color: #000 !important;
+}
+
+.ribbon-polyplus-unknown::after, .ribbon-polyplus-unknown::before {
+    border-color: #121212 !important;
+}
