@@ -35,7 +35,8 @@ const ItemCache = {
         },
         thumbnail: "https://c0.ptacdn.com/thumbnails/assets/anebTuFMLg8NKhRL3ab7hbzCfmcsFqGO.png",
         asset: "https://c0.ptacdn.com/assets/HD6TFdXD8CaflRNmd84VCNyNsmTB0SH3.png"
-    },
+    }
+    /*
     37582: {
         type: "torso",
         name: "Slim Body",
@@ -47,6 +48,7 @@ const ItemCache = {
         thumbnail: "https://c0.ptacdn.com/thumbnails/assets/f_k-ZN_xmA_ALZiJQanOKT-Y4qq5kI1b.png",
         asset: "https://c0.ptacdn.com/assets/qoqZ2qPyaGvB3MLGgJZ6oLWTz-xxGo-8.glb"
     }
+        */
 }
 let Avatar = {
 	useCharacter: true,
@@ -335,7 +337,7 @@ async function UpdateAvatar() {
 
     const FormattedAvatar = structuredClone(Avatar)
 
-    const AccessoryPromise = [...Avatar.items, Avatar.tool, Avatar.torso].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:')).map(async (x, index) => {
+    const AccessoryPromise = [...Avatar.items, Avatar.tool].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:')).map(async (x, index) => {
         if (ItemCache[x] === undefined) {
             try {
                 const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
@@ -391,7 +393,7 @@ async function UpdateAvatar() {
         }
     })
 
-    const TexturePromise = [Avatar.shirt, Avatar.pants, Avatar.face].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:') && x !== undefined).map(async (x, index) => {
+    const TexturePromise = [Avatar.shirt, Avatar.pants, Avatar.face, Avatar.torso].filter((x) => x !== undefined && !x.toString().startsWith('http') && !x.toString().startsWith('data:') && x !== undefined).map(async (x, index) => {
         if (ItemCache[x] === undefined) {
             try {
                 const ItemDetails = (await (await fetch('https://api.polytoria.com/v1/store/' + x)).json())
@@ -437,6 +439,8 @@ async function UpdateAvatar() {
                     FormattedAvatar.pants = TextureURL.url
                 } else if (x === Avatar.face) {
                     FormattedAvatar.face = TextureURL.url
+                } else if (x === Avatar.torso) {
+                    FormattedAvatar.torso = TextureURL.url
                 }
             }
         } else {
@@ -446,6 +450,8 @@ async function UpdateAvatar() {
                 FormattedAvatar.pants = ItemCache[x].asset
             } else if (x === Avatar.face) {
                 FormattedAvatar.face = ItemCache[x].asset
+            } else if (x === Avatar.torso) {
+                FormattedAvatar.torso = ItemCache[x].asset
             }
         }
     })
