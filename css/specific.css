@@ -118,3 +118,12 @@ body:has(.polyplus-modal[open]) {
 .ribbon-polyplus-unknown::after, .ribbon-polyplus-unknown::before {
     border-color: #121212 !important;
 }
+
+.ribbon-polyplus-retro span {
+    background-color: purple !important;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.ribbon-polyplus-retro::after, .ribbon-polyplus-retro::before {
+    border-color: rgb(104, 0, 104) !important;
+}

@@ -970,6 +970,8 @@ function ChooseRibbon(item) {
         return '<div class="ribbon ribbon-polyplus-custom ribbon-top-right"><span>Custom</span></div>';
     } else if (item.ribbon === 'unknown') {
         return '<div class="ribbon ribbon-polyplus-unknown ribbon-top-right"><span><i>?</i></span></div>';
+    } else if (item.ribbon === 'retro' && (Avatar.items.indexOf(item.id) !== -1 || Avatar.tool === item.id)) {
+        return '<div class="ribbon ribbon-polyplus-retro ribbon-top-right"><span>Retro</span></div>';
     } else if (item.isLimited) {
         return '<div class="ribbon ribbon-limited ribbon-top-right"><span><i class="fas fa-star"></i></span></div>';
     } else if (new Date(item.createdAt) > NewDateAgo) {
