@@ -635,7 +635,7 @@ async function LoadItems() {
                         <h6 class="text-truncate mb-0">${item.name}</h6>
                     </a>
                     <small class="text-muted d-block text-truncate">
-                        ${ (item.creator.id || 1) === 1 ? (item.accessoryType !== undefined ? CleanAccessoryType(item.accessoryType) : item.type.substring(0, 1).toUpperCase()+item.type.substring(1)) : `by <a href="/users/${item.creator.id || "1"}" class="text-reset">${item.creator.name || "-"}</a>` }
+                        ${FormatTypeDisplay(item)}
                     </small>
                     <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
                        ${FormatPrice(item.price)}
@@ -878,7 +878,7 @@ function LoadWearing() {
                     <h6 class="text-truncate mb-0">${Cached.name}</h6>
                 </a>
                 <small class="text-muted d-block text-truncate">
-                    ${ (Cached.creator.id || 1) === 1 ? (Cached.accessoryType !== undefined ? CleanAccessoryType(Cached.accessoryType) : Cached.type.substring(0, 1).toUpperCase()+Cached.type.substring(1)) : `by <a href="/users/${Cached.creator.id || "1"}" class="text-reset">${Cached.creator.name || "-"}</a>` }
+                    ${FormatTypeDisplay(Cached)}
                 </small>
                 <small style="font-size: 0.8rem;" class="d-block text-truncate mb-2
                     ${FormatPrice(Cached.price)}
@@ -974,6 +974,20 @@ function ChooseRibbon(item) {
         return '<div class="ribbon ribbon-new ribbon-top-right"><span>New</span></div>';
     } else {
         return null
+    }
+}
+
+function FormatTypeDisplay(item) {
+    if (["hat", "tool", "face", "torso"].indexOf(item.type) !== -1) {
+        if (item.type === "hat") {
+            return CleanAccessoryType(item.accessoryType)
+        } else if (item.type === "torso") {
+            return "Body Part"
+        } else {
+            return item.type.substring(0, 1).toUpperCase() + item.type.substring(1)
+        }
+    } else {
+        return 'by <a class="text-muted" href="/u/' + item.creator.name + '">' + item.creator.name + '</a>'
     }
 }
 
