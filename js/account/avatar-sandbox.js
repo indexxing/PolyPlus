@@ -664,6 +664,11 @@ async function LoadItems() {
                 ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
                     WearAsset(item, item.id)
                 })
+                if (Ribbon !== null) {
+                    ItemColumn.getElementsByClassName('ribbon')[0].addEventListener('click', function(){
+                        WearAsset(item, item.id)
+                    })
+                }
             })
         } else {
             Items.assets.forEach((outfit, index) => {
@@ -880,6 +885,11 @@ function LoadWearing() {
             ItemColumn.getElementsByClassName('p-2')[0].addEventListener('click', function(){
                 WearAsset(Cached, id)
             })
+            if (Ribbon !== null) {
+                ItemColumn.getElementsByClassName('ribbon')[0].addEventListener('click', function(){
+                    WearAsset(item, item.id)
+                })
+            }
         }
     })
 }
