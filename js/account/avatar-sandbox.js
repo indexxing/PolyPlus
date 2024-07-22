@@ -562,7 +562,9 @@ async function LoadItems() {
                     id: 1,
                     name: "Polytoria"
                 }
-                item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
+                if (item.asset === undefined) {
+                    item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
+                }
                 item.id = item.id*-1
                 item.ribbon = 'retro'
                 ItemCache[item.id] = item
