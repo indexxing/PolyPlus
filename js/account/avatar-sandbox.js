@@ -622,7 +622,7 @@ async function LoadItems() {
                     <div class="card mb-2 avatar-item-container">
                         ${ (Ribbon !== null) ? Ribbon : '' }
                         <div class="p-2">
-                            <img src="${item.thumbnail}" class="img-fluid">
+                            <img src="${item.thumbnail}" class="img-fluid" style="border-radius: 10px;">
                             <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
