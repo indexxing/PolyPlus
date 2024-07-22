@@ -623,11 +623,6 @@ async function LoadItems() {
                         ${ (Ribbon !== null) ? Ribbon : '' }
                         <div class="p-2">
                             <img src="${item.thumbnail}" class="img-fluid">
-                            ${ (item.type === 'hat' && Ribbon === null) ? `
-                            <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
-                                <span class="badge bg-secondary">${CleanAccessoryType(item.accessoryType)}</span>
-                            </span>
-                            ` : ''}
                             <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
@@ -866,11 +861,6 @@ function LoadWearing() {
                     ${ (Ribbon !== null) ? Ribbon : '' }
                     <div class="p-2">
                         <img src="${Cached.thumbnail}" class="img-fluid" style="border-radius: 10px;">
-                        ${ (Cached.type === 'hat' && Ribbon === null) ? `
-                        <span class="position-absolute" style="top: 5px; left: 5px; z-index: 1;">
-                            <span class="badge bg-secondary">${CleanAccessoryType(Cached.accessoryType)}</span>
-                        </span>
-                        ` : ''}
                         <button class="avatarAction btn btn-danger btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-minus"></i></button>
                     </div>
                 </div>
