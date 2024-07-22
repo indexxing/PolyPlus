@@ -611,8 +611,10 @@ async function LoadItems() {
         document.getElementById('inventory').classList.add('itemgrid')
         if (TabSelected !== 'outfit') {
             Items.assets.forEach(item => {
-                if (item.price === null) {
-                    item.price = false
+                if (TabSelected !== "retro") {
+                    if (item.price === null) {
+                        item.price = false
+                    }
                 }
 
                 const Ribbon = ChooseRibbon(item)
