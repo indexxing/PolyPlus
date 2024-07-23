@@ -636,7 +636,7 @@ async function LoadItems() {
                             <button class="avatarAction btn btn-success btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
-                    <a href="/store/${item.id}" class="text-reset">
+                    <a href="${ (Math.abs(item.id) === item.id) ? '/store/' + item.id : 'https://poly-archive.vercel.app/archive/' + Math.abs(item.id) }" class="text-reset">
                         <h6 class="text-truncate mb-0">${item.name}</h6>
                     </a>
                     <small class="text-muted d-block text-truncate">
@@ -879,7 +879,7 @@ function LoadWearing() {
                         <button class="avatarAction btn btn-danger btn-sm position-absolute rounded-circle text-center" style="top: -10px; right: -16px; width: 32px; height: 32px; z-index: 1;"><i class="fas fa-minus"></i></button>
                     </div>
                 </div>
-                <a href="/store/${id}" class="text-reset">
+                <a href="${ (Math.abs(id) === id) ? '/store/' + id : 'https://poly-archive.vercel.app/archive/' + Math.abs(id) }" class="text-reset">
                     <h6 class="text-truncate mb-0">${Cached.name}</h6>
                 </a>
                 <small class="text-muted d-block text-truncate">
