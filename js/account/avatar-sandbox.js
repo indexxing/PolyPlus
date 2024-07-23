@@ -617,13 +617,11 @@ async function LoadItems() {
         document.getElementById('inventory').classList.add('itemgrid')
         if (TabSelected !== 'outfit') {
             Items.assets.forEach(item => {
-                if (TabSelected !== "retro") {
-                    if (item.price === null) {
-                        item.price = false
-                    }
+                if (TabSelected !== "retro" && item.price === null) {
+                    item.price = false
                 }
 
-                const Ribbon = ChooseRibbon(item)
+                const Ribbon = ChooseRibbon(item, false)
 
                 const ItemColumn = document.createElement('div')
                 ItemColumn.classList = 'col-auto'
@@ -866,7 +864,7 @@ function LoadWearing() {
 
             if (Cached.price === undefined || Cached.price === null) { Cached.price = "???" }
 
-            const Ribbon = ChooseRibbon(Cached)
+            const Ribbon = ChooseRibbon(Cached, true)
 
             const ItemColumn = document.createElement('div')
             ItemColumn.classList = 'col-auto'
@@ -897,7 +895,7 @@ function LoadWearing() {
             })
             if (Ribbon !== null) {
                 ItemColumn.getElementsByClassName('ribbon')[0].addEventListener('click', function(){
-                    WearAsset(item, item.id)
+                    WearAsset(Cached, id)
                 })
             }
         }
@@ -970,7 +968,7 @@ function FormatPrice(price) {
     return '">how did this happen</small>'
 }
 
-function ChooseRibbon(item) {
+function ChooseRibbon(item, wearing) {
     const NewDateAgo = new Date();
     NewDateAgo.setDate(NewDateAgo.getDate() - 3);
 
@@ -978,7 +976,7 @@ function ChooseRibbon(item) {
         return '<div class="ribbon ribbon-polyplus-custom ribbon-top-right"><span>Custom</span></div>';
     } else if (item.ribbon === 'unknown') {
         return '<div class="ribbon ribbon-polyplus-unknown ribbon-top-right"><span><i>?</i></span></div>';
-    } else if (item.ribbon === 'retro' && (Avatar.items.indexOf(item.id) !== -1 || Avatar.tool === item.id)) {
+    } else if (item.ribbon === 'retro' && wearing === true) {
         return '<div class="ribbon ribbon-polyplus-retro ribbon-top-right"><span>Retro</span></div>';
     } else if (item.isLimited) {
         return '<div class="ribbon ribbon-limited ribbon-top-right"><span><i class="fas fa-star"></i></span></div>';
