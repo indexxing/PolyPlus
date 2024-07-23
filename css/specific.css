@@ -14,6 +14,13 @@ body[data-URL^='/create/'] .col.d-flex.align-content-between.flex-wrap {
 	width: 50%;
 }
 
+body[data-URL^='/create'] .me-2:has(.fa-thumbs-up)::after {
+    content: '%';
+    margin-left: -2.5px;
+    margin-bottom: 2px;
+    cursor: text;
+}
+
 .text-truncate {
 	white-space: nowrap !important;
 	overflow: hidden !important;
