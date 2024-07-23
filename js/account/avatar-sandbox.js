@@ -271,6 +271,10 @@ async function PageLoad() {
     const LoadAssetType = document.getElementById('load-asset-type')
     LoadAsset.addEventListener('click', function(){
         const SelectedType = LoadAssetType.options[LoadAssetType.selectedIndex].value
+
+        if (LoadAsset.previousElementSibling.value === "trofie") {
+            LoadAsset.previousElementSibling.value = 31501
+        }
         
         if (SelectedType !== 'user') {
             if (SelectedType === 'hat') {
@@ -286,6 +290,8 @@ async function PageLoad() {
         } else {
             LoadUser(LoadAsset.previousElementSibling.value)
         }
+
+        LoadAsset.previousElementSibling.value = ""
     })
 
     const SaveButton = document.getElementById('saveOutfit')
