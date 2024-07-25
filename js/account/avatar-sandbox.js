@@ -735,11 +735,41 @@ async function LoadItems() {
                 document.getElementById('inventory').appendChild(ItemColumn)
                 Utilities.InjectResource("registerTooltips")
     
-                ItemColumn.getElementsByClassName('p+outfit_wear_button')[0].addEventListener('click', function(){
+                ItemColumn.getElementsByClassName('p+outfit_wear_button')[0].addEventListener('click', async function(){
                     if (Avatar === outfit.data) {
                         return
                     }
                     console.log('Equipped Outfit: ', outfit)
+                    if (RetroItems === null) {
+                        Items = (await (await fetch('https://poly-upd-archival.pages.dev/data.json')).json())
+                        Object.values(Items).forEach((item, index) => {
+                            item.id = parseInt(Object.keys(Items)[index])
+                            item.thumbnail = 'https://poly-archive.pages.dev/assets/thumbnails/' + item.id + '.png'
+                            item.creator = {
+                                id: 1,
+                                name: "Polytoria"
+                            }
+                            if (item.asset === undefined) {
+                                item.asset = 'https://poly-upd-archival.pages.dev/glb/' + item.id + '.glb'
+                            }
+                            item.id = item.id*-1
+                            item.ribbon = 'retro'
+                            ItemCache[item.id] = item
+                        })
+            
+                        const PaginationItems = Object.values(Items)
+                        let Groups = []
+                        while (PaginationItems.length > 0) {
+                            Groups.push(PaginationItems.splice(0, 12));
+                        }
+            
+                        Items = {
+                            assets: Groups[Page - 1],
+                            pages: Groups.length
+                        }
+            
+                        RetroItems = Groups
+                    }
                     Avatar = outfit.data
                     UpdateAvatar()
                 })
