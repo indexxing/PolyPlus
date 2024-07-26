@@ -10,5 +10,5 @@ Local:
 ------------------
 PolyPlus_InventoryCache: {
     data: [],
-    requested: number (repersenting date)
+    requested: number (representing date)
 }
