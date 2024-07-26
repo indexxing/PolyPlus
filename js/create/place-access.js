@@ -192,7 +192,7 @@ function MultiWhitelist(){
 		MultiWhitelistSubmitButton.previousElementSibling.disabled = true
 		if (Usernames.length > 0) {
 			for (let username of Usernames) {
-				const WhitelistAddRequest = (await (await fetch('https://polytoria.com/api/create/whitelist', {
+				Utilities.RatelimitRepeatingFetch('https://polytoria.com/api/create/whitelist', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -201,7 +201,7 @@ function MultiWhitelist(){
 						placeID: PlaceID,
 						username: username
 					})
-				})).json())
+				})
 			}
 
 			window.location.reload()
