@@ -78,6 +78,80 @@ let Theme = ``;
       const ThemeBlob = new Blob([Theme], { type: 'text/css' });
       const ThemeURL = URL.createObjectURL(ThemeBlob);
       document.head.innerHTML += `<link href="${ThemeURL}" rel="stylesheet" type="text/css">`;
+
+      /*
+      chrome.storage.local.get(['PolyPlus_AdCache'], async function(result){
+        const AdCache = result.PolyPlus_AdCache || {};
+
+        const NewCacheAdditions = Array.from(document.querySelectorAll('a[href^="/ads"]')).map(async (ad) => {
+          const AdID = ad.getAttribute('href').split('/')[2]
+          if (Object.keys(AdCache).indexOf(AdID) === -1) {
+            const AssetURL = (await fetch(ad.href)).url
+            const AssetInfo = ((await fetch(AssetURL.replace('polytoria.com/', 'api.polytoria.com/v1/'))).json())
+            console.log(AssetInfo)
+            AdCache[AdID] = AssetInfo
+          }
+        })
+
+        await Promise.all(NewCacheAdditions)
+
+        console.log(AdCache)
+      })
+        */
+
+      if (/\/inbox\/messages\/[0-9]+\/compose/.test(window.location.pathname) && new URLSearchParams(window.location.search).has('anniversaryPreset')) {
+        const AnniversaryNumber = parseInt(new URLSearchParams(window.location.search).get('anniversaryPreset'))
+        const MessageSubject = document.querySelector('[action^="/inbox"] #subject')
+        const MessageBody = document.querySelector('[action^="/inbox"] #body')
+  
+        const RandomAnniversaryMessage = [
+          {
+            subject: "Happy :number+ Polytorian Anniversary!",
+            body: `Congratulations on your :number full year on Polytoria, :recipient! 🎉🎂🎈
+  
+Best wishes,
+- :username
+            `
+          },
+          {
+            subject: `:number Year${ (AnniversaryNumber > 1) ? 's' : '' } on Polytoria!`,
+            body: `Happy :number+ Polytorian Anniversary, :recipient! 🎈🎈🎉🎉
+  
+Yours truly,
+- :username
+            `
+          },
+          {
+            subject: `:number Year${ (AnniversaryNumber > 1) ? 's' : '' } of Polytorian Fun!`,
+            body: `I am so proud of you for reaching :number years on Polytoria, :recipient! 🎉🎂🎈
+  
+Warm regards,
+- :username
+            `
+          },
+          {
+            subject: "Congratulations on :number Years on Polytoria!",
+            body: `:recipient, you have been on Polytoria for :number ${ (AnniversaryNumber === 1) ? 'whole' : 'full' } years! I am writing to congratulate you on this amazing achievement! 🎉🎂🎈
+  
+With love and fun,
+- :username
+            `
+          }
+        ][Math.floor(Math.random() * 3) + 1]
+  
+        MessageSubject.value = RandomAnniversaryMessage.subject.replace(':number', AnniversaryNumber).replace(':number+', AnniversaryNumber + (AnniversaryNumber % 10 === 1 && AnniversaryNumber % 100 !== 11 ? 'st' : AnniversaryNumber % 10 === 2 && AnniversaryNumber % 100 !== 12 ? 'nd' : AnniversaryNumber % 10 === 3 && AnniversaryNumber % 100 !== 13 ? 'rd' : 'th'))
+          
+        setTimeout(() => {
+          const NewMessageBody = document.createElement('textarea')
+          NewMessageBody.classList = 'form-control'
+          NewMessageBody.id = 'body'
+          NewMessageBody.name = 'body'
+          NewMessageBody.rows = '16'
+          NewMessageBody.innerHTML = RandomAnniversaryMessage.body.replace(':number', AnniversaryNumber).replace(':number+', AnniversaryNumber + (AnniversaryNumber % 10 === 1 && AnniversaryNumber % 100 !== 11 ? 'st' : AnniversaryNumber % 10 === 2 && AnniversaryNumber % 100 !== 12 ? 'nd' : AnniversaryNumber % 10 === 3 && AnniversaryNumber % 100 !== 13 ? 'rd' : 'th')).replace(':recipient', document.querySelector('[action^="/inbox"] a[href^="/u"]').innerText).replace(':username', document.querySelector('a[href^="/u"]:has(.dropdown-item):first-child').innerText.replaceAll('\n', '').replaceAll('\t', '').trim())
+          MessageBody.parentElement.appendChild(NewMessageBody)
+          MessageBody.remove()
+        }, 100);
+      }
     }
     
     if (document.readyState === 'complete' || document.readyState === 'interactive') {

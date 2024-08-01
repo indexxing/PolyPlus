@@ -133,16 +133,18 @@ if (Username) {
 			}
 		});
 
-		if (new URLSearchParams(window.location.search).get('birthday') === 'true') {
+		if (new URLSearchParams(window.location.search).get('anniversary') === '1') {
 			const JoinDateRow = document.querySelector('#user-stats-card .mb-1:has(.fa-calendar)')
 			const BirthdayCard = document.createElement('div')
 			BirthdayCard.classList = 'card card-themed card-player-birthday mb-2'
+
+			const AnniversaryNumber = (new Date().getFullYear() - new Date(JoinDateRow.children[1].innerText).getFullYear())
 			BirthdayCard.innerHTML = `
 			<div class="card-body">
 				<div class="fw-semibold text-birthday-gradient">
-					<i class="fas fa-cake me-1"></i> It's my ${new Date().getFullYear() - new Date(JoinDateRow.children[1].innerText).getFullYear()}rd Polytoria anniversary!
+					<i class="fas fa-cake me-1"></i> It's my ${AnniversaryNumber + (AnniversaryNumber % 10 === 1 && AnniversaryNumber % 100 !== 11 ? 'st' : AnniversaryNumber % 10 === 2 && AnniversaryNumber % 100 !== 12 ? 'nd' : AnniversaryNumber % 10 === 3 && AnniversaryNumber % 100 !== 13 ? 'rd' : 'th')} Polytoria anniversary!
 				</div>
-				<a href="/inbox/messages/${UserID.id}/compose?anniversary=1" class="btn btn-sm btn-outline-light mt-2"><i class="fas fa-hands-clapping me-1"></i> Send ${UserID.username} congrats</a>
+				<a href="/inbox/messages/${UserID.id}/compose?anniversaryPreset=${AnniversaryNumber}" class="btn btn-sm btn-outline-light mt-2"><i class="fas fa-hands-clapping me-1"></i> Send ${UserID.username} congrats</a>
 			</div>
 			`
 			document.getElementById('user-avatar-card').parentElement.insertBefore(BirthdayCard, document.getElementById('user-avatar-card'))

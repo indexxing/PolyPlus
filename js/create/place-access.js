@@ -129,8 +129,6 @@ async function CopyOwnedPlace() {
 
 	const DownloadButton = DIV.getElementsByTagName('button')[0];
 	DownloadButton.addEventListener('click', async function () {
-		console.log('clicked download epic');
-
 		let CreatorToken = await fetch('https://polytoria.com/api/places/edit', {
 			method: 'POST',
 			body: JSON.stringify({placeID: PlaceID})
