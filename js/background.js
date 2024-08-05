@@ -122,6 +122,170 @@ let RecordingTimePlayed = false
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
+	} else if (request.action === 'greatdivide_stats') {
+		chrome.storage.local.get(['PolyPlus_GreatDivideStats_' + request.userID], async function(result){
+			let Statistics = result['PolyPlus_GreatDivideStats_' + request.userID]
+
+			// cache for 5 minutes
+			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 300000)) {
+				Statistics = Statistics.data
+			} else {
+				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
+				if (Statistics !== null) { Statistics = Statistics[0] }
+				chrome.storage.local.set({['PolyPlus_GreatDivideStats_' + request.userID]: {data: Statistics, requested: new Date().getTime()}}, function(){})
+			}
+
+			chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+				chrome.scripting
+					.executeScript({
+						target: {tabId: tabs[0].id},
+						func: LoadStats,
+						args: [Statistics]
+					})
+			})
+		})
+
+		const LoadStats = function(stats){	
+			const GreatDivideCard = document.getElementById('p+greatdivide_card')
+			if (stats !== null) {
+				let KDR = (stats.Kills / stats.Deaths)
+				if (isNaN(KDR)) {
+					KDR = "N/A"
+				} else {
+					KDR = KDR.toFixed(4)
+				}
+
+				if (stats.Team === 'phantoms') {
+					GreatDivideCard.parentElement.style.backgroundImage = 'linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url("https://c0.ptacdn.com/assets/N3DH4x5a6iW7raaQ-3lwHpRHHpWShdXc.png")';
+					GreatDivideCard.parentElement.style.borderColor = '';
+					GreatDivideCard.parentElement.style.border = '1.25px solid blue !important';
+				} else {
+					GreatDivideCard.parentElement.style.backgroundImage = 'linear-gradient(rgba(0.7, 0.7, 0.7, 0.7), rgba(0.7, 0.7, 0.7, 0.7)), url("https://c0.ptacdn.com/assets/1HXpaoDLHJo2rrvwwxqJEDWvDZ6BgvSE.png")';
+					GreatDivideCard.parentElement.style.borderColor = '';
+					GreatDivideCard.parentElement.style.border = '1.25px solid green !important';
+				}
+
+				GreatDivideCard.innerHTML = `
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-eye text-center d-inline-block" style="width:1.2em"></i>
+						Last Round Seen
+					</b>
+					<span class="float-end">
+						${ (stats.LastRoundSeen === 0) ? '-' : stats.LastRoundSeen }
+					</span>
+				</div>
+				<hr class="mb-3 mt-2">
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-swords text-center d-inline-block" style="width:1.2em"></i>
+						Kills
+					</b>
+					<span class="float-end">
+						${stats.Kills.toLocaleString()} <small class="text-muted" style="font-size: 0.8rem;">(${stats.UniqueKills.toLocaleString()} unique)</small>
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-skull text-center d-inline-block" style="width:1.2em"></i>
+						Deaths
+					</b>
+					<span class="float-end">
+						${stats.Deaths.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-percent text-center d-inline-block" style="width:1.2em"></i>
+						Kill Death Ratio
+					</b>
+					<span class="float-end ${ (!isNaN(KDR) && KDR > 1) ? 'text-success' : (!isNaN(KDR) && KDR !== 0) ? 'text-danger' : '' }">
+						${KDR} <i class="fa-solid fa-circle-info" data-bs-toggle="tooltip" data-bs-title="KDR is a user's kills divided by the amount of times they have died. If their KDR is above 1, they are making a positive contribution. If their KDR is less than 1, that means they die more than they kill."></i>
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-hundred-points text-center d-inline-block" style="width:1.2em"></i>
+						Points Scored
+					</b>
+					<span class="float-end">
+						${stats.PointsScored.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-money-bill-wave text-center d-inline-block" style="width:1.2em"></i>
+						Cash Earned
+					</b>
+					<span class="float-end">
+						${stats.CashEarned.toLocaleString()}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-flag text-center d-inline-block" style="width:1.2em"></i>
+						Flags Captured
+					</b>
+					<span class="float-end">
+						${stats.FlagsCaptured} (${stats.FlagsReturned} returned)
+					</span>
+				</div>
+				<div>
+					<b>
+						<i class="fa-solid fa-box-open text-center d-inline-block" style="width:1.2em"></i>
+						Airdrops Collected
+					</b>
+					<span class="float-end">
+						${stats.AirdropsCollected}
+					</span>
+				</div>
+				<hr class="mb-3 mt-2">
+				<div class="mb-1">
+					<b>
+						<i class="fa-solid fa-chart-pyramid text-center d-inline-block" style="width:1.2em"></i>
+						Monoliths Destroyed
+					</b>
+					<span class="float-end">
+						${stats.ObelisksDestroyed}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-block-question text-center d-inline-block" style="width:1.2em"></i>
+						Blocks Placed
+					</b>
+					<span class="float-end">
+						${stats.BlocksPlaced} (${stats.BlocksDestroyed} destroyed)
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-head-side-brain text-center d-inline-block" style="width:1.2em"></i>
+						Headshots
+					</b>
+					<span class="float-end">
+						${stats.Headshots}
+					</span>
+				</div>
+				`
+
+				const Script = document.createElement('script');
+				Script.setAttribute('type', 'text/javascript');
+				Script.setAttribute('src', chrome.runtime.getURL('resources/registerTooltips.js'));
+				Script.addEventListener('load', function () {
+					Script.remove();
+				});
+				document.body.appendChild(Script);
+			} else {
+				GreatDivideCard.classList.add('text-center', 'py-5')
+				GreatDivideCard.innerHTML = `
+				<h1 class="display-3"><i class="fa-solid fa-face-thinking"></i></h1>
+				<h5> Not Drafted </h5>
+				<p class="mb-0">This user didn't participate in The Great Divide.</p>
+				`
+			}
+		}
+		return true
 	} else if (request.action === 'start_time_played') {
 		if (RecordingTimePlayed === true) {
 			console.log('Time Played: Already Started Interval')
