@@ -88,9 +88,17 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 			InfoColumns[0].appendChild(TimePlayedNameRow);
 			InfoColumns[1].appendChild(TimePlayedValueRow);
 
-			document.getElementById('btn-play').addEventListener('click', function(){
-				chrome.runtime.sendMessage({ action: "start_time_played", placeID: PlaceID, userID: UserID })
-			})
+			if (document.getElementById('btn-play')) {
+				document.getElementById('btn-play').addEventListener('click', function(){
+					chrome.runtime.sendMessage({ action: "start_time_played", placeID: PlaceID, userID: UserID });
+				})
+
+				Array.from(document.querySelectorAll('button[onclick^="joinPlace"]')).forEach(serverJoin => {
+					serverJoin.addEventListener("click", function(){
+						chrome.runtime.sendMessage({ action: "start_time_played", placeID: PlaceID, userID: UserID })
+					})
+				})
+			}
 		}
 
 		if (Settings.ShowPlaceRevenueOn === true) {
