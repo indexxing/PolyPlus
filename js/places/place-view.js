@@ -80,9 +80,9 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 
 			const TimePlayedValueRow = document.createElement('li')
 			if (TimePlayed[PlaceID]) {
-				TimePlayedValueRow.innerText = new Date(TimePlayed[PlaceID] * 1000).toISOString().slice(11, 19)
+				TimePlayedValueRow.innerHTML = '<i class="text-center text-muted fa-duotone fa-solid fa-watch me-1" style="width: 1.3em;"></i> ' + new Date(TimePlayed[PlaceID] * 1000).toISOString().slice(11, 19) + ' <small style="font-size: 0.7rem;" class="text-muted">(poly+)</small>'
 			} else {
-				TimePlayedValueRow.innerText = '-'
+				TimePlayedValueRow.innerHTML = '<i class="text-center text-muted fa-duotone fa-solid fa-watch me-1" style="width: 1.3em;"></i> - <small style="font-size: 0.7rem;" class="text-muted">(poly+)</small>'
 			}
 
 			InfoColumns[0].appendChild(TimePlayedNameRow);
