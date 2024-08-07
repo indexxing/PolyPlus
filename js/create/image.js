@@ -22,6 +22,7 @@
       const submitBtn = document.querySelector(
         "form[action^=\"/create\"] button[type=\"submit\"]"
       );
+      const nameInput = document.querySelector("form[action^=\"/create\"] input[name=\"name\"]")
       console.log(submitBtn)
       submitBtn.addEventListener("click", async function (ev) {
         ev.preventDefault();
@@ -36,6 +37,10 @@
         const uploadFile = async (file, index) => {
           const formData = new FormData();
           formData.append("file", file);
+          
+          if (nameInput.value !== "") {
+            formData.append("name", nameInput.value)
+          }
 
           try {
             const response = await Utilities.RatelimitRepeatingFetch(
