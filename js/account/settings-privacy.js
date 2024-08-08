@@ -9,9 +9,8 @@ chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
         `;
 		BlockedUsersCard.insertBefore(InputGroup, BlockedUsersCard.children[0]);
 		const SearchBar = document.getElementById('blocked-users-search');
-		const ConfirmBtn = document.getElementById('blocked-users-confirm');
 
-		ConfirmBtn.addEventListener('click', function () {
+		SearchBar.addEventListener('input', function () {
 			SearchBlockedUsers(SearchBar.value);
 		});
 
