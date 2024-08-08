@@ -1,6 +1,6 @@
 chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
 	if (result.PolyPlus_Settings.MoreSearchFiltersOn === true) {
-		const BlockedUsersCard = document.getElementsByClassName('card-body')[1];
+		const BlockedUsersCard = document.querySelector('.card-body:has([action^="/api/users/"])');
 		const InputGroup = document.createElement('div');
 		InputGroup.classList = 'input-group mb-2';
 		InputGroup.innerHTML = `
