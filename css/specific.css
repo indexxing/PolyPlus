@@ -31,6 +31,10 @@ body[data-URL^='/create'] .me-2:has(.fa-thumbs-up)::after {
     margin-bottom: 10px;
 }
 
+body[data-URL^='/my/settings/privacy'] .card-body:has([action^="/api/users/"]) .card {
+    margin-bottom: 10px;
+}
+
 .home-event-container .img-container {
     height: 100% !important;
 }
