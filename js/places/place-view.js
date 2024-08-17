@@ -450,7 +450,7 @@ async function PlaceRevenue() {
 	const ResultText = document.createElement('li');
 	ResultText.classList = 'fw-normal text-success';
 	ResultText.style.letterSpacing = '0px';
-	ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString() + ' <i class="fa fa-question"></i>';
+	ResultText.innerHTML = `<i class="pi pi-brick mx-1"></i> ~` + Revenue.toLocaleString();
 
 	CalculateRevenueButton.remove();
 	InfoColumns[1].appendChild(ResultText);
