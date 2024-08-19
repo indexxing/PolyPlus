@@ -409,7 +409,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 								<div class="card-header">
 									<span class="badge bg-secondary" style="margin-right: 5px; vertical-align: text-bottom;">Local</span>
 									Inventory Cache
-									<small class="text-muted" style="font-size: 0.7rem;">(cached for 5 minutes)</small>
+									<small class="text-muted" style="font-size: 0.7rem;">(cached for 5 minutes, ${local.PolyPlus_InventoryCache.data.length} items cached)</small>
 								</div>
 							</a>
 							<div class="card-body collapse" id="inventory-cache">
