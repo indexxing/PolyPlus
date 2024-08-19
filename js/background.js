@@ -105,7 +105,8 @@ const DefaultSettings = {
 		PlaceFileDownloadOn: true,
 		MultiWhitelistOn: true,
 		ClearWhitelistOn: true
-	}
+	},
+	MoreBlockedDetailsOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD

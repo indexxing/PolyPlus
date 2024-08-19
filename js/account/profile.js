@@ -1,4 +1,6 @@
 let Username = window.location.pathname.split('/')[2];
+let Blocked = false;
+
 const AvatarRow = document.getElementsByClassName('d-flex flex-row flex-nowrap overflow-x-scroll px-3 px-lg-0 mb-2 mb-lg-0')[0];
 const AvatarHeading = document.querySelector('.section-title:has(i.fa-user-crown)');
 
@@ -16,19 +18,44 @@ if (Username) {
 		Utilities = await import(chrome.runtime.getURL('resources/utils.js'));
 		Utilities = Utilities.default;
 
-		chrome.storage.sync.get(['PolyPlus_Settings'], function (result) {
+		if (document.querySelector('.card .fa-ban')) {
+			Blocked = true;
+		}
+
+		chrome.storage.sync.get(['PolyPlus_Settings'], async function (result) {
 			Settings = result.PolyPlus_Settings || {};
 
 			const InfoColumns = document.getElementById('user-stats-card');
 			const UserIDRow = document.createElement('div')
-			UserIDRow.classList = 'mb-1'
+			UserIDRow.classList = 'mb-1 text-start'
 			UserIDRow.innerHTML = `
 			<b><i class="fa fa-hashtag text-center d-inline-block" style="width:1.2em"></i> Player ID</b>
 			<span class="float-end">
 				${UserID.id} <a id="copy" href="#copy"><i class="fad fa-copy" style="margin-left: 5px;"></i></a>
 			</span>
 			`
-			InfoColumns.children[0].insertBefore(UserIDRow, InfoColumns.children[0].children[1]);
+			if (!Blocked) {
+				InfoColumns.children[0].insertBefore(UserIDRow, InfoColumns.children[0].children[1]);
+			} else {
+				if (Settings.MoreBlockedDetailsOn) {
+					const BlockedCard = document.querySelector('.card-body:has(.fa-ban)')
+					BlockedCard.appendChild(document.createElement('hr'))
+
+					const AccountInfo = (await (await fetch('https://api.'+window.location.hostname+'/v1/users/' + UserID.id )).json());
+
+					const AccountCreatedRow = document.createElement('div')
+					AccountCreatedRow.classList = 'mb-1 text-start'
+					AccountCreatedRow.innerHTML = `
+					<b><i class="fad fa-calendar text-center d-inline-block" style="width:1.2em"></i> Join date</b>
+					<span class="float-end">
+						${ ["January","February","March","April","May","June","July","August","September","November","December"][new Date(AccountInfo.registeredAt).getMonth() - 1] + " " + new Date(AccountInfo.registeredAt).getDate() + ", " + new Date(AccountInfo.registeredAt).getFullYear() }
+					</span>
+					`
+
+					BlockedCard.appendChild(UserIDRow)
+					BlockedCard.appendChild(AccountCreatedRow)
+				}
+			}
 
 			const CopyButton = UserIDRow.getElementsByTagName('a')[0]
 			CopyButton.addEventListener('click', function(){

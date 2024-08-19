@@ -124,7 +124,8 @@ export default {
 			PlaceFileDownloadOn: true,
 			MultiWhitelistOn: true,
 			ClearWhitelistOn: true
-		}
+		},
+		MoreBlockedDetailsOn: true
 	},
 	Limits: {
 		PinnedGames: 10,
