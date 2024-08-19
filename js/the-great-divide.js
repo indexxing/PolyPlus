@@ -15,7 +15,7 @@ const PlaceAllowlist = [
 		Settings = result.PolyPlus_Settings || {};
 
 		if (Settings.TheGreatDivide.Enabled !== true) {
-			//return
+			return
 		}
 
 		if (Settings.TheGreatDivide.UserStatsOn === true && window.location.pathname.split('/')[1] === 'u') {
