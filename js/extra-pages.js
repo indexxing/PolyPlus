@@ -264,7 +264,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 		})
 
 		chrome.storage.sync.getBytesInUse(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_ItemWishlist', 'PolyPlus_TimePlayed', 'PolyPlus_AvatarSandboxOutfits'], function (sync) {
-			chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache'], function(local){
+			chrome.storage.local.getBytesInUse(['PolyPlus_InventoryCache', 'PolyPlus_GreatDivideStats'], function(local){
 				document.getElementById('data-size').innerText = (sync + local).toLocaleString();
 			})
 		});
@@ -272,7 +272,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 } else if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.hash === '#debug') {
 	document.addEventListener('DOMContentLoaded', function () {
 		chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames', 'PolyPlus_BestFriends', 'PolyPlus_ItemWishlist', 'PolyPlus_AvatarSandboxOutfits', 'PolyPlus_TimePlayed'], function(sync) {
-			chrome.storage.local.get(['PolyPlus_InventoryCache'], function(local){
+			chrome.storage.local.get(['PolyPlus_InventoryCache', 'PolyPlus_GreatDivideStats'], function(local){
 				document.querySelector('#main-content .container').innerHTML = `
 				<style>
 					#main-content .container label {
@@ -292,7 +292,8 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 				</style>
 				<div class="text-center mb-3">
 					<h1 class="text-center" style="font-size: 4.6rem;">Poly+ Debug</h1>
-					<p class="w-75 d-block mx-auto">This page is used for accessing most data-related objects stored by the extension.</p>
+					<p class="w-75 d-block mx-auto mb-0">This page is used for accessing most data-related objects stored by the extension.</p>
+					<small style="font-size: 0.75rem;" class="text-muted">* note: cache objects don't get cleared, instead when they are requested, if the data stored is old, new data will replace the old data.</small>
 				</div>
 				<div class="row">
 					<div class="col-md-2" style="padding-left: 0px;">
@@ -404,7 +405,7 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 								</div>
 							</div>
 						</div>
-						<div class="card">
+						<div class="card mb-3">
 							<a class="text-reset" data-bs-toggle="collapse" href="#inventory-cache" role="button" aria-expanded="false" aria-controls="inventory-cache">
 								<div class="card-header">
 									<span class="badge bg-secondary" style="margin-right: 5px; vertical-align: text-bottom;">Local</span>
@@ -415,6 +416,23 @@ if (window.location.pathname.split('/')[3] === 'polyplus' && window.location.has
 							<div class="card-body collapse" id="inventory-cache">
 								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
 									${JSON.stringify((local.PolyPlus_InventoryCache || {data: [], requested: "never"}), null, 2)
+										.replaceAll('\n','<br>')
+										.replaceAll(' ', '&nbsp;')
+										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<a class="text-reset" data-bs-toggle="collapse" href="#great-divide-stats" role="button" aria-expanded="false" aria-controls="inventory-cache">
+								<div class="card-header">
+									<span class="badge bg-secondary" style="margin-right: 5px; vertical-align: text-bottom;">Local</span>
+									Great Divide User Statistics
+									<small class="text-muted" style="font-size: 0.7rem;">(cached for 5 minutes, ${Object.keys(local.PolyPlus_GreatDivideStats || {}).length} users cached)</small>
+								</div>
+							</a>
+							<div class="card-body collapse" id="great-divide-stats">
+								<div style="padding: 10px; background: #171717; font-family: monospace; color: orange; font-size: 0.8rem; border-radius: 10px; position: relative;">
+									${JSON.stringify((local.PolyPlus_GreatDivideStats || {}), null, 2)
 										.replaceAll('\n','<br>')
 										.replaceAll(' ', '&nbsp;')
 										.replaceAll('\t', '&nbsp;&nbsp;&nbsp;&nbsp;')}

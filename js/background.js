@@ -124,16 +124,21 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 	if (request.action === 'reload') {
 		chrome.runtime.reload();
 	} else if (request.action === 'greatdivide_stats') {
-		chrome.storage.local.get(['PolyPlus_GreatDivideStats_' + request.userID], async function(result){
-			let Statistics = result['PolyPlus_GreatDivideStats_' + request.userID]
+		chrome.storage.local.get(['PolyPlus_GreatDivideStats'], async function(result){
+			const Cache = (result['PolyPlus_GreatDivideStats']||{[request.userID]:undefined})
 
 			// cache for 5 minutes
-			if (Statistics !== undefined && (new Date().getTime() - Statistics.requested < 300000)) {
-				Statistics = Statistics.data
-			} else {
-				Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
-				if (Statistics !== null) { Statistics = Statistics[0] }
-				chrome.storage.local.set({['PolyPlus_GreatDivideStats_' + request.userID]: {data: Statistics, requested: new Date().getTime()}}, function(){})
+			if (Cache[request.userID] === undefined || (new Date().getTime() - Cache[request.userID].requested > 300000)) {
+				let Statistics = (await (await fetch('https://stats.silly.mom/player_stats?id=' + request.userID)).json()).results
+				if (Statistics !== null) {
+					Statistics = Statistics[0]
+				}
+				Cache[request.userID] = {
+					data: Statistics,
+					requested: new Date().getTime()
+				}
+
+				chrome.storage.local.set({['PolyPlus_GreatDivideStats']: Cache}, function(){})
 			}
 
 			chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
@@ -141,7 +146,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 					.executeScript({
 						target: {tabId: tabs[0].id},
 						func: LoadStats,
-						args: [Statistics]
+						args: [Cache[request.userID].data]
 					})
 			})
 		})
