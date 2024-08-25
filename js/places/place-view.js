@@ -146,6 +146,16 @@ const Gamepasses = Array.from(GamepassesTab.getElementsByClassName('card')) || [
 		if (Settings.ReaddCopyablePlacesOn === true) {
 			ReaddCopyable()
 		}
+
+		if (document.querySelector('.text-warning .fa-lock') || new URLSearchParams(window.location.search).has('testRestrictedServers')) {
+			const ServerJoinButtons = Array.from(document.querySelectorAll('#servers-tabpane button'));
+			for (let button of ServerJoinButtons) {
+				button.classList.add('btn-secondary');
+				button.classList.remove('btn-success');
+				button.disabled = true;
+				button.innerText = 'Restricted'
+			}
+		}
 	});
 })();
 
