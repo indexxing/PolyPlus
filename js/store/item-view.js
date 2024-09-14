@@ -64,6 +64,8 @@ var Utilities;
 		if (Settings.ItemWishlistOn === true) {
 			HandleItemWishlist();
 		}
+
+		ItemCreator()
 	});
 })();
 
@@ -765,12 +767,6 @@ async function ValueListData() {
 		"Freaky": "danger"
 	}
 
-	const ValueListDocument = new DOMParser().parseFromString(await (await fetch('https://docs.google.com/feeds/download/documents/Export?exportFormat=html&format=html&id=1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4')).text(), 'text/html')
-
-	/*
-		Table to JSON function (slightly modified for my use-case)
-		https://stackoverflow.com/questions/9927126/how-to-convert-the-following-table-to-json-with-javascript#answer-60196347
-	*/
 	const ExtractTableJSON = function(table) { 
 		var data = [];
 		for (var i = 1; i < table.rows.length; i++) { 
@@ -781,7 +777,10 @@ async function ValueListData() {
 			for (var j = 0; j < tableRow.cells.length; j++) { 
 				let Value = tableRow.cells[j].children[0].children[0].innerText;
 				if (ColumnLabels[j] === "name") {
-					rowData.id = tableRow.cells[j].children[0].children[0].children[0].href.split('https://www.google.com/url?q=')[1].split('&')[0].split('/')[4]
+					const LinkValue = tableRow.cells[j].getElementsByTagName('a')[0]
+					if (LinkValue) {
+						rowData.id = LinkValue.href.split('https://www.google.com/url?q=')[1].split('&')[0].split('/')[4]
+					}
 				}
 				if (ColumnLabels[j] === "tags") {
 					Array.from(tableRow.cells[j].children).forEach(tag => {
@@ -798,6 +797,13 @@ async function ValueListData() {
 		} 
 		return data; 
 	}
+
+	const ValueListDocument = new DOMParser().parseFromString(await (await fetch('https://docs.google.com/feeds/download/documents/Export?exportFormat=html&format=html&id=1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4')).text(), 'text/html')
+
+	/*
+		Table to JSON function (slightly modified for my use-case)
+		https://stackoverflow.com/questions/9927126/how-to-convert-the-following-table-to-json-with-javascript#answer-60196347
+	*/
 
 	const GetTagColor = function(label) {
 		if (TagColors[label] !== undefined) {
@@ -860,4 +866,21 @@ async function ValueListData() {
 		There is no evaluation for this item at this time.
 		`
 	}
+}
+
+async function ItemCreator() {
+	const ItemCreatorData = await ((await fetch('https://polyplus.vercel.app/data/itemModelers.json')).json())
+	if (!ItemCreatorData[ItemID]) { return }
+
+	let QuickStats = document.querySelectorAll('.row:has(h3, h6, [data-bs-tooltip])')[2];
+
+	const CreatorStat = document.createElement('div')
+	CreatorStat.classList = 'col text-center'
+	CreatorStat.innerHTML = `
+	<h6>Item Modeler</h6>
+	<h3 class="small">
+		<a href="/u/${ItemCreatorData[ItemID]}" style="background-clip:text;-webkit-background-clip:text;color:transparent;background-image: linear-gradient(90deg, #1ad05b, #68f);-webkit-text-fill-color: transparent;">${ItemCreatorData[ItemID]}</a>
+	</h3>
+	`
+	QuickStats.appendChild(CreatorStat)
 }
