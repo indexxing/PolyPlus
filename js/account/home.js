@@ -97,13 +97,25 @@ chrome.storage.sync.get(['PolyPlus_Settings', 'PolyPlus_PinnedGames'], async fun
     }
 
     if (Settings.HomeFriendCountOn === true) {
-        const FriendCount = (await (await fetch('https://polytoria.com/api/friends?page=1')).json()).meta.total;
+        chrome.storage.local.get(['PolyPlus_FriendCount'], async function(result){
+			let FriendCount = result['PolyPlus_FriendCount'].count;
 
-        const CountText = document.createElement('small');
-        CountText.classList = 'text-muted fw-lighter';
-        CountText.style.fontSize = '0.8rem';
-        CountText.innerText = ' (' + FriendCount + ')';
-        document.querySelector('#home-friendsOnline h5').appendChild(CountText);
+			// cache for 5 minutes
+			if (FriendCount === undefined || (new Date().getTime() - FriendCount.requested > 300000)) {
+				FriendCount = (await (await fetch('https://polytoria.com/api/friends?page=1')).json()).meta.total;
+
+				chrome.storage.local.set({['PolyPlus_FriendCount']: {
+                    count: FriendCount,
+                    requested: new Date().getTime()
+                }}, function(){});
+			}
+
+            const CountText = document.createElement('small');
+            CountText.classList = 'text-muted fw-lighter';
+            CountText.style.fontSize = '0.8rem';
+            CountText.innerText = ' (' + FriendCount + ')';
+            document.querySelector('#home-friendsOnline h5').appendChild(CountText);
+        });
     }
 
     if (Settings.HomeJoinFriendsButtonOn === true) {
