@@ -106,7 +106,8 @@ const DefaultSettings = {
 		MultiWhitelistOn: true,
 		ClearWhitelistOn: true
 	},
-	MoreBlockedDetailsOn: true
+	MoreBlockedDetailsOn: true,
+	AssetDesignerCreditOn: true
 }
 
 // ON EXTENSION INSTALL / RELOAD

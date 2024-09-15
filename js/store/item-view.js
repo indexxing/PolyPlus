@@ -66,7 +66,7 @@ var Utilities;
 			HandleItemWishlist();
 		}
 
-		if (Settings.AssetDesignerCreditOn == true) {
+		if (Settings.AssetDesignerCreditOn === true) {
 			chrome.storage.local.get(['PolyPlus_AssetDesigners'], async function(result){
 				let AssetDesignerData = result['PolyPlus_AssetDesigners'];
 	

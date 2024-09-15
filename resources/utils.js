@@ -125,7 +125,8 @@ export default {
 			MultiWhitelistOn: true,
 			ClearWhitelistOn: true
 		},
-		MoreBlockedDetailsOn: true
+		MoreBlockedDetailsOn: true,
+		AssetDesignerCreditOn: true
 	},
 	Limits: {
 		PinnedGames: 10,
