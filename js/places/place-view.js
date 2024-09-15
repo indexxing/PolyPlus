@@ -546,7 +546,6 @@ async function ReaddCopyable() {
 	}
 
 	if (PlaceDetails.isCopyable) {
-		console.log('is copyable')
 		const TitleCardButtons = document.querySelector('.card:has(h1.my-0) .col-auto[style^="m"]')
 		
 		const DownloadCopyButton = document.createElement('button')

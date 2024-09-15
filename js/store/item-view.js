@@ -1,4 +1,5 @@
 const ItemID = window.location.pathname.split('/')[2];
+let ItemModeler = null;
 const ItemType = document.querySelector('.row .badge').innerHTML;
 
 var Settings;
@@ -65,7 +66,27 @@ var Utilities;
 			HandleItemWishlist();
 		}
 
-		ItemCreator()
+		if (Settings.AssetDesignerCreditOn == true) {
+			chrome.storage.local.get(['PolyPlus_AssetDesigners'], async function(result){
+				let AssetDesignerData = result['PolyPlus_AssetDesigners'];
+	
+				// cache for 5 minutes
+				if (AssetDesignerData === undefined || (new Date().getTime() - AssetDesignerData.requested > 300000)) {
+					AssetDesignerData = await ((await fetch('https://polyplus.vercel.app/data/itemModelers.json')).json());
+	
+					chrome.storage.local.set({['PolyPlus_AssetDesigners']: {
+						data: AssetDesignerData,
+						requested: new Date().getTime()
+					}}, function(){});
+				} else {
+					AssetDesignerData = AssetDesignerData.data
+				}
+	
+				if (AssetDesignerData[ItemID]) {
+					AssetDesignerInfo(AssetDesignerData)
+				}
+			});
+		}
 	});
 })();
 
@@ -868,18 +889,15 @@ async function ValueListData() {
 	}
 }
 
-async function ItemCreator() {
-	const ItemCreatorData = await ((await fetch('https://polyplus.vercel.app/data/itemModelers.json')).json())
-	if (!ItemCreatorData[ItemID]) { return }
-
+async function AssetDesignerInfo(data) {
 	let QuickStats = document.querySelectorAll('.row:has(h3, h6, [data-bs-tooltip])')[2];
 
 	const CreatorStat = document.createElement('div')
 	CreatorStat.classList = 'col text-center'
 	CreatorStat.innerHTML = `
-	<h6>Item Modeler</h6>
+	<h6>Asset Designer</h6>
 	<h3 class="small">
-		<a href="/u/${ItemCreatorData[ItemID]}" style="background-clip:text;-webkit-background-clip:text;color:transparent;background-image: linear-gradient(90deg, #1ad05b, #68f);-webkit-text-fill-color: transparent;">${ItemCreatorData[ItemID]}</a>
+		<a href="/u/${data[ItemID]}" style="background-clip:text;-webkit-background-clip:text;color:transparent;background-image: linear-gradient(90deg, #1ad05b, #68f);-webkit-text-fill-color: transparent;">${data[ItemID]}</a>
 	</h3>
 	`
 	QuickStats.appendChild(CreatorStat)
