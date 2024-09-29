@@ -1,4 +1,7 @@
 const ItemID = window.location.pathname.split('/')[2];
+if (window.location.pathname.slice(-6) == "/asset") {
+	window.location.href = "https://api.polytoria.com/v1/assets/serve-mesh/" + ItemID
+}
 let ItemModeler = null;
 const ItemType = document.querySelector('.row .badge').innerHTML;
 

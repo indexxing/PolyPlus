@@ -63,7 +63,7 @@
 		},
 
 		{
-			"matches": ["https://polytoria.com/store/**"],
+			"matches": ["https://polytoria.com/store/**", "https://polytoria.com/store/*/asset"],
 			"js": ["/js/store/item-view.js"]
 		},
 
