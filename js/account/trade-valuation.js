@@ -79,7 +79,7 @@ var Utilities;
             const ValueJSON = ExtractTableJSON(ValueListDocument.getElementsByTagName('table')[0])
             
             for (let card of Array.from(document.querySelectorAll('.card:has(a[href^="/store"])'))) {
-                const ItemValuations = Array.from(card.querySelectorAll('a[href^="/store"]')).map((item) => ValueJSON.filter((x) => x.id == item.getAttribute('href').split('/')[2])[0]||null).filter((x)=>x!=null&&x.tags[0]!="")
+                const ItemValuations = Array.from(card.querySelectorAll('a[href^="/store"]')).map((item) => ValueJSON.filter((x) => x.id == item.getAttribute('href').split('/')[2])[0]||null).filter((x)=>x!=null)
             
                 if (ItemValuations.length > 0) {
                     /* this code is so bad I never want to look at it again */
@@ -88,14 +88,13 @@ var Utilities;
                     QuestionMarkTooltip.classList = 'fa fa-question-circle'
                     QuestionMarkTooltip.setAttribute('data-bs-toggle', 'tooltip')
                     QuestionMarkTooltip.setAttribute('data-bs-html', 'true')
-                    ItemValuations.map((item) => {console.log(item.tags)})
                     QuestionMarkTooltip.setAttribute('data-bs-title', ItemValuations.map((item, i) => `
+                    <small class="text-muted" style="font-size: 0.65rem">"${item.short}" | ${item.trend}</small><br>
                     <b style="text-align: left !important;">${item.name}</b><br>
                     ${ item.tags.map((x) => `
                     <span class="badge bg-${ GetTagColor(x) }">${x}</span>
                     `).join('')}
-                    <br>
-                    `).join(''))
+                    `).join('<hr class="mt-2 mb-1">'))
                     card.getElementsByClassName('card-header')[0].appendChild(QuestionMarkTooltip)
                 }
             }
