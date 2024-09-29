@@ -697,7 +697,7 @@
 					Sort a player's inventory by all of their limited-edition collectibles!
 				</span>
 			</div>
-			<div class="setting-container" id="collectibles-inventory-category">
+			<div class="setting-container" id="value-list-info">
 				<span class="badge bg-primary mb-1">New in v1.3!</span>
 				<br>
 				<span class="indicator">&nbsp;</span>
@@ -705,14 +705,22 @@
 					"List of Values Everlast" Integration
 				</span>
 				<div class="setting-buttons">
-					<button class="btn btn-sm toggle-btn" data-setting="ShowValueListDataOn">Toggle</button>
+					<button class="btn btn-sm toggle-btn" data-setting="Enabled" data-parent="ValueListInfo">Toggle</button>
 				</div>
 				<br />
 				<span class="desc">
-					Quickly see a collectible's evaluation by the community-trusted "List-of-Values Everlast" guild!
+					Quickly see a collectible's evaluation by the community-trusted "List-of-Values Everlast" guild! Credits to them for all value information provided by the extension.
 				</span>
 				<span class="note">
 					* This feature will be expanded to allow you to pick from a list of value lists (list-inception), if any prominent value lists pop-up in the future!
+				</span>
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="item-view-valuation" data-setting="ItemValuation" data-parent="ValueListInfo" />
+					<label class="form-check-label" for="item-view-valuation"> Show Value Info on Item View Page </label>
+				</span>
+				<span class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="trade-valuation" data-setting="TradeValuation" data-parent="ValueListInfo" />
+					<label class="form-check-label" for="trade-valuation"> Show Value Info for all items on Trade View Page </label>
 				</span>
 			</div>
 			<div class="setting-container" id="readd-copyable-places">

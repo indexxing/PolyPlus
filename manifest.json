@@ -131,6 +131,11 @@
 		{
 			"matches": ["https://polytoria.com/u/**"],
 			"js": ["/js/the-great-divide.js"]
+		},
+
+		{
+			"matches": ["https://polytoria.com/trade/view/**"],
+			"js": ["/js/account/trade-valuation.js"]
 		}
 	],
 	"background": {

@@ -56,7 +56,11 @@ var Utilities;
 				HoardersList(parseInt(Settings.HoardersList.MinCopies), Settings.HoardersList.AvatarsEnabled);
 			}
 
-			if (Settings.ShowValueListDataOn && Settings.ShowValueListDataOn === true) {
+			if (
+				Settings.ValueListInfo &&
+				Settings.ValueListInfo.Enabled == true &&
+				Settings.ValueListInfo.ItemValuation == true
+			) {
 				ValueListData()
 			}
 		}

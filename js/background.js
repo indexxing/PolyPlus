@@ -89,7 +89,11 @@ const DefaultSettings = {
 		LeaderboardsOn: true
 	},
 	CollectibleInventoryCatOn: true,
-	ShowValueListDataOn: true,
+	ValueListInfo: {
+		Enabled: true,
+		ItemValuation: true,
+		TradeValuation: true
+	},
 	ImprovedAchievements: {
 		Enabled: true,
 		ProgressBarOn: true,
