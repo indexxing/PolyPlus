@@ -581,6 +581,19 @@ async function LoadUser(id) {
 async function LoadItems() {
     document.getElementById('inventory').innerHTML = ''
 
+    const SearchFilters = document.getElementsByClassName('retro-items-disable')
+    if (TabSelected != 'retro') {
+        for (let filter of SearchFilters) {
+            filter.disabled = false
+            filter.classList.remove('disabled')
+        }
+    } else {
+        for (let filter of SearchFilters) {
+            filter.disabled = true
+            filter.classList.add('disabled')
+        }
+    }
+
     let Items;
     if (['retro', 'outfit'].indexOf(TabSelected) === -1) {
         Items = (await (await fetch('https://api.polytoria.com/v1/store?limit=12&order=' + Order + '&sort=' + Sort + '&showOffsale=' + ShowOffsale + '&types[]='+ TabSelected +'&search=' + Search + '&page=' + Page)).json())
