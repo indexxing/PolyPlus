@@ -12,3 +12,12 @@ PolyPlus_InventoryCache: {
     data: [],
     requested: number (representing date)
 }
+PolyPlus_GreatDivideStats: {}
+PolyPlus_FriendCount: {
+    count: number,
+    requested: number (representing date)
+}
+PolyPlus_AssetDesigners: {
+    data: {},
+    requested: number (representing date)
+}
