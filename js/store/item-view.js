@@ -763,7 +763,7 @@ async function ValueListDataNew() {
 	ValueSection.classList = 'mb-3'
 	ValueSection.innerHTML = `
 	<h6 class="section-title mt-3 mt-lg-0 mb-3 px-2">
-		Valuation <a href="https://docs.google.com/document/d/1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4/" target="_blank">(based off LOVE)</a>
+		Valuation <a href="https://polytoria.trade/" target="_blank">(based off LOVE)</a>
 	</h6>
 	<div class="card" id="p+valuation_card">
 		<div class="card-body">
