@@ -756,6 +756,51 @@ function CheckOwner() {
 	});
 }
 
+async function ValueListDataNew() {
+	let Tabs = document.getElementById('store-tabs');
+
+	const ValueSection = document.createElement('div')
+	ValueSection.classList = 'mb-3'
+	ValueSection.innerHTML = `
+	<h6 class="section-title mt-3 mt-lg-0 mb-3 px-2">
+		Valuation <a href="https://docs.google.com/document/d/1W7JN74MU-9Dbd-9xNnjxE18hQVBPXWuwjK5DGSnuQR4/" target="_blank">(based off LOVE)</a>
+	</h6>
+	<div class="card" id="p+valuation_card">
+		<div class="card-body">
+			<small class="d-block text-center text-muted" style="font-size: 0.8rem;">
+				Loading...
+			</small>
+			<lottie-player id="avatar-loading" src="https://c0.ptacdn.com/static/images/lottie/poly-brick-loading.2b51aa85.json" background="transparent" speed="1" style="width: 20%;height: auto;margin: -16px auto 50px;margin-top: 0px;" loop="" autoplay=""></lottie-player>
+		</div>
+	</div>
+	`
+	Tabs.parentElement.insertBefore(ValueSection, Tabs)
+
+	const ValueCard = document.getElementById('p+valuation_card').children[0]
+
+	const TagColors = {
+		"Projected": "warning",
+		"Hoarded": "success",
+		"Rare": "primary",
+		"Freaky": "danger"
+	}
+
+	const GetTagColor = function(label) {
+		if (TagColors[label] !== undefined) {
+			return TagColors[label]
+		} else if (TagColors[label.substring(1)] !== undefined) {
+			return TagColors[label.substring(1)]
+		} else {
+			return 'dark'
+		}
+	}
+
+	await chrome.runtime.sendMessage({
+		action: "item_valuation",
+		itemID: ItemID
+	});
+}
+
 async function ValueListData() {
 	let Tabs = document.getElementById('store-tabs');
 

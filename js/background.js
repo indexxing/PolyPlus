@@ -334,6 +334,104 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 				}
 			}, 5000);
 		})
+	} else if (request.action == "item_valuation") {
+		chrome.storage.local.get(['PolyPlus_ItemValuationData'], async function(result){
+			const Cache = (result['PolyPlus_ItemValuationData']||{[request.itemID]:undefined})
+
+			// cache for 5 minutes
+			if (Cache[request.itemID] === undefined || (new Date().getTime() - Cache[request.itemID].requested > 300000)) {
+				let ValueDetails = (await (await fetch('https://polytoria.trade/api/trpc/getItem?batch=1&input={"0":' + request.itemID + '}',{mode:'no-cors'})).json())
+				if (ValueDetails.result.length > 0) {
+					ValueDetails = ValueDetails[0].result.data
+				}
+				Cache[request.itemID] = {
+					data: ValueDetails,
+					requested: new Date().getTime()
+				}
+
+				chrome.storage.local.set({['PolyPlus_GreatDivideStats']: Cache}, function(){})
+			}
+
+			chrome.tabs.query({ active: true, currentWindow: true }, function(tabs){
+				chrome.scripting
+					.executeScript({
+						target: {tabId: tabs[0].id},
+						func: LoadValuation,
+						args: [Cache[request.itemID].data]
+					})
+			})
+		})
+
+		const LoadValuation = async function(valuation) {
+			const GetTagColor = function(label) {
+				if (TagColors[label] !== undefined) {
+					return TagColors[label]
+				} else if (TagColors[label.substring(1)] !== undefined) {
+					return TagColors[label.substring(1)]
+				} else {
+					return 'dark'
+				}
+			}
+
+			const TagColors = {
+				"Projected": "warning",
+				"Hoarded": "success",
+				"Rare": "primary",
+				"Freaky": "danger"
+			}
+
+			//const ValueDetails = (await (await fetch('https://polytoria.trade/api/trpc/getItem?batch=1&input={"0":' + ItemID + '}')).json())
+
+			if (valuation !== undefined) {
+				ValueCard.innerHTML = `
+				<div class="mb-1">
+					<b class="text-success">
+						<i class="pi pi-brick" style="width:1.2em"></i>
+						Value
+					</b>
+					<span class="float-end">
+						${valuation.value}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b class="text-primary"">
+						<i class="pi" style="width:1.2em">%</i>
+						Trend
+					</b>
+					<span class="float-end">
+						${valuation.trend}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-triangle" style="width:1.2em"></i>
+						Valuation Type
+					</b>
+					<span class="float-end">
+						${valuation.type}
+					</span>
+				</div>
+				<div class="mb-1">
+					<b>
+						<i class="fa-duotone fa-hand-wave" style="width:1.2em"></i>
+						Shorthand
+					</b>
+					<span class="float-end">
+						${valuation.short}
+					</span>
+				</div>
+				<div class="d-flex" style="gap: 5px;">
+					${ ValueDetails.tags.map((x) => `
+					<span class="badge bg-${ GetTagColor(x) }">${x}</span>
+					`).join('')}
+				</div>
+				`
+			} else {
+				ValueCard.innerHTML = `
+				There is no evaluation for this item at this time.
+				`
+			}
+		}
 	}
 });
 
